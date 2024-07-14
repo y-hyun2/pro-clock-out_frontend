@@ -3,38 +3,40 @@ import Analytics_BarChart from "./Analytics_BarChart";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 200px;
+  width: 430px;
   border: 1px gray solid;
-  border-radius: 10px;
+  border-radius: 15px;
   //box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
-  margin: 10px;
+  margin: 2%;
 `;
 
 const Header = styled.div`
   background-color: ${(props) => props.fill};
   color: black;
   font-weight: 800;
-  padding: 10px 0;
-  font-size: 18px;
+  padding: 20px 0;
+  font-size: 40px;
 `;
 
 const Score = styled.div`
-  font-size: 36px;
+  padding-top: 15px;
+  font-size: 70px;
   font-weight: bold;
   margin: 10px 0;
 `;
 
 const Percentage = styled.div`
   color: ${(props) => props.fill};
-  font-size: 14px;
+  font-size: 25px;
+  margin-bottom: 6%;
 `;
 
 const ChartsContainer = styled.div`
   display: flex;
   justify-content: space-around;
-  padding: 10px 0;
+  padding: 20;
 `;
 
 function Category({ categoryData }) {

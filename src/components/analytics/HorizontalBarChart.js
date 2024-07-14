@@ -1,4 +1,3 @@
-// HorizontalBarChart.js
 import React from "react";
 import {
   BarChart,
@@ -11,16 +10,16 @@ import {
 } from "recharts";
 
 const HorizontalBarChart = ({ data }) => {
-  // 가장 큰 값을 가진 막대의 길이를 기준으로 함
-  const maxwdth = 1000;
+  const maxwdth = 1700;
   const CustomLabel = ({ x, y, value }) => {
     return (
       <Text
-        x={x + maxwdth - 430}
-        y={y + 13}
+        x={x + maxwdth - 470}
+        y={y + 22}
         textAnchor="start"
         fill="#000"
         fontWeight={800}
+        fontSize={22}
       >
         {`${value}%`}
       </Text>
@@ -30,10 +29,10 @@ const HorizontalBarChart = ({ data }) => {
   return (
     <BarChart
       width={maxwdth - 300}
-      height={230}
+      height={380}
       data={data}
       layout="vertical"
-      margin={{ top: 10, right: 50, left: 20, bottom: 20 }}
+      margin={{ top: 10, right: 50, left: 40, bottom: 20 }}
     >
       <XAxis type="number" axisLine={false} tickLine={false} hide={true} />
       <YAxis
@@ -42,12 +41,13 @@ const HorizontalBarChart = ({ data }) => {
         axisLine={false}
         tickLine={false}
         fontWeight={800}
+        fontSize={23}
       />
       <Bar
         dataKey="score"
         isAnimationActive={true}
         label={<CustomLabel />}
-        barSize={20}
+        barSize={30}
       >
         {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={entry.fill} />

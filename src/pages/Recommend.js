@@ -12,7 +12,7 @@ import img7 from "../img/Ad_img4_2.png";
 
 const OuterWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
-  padding-left: 10%;
+  padding-left: 8%;
 `;
 
 const InnerWrapper = styled.div`
@@ -23,15 +23,14 @@ const InnerWrapper = styled.div`
   justify-content: space-around;
   height: 100%;
   width: 100%;
-  gap: 10px 10px;
 `;
 const Title = styled.p`
-  font-size: 22px;
+  font-size: 40px;
   font-weight: bold;
 `;
 const AdContainer = styled.div`
   flex: 1 1 calc(25% - 10px);
-  margin-bottom: 10px;
+  margin-bottom: 3%;
 `;
 
 const Recommend = () => {
