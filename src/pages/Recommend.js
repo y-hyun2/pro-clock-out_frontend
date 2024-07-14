@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
-import GlobalStyle from "../components/recommend/GlobalStyle_recommend";
 import Ad from "../components/recommend/Ad";
 import img1 from "../img/Ad_img1_1.png";
 import img2 from "../img/Ad_img3_1.png";
@@ -12,6 +11,7 @@ import img6 from "../img/Ad_img3_2.png";
 import img7 from "../img/Ad_img4_2.png";
 
 const OuterWrapper = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
   padding-left: 10%;
 `;
 
@@ -53,7 +53,6 @@ const Recommend = () => {
 
   return (
     <OuterWrapper>
-      <GlobalStyle />
       <Title>당신을 위한 추천 활동</Title>
       <InnerWrapper>
         {filledImgArr.map((item, index) => (
