@@ -19,6 +19,7 @@ function Analytics_BarChart({ data }) {
         fill={fill}
         textAnchor="middle"
         fontSize="10px"
+        fontWeight={800}
       >
         {`${value}점`}
       </text>
@@ -36,6 +37,7 @@ function Analytics_BarChart({ data }) {
           axisLine={false}
           tickLine={false}
           tick={{ fontSize: "10px" }}
+          fontWeight={800}
         />
         <Bar
           dataKey="score"

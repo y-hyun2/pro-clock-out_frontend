@@ -15,7 +15,13 @@ const HorizontalBarChart = ({ data }) => {
   const maxwdth = 1000;
   const CustomLabel = ({ x, y, value }) => {
     return (
-      <Text x={x + maxwdth - 430} y={y + 12} textAnchor="start" fill="#000">
+      <Text
+        x={x + maxwdth - 430}
+        y={y + 13}
+        textAnchor="start"
+        fill="#000"
+        fontWeight={800}
+      >
         {`${value}%`}
       </Text>
     );
@@ -30,7 +36,13 @@ const HorizontalBarChart = ({ data }) => {
       margin={{ top: 10, right: 50, left: 20, bottom: 20 }}
     >
       <XAxis type="number" axisLine={false} tickLine={false} hide={true} />
-      <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} />
+      <YAxis
+        type="category"
+        dataKey="name"
+        axisLine={false}
+        tickLine={false}
+        fontWeight={800}
+      />
       <Bar
         dataKey="score"
         isAnimationActive={true}

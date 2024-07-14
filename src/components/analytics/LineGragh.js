@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import theme from "../../styles/theme";
 
 const LineGraph = ({ data }) => {
   const CustomXAxisTick = ({ x, y, payload }) => {
@@ -34,11 +35,36 @@ const LineGraph = ({ data }) => {
       >
         <XAxis dataKey="date" tick={<CustomXAxisTick />} />
         <YAxis ticks={[0, 50, 100]} />
-        <Line type="linear" dataKey="value1" stroke="#8884d8" strokeWidth={3} />
-        <Line type="linear" dataKey="value2" stroke="#82ca9d" strokeWidth={3} />
-        <Line type="linear" dataKey="value3" stroke="#8dd1e1" strokeWidth={3} />
-        <Line type="linear" dataKey="value4" stroke="#ffc658" strokeWidth={3} />
-        <Line type="linear" dataKey="value5" stroke="#ff8042" strokeWidth={3} />
+        <Line
+          type="linear"
+          dataKey="value1"
+          stroke={theme.colors["main-blue"]}
+          strokeWidth={3}
+        />
+        <Line
+          type="linear"
+          dataKey="value2"
+          stroke={theme.colors["main-light-green"]}
+          strokeWidth={3}
+        />
+        <Line
+          type="linear"
+          dataKey="value3"
+          stroke={theme.colors["main-light-purple"]}
+          strokeWidth={3}
+        />
+        <Line
+          type="linear"
+          dataKey="value4"
+          stroke={theme.colors["main-green"]}
+          strokeWidth={3}
+        />
+        <Line
+          type="linear"
+          dataKey="value5"
+          stroke={theme.colors["main-purple"]}
+          strokeWidth={3}
+        />
       </LineChart>
     </ResponsiveContainer>
   );

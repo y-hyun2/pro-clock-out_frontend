@@ -4,8 +4,9 @@ import styled from "styled-components";
 import Analytics_BarChart from "../components/analytics/Analytics_BarChart";
 import HorizontalBarChart from "../components/analytics/HorizontalBarChart";
 import LineGraph from "../components/analytics/LineGragh";
-
+import theme from "../styles/theme";
 const Container = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
   display: flex;
   flex-direction: column;
 `;
@@ -63,7 +64,7 @@ const DropdownOptions = styled.div`
 const DropdownOption = styled.div`
   padding: 3px;
   text-align: center;
-  background-color: #7a7ee3;
+  background-color: ${theme.colors["main-purple"]};
   color: #fff;
   cursor: pointer;
   &:hover {
@@ -103,7 +104,7 @@ const Score = styled.div`
   margin: 10px 0;
 `;
 const Percentage = styled.div`
-  color: #7a7ee3;
+  color: ${theme.colors["main-purple"]};
   font-size: 14px;
 `;
 const SwitchBox = styled.div`
@@ -117,7 +118,7 @@ const SwitchButton = styled.button`
   width: 45px;
   border: none;
   border-radius: 7px;
-  background-color: #7a7ee3;
+  background-color: ${theme.colors["main-purple"]};
   color: white;
   font-weight: bold;
 `;
@@ -215,24 +216,6 @@ const Analytics = () => {
       value5: 85,
     },
   ]);
-  const [showLineGraph, setShowLineGraph] = useState(false);
-
-  useEffect(() => {
-    const data = [
-      { name: "나의 점수", score: 90, fill: "#7AA2E3" },
-      { name: "평균 점수", score: 75, fill: "#C9DDFD" },
-      { name: "나의 점수", score: 61, fill: "#A2A6FF" },
-      { name: "평균 점수", score: 50, fill: "#EEEFFF" },
-      { name: "나의 점수", score: 40, fill: "#6AD4DD" },
-      { name: "평균 점수", score: 72, fill: "#B4F9FF" },
-      { name: "나의 점수", score: 96, fill: "#97E7E1" },
-      { name: "평균 점수", score: 71, fill: "#CCFFFB" },
-      { name: "나의 점수", score: 28, fill: "#F8F6E3" },
-      { name: "평균 점수", score: 84, fill: "#FFFEF0" },
-    ];
-    setAllChartData(data);
-  }, []);
-
   const categories = [
     {
       title: "작업",
@@ -270,6 +253,23 @@ const Analytics = () => {
       data: allChartData.slice(8, 10),
     },
   ];
+  const [showLineGraph, setShowLineGraph] = useState(false);
+
+  useEffect(() => {
+    const data = [
+      { name: "나의 점수", score: 90, fill: "#7AA2E3" },
+      { name: "평균 점수", score: 75, fill: "#C9DDFD" },
+      { name: "나의 점수", score: 61, fill: "#A2A6FF" },
+      { name: "평균 점수", score: 50, fill: "#EEEFFF" },
+      { name: "나의 점수", score: 40, fill: "#6AD4DD" },
+      { name: "평균 점수", score: 72, fill: "#B4F9FF" },
+      { name: "나의 점수", score: 96, fill: "#97E7E1" },
+      { name: "평균 점수", score: 71, fill: "#CCFFFB" },
+      { name: "나의 점수", score: 28, fill: "#F8F6E3" },
+      { name: "평균 점수", score: 84, fill: "#FFFEF0" },
+    ];
+    setAllChartData(data);
+  }, []);
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);

@@ -6,7 +6,7 @@ const Container = styled.div`
   width: 200px;
   border: 1px gray solid;
   border-radius: 10px;
-  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  //box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
   margin: 10px;
