@@ -1,7 +1,7 @@
 export const MAIN_DATA = [
     {
         id: 1,
-        text: '(로고)퇴근의 정석',
+        text: '퇴근의 정석',
         name: 'mainpage',
     },
     {
