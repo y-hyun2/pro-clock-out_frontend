@@ -10,13 +10,13 @@ function Ad({ img, title }) {
 
   const ImageContainer = styled.div`
     position: relative;
-    height: 180px;
-    width: 220px;
+    height: 380px;
+    width: 460px;
     border-radius: 18px;
     overflow: hidden;
 
     &:hover img {
-      filter: blur(4px);
+      filter: blur(12px);
     }
 
     &:hover a {
@@ -34,8 +34,8 @@ function Ad({ img, title }) {
   const AdTitle = styled.div`
     padding-top: 15px;
     padding-left: 10px;
-    font-weight: bold;
-    font-size: 17px;
+    font-weight: 800;
+    font-size: 35px;
     word-wrap: break-word;
     width: 150px;
   `;
@@ -47,18 +47,17 @@ function Ad({ img, title }) {
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 20px;
+    font-size: 50px;
     font-weight: bold;
     opacity: 0;
     transition: opacity 0.3s;
-    pointer-events: none; /* 클릭 이벤트를 막음 */
-
+    pointer-events: none;
     &:hover {
       text-decoration: none;
     }
 
     ${ImageContainer}:hover & {
-      pointer-events: auto; /* 부모가 hover될 때 클릭 가능하게 만듦 */
+      pointer-events: auto;
     }
   `;
 

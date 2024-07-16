@@ -21,10 +21,11 @@ const DropdownContainer = styled.div`
 const DropdownWrapper = styled.div`
   display: flex;
   align-items: left;
-  width: 60px;
-  height: 17px;
+  width: 80px;
+  height: 30px;
+  margin-top: 2%;
   margin-left: 2%;
-  padding: 7px 20px 10px 15px;
+  padding: 5px 20px 10px 15px;
   border: 1px solid #ccc;
   border-radius: 25px;
   background-color: #7a7ee3;
@@ -33,36 +34,39 @@ const DropdownWrapper = styled.div`
 `;
 
 const WhiteCircle = styled.div`
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
   background-color: #fff;
   border-radius: 50%;
-  margin-top: 3px;
+  margin-top: 7px;
   margin-right: 5px;
 `;
 
 const DropdownText = styled.div`
   flex: 1;
-  font-size: 16px;
+  font-size: 22px;
   text-align: center;
   font-weight: bold;
-  margin: 0;
+  margin-top: 2px;
 `;
 
 const DropdownOptions = styled.div`
   position: absolute;
-  top: 35px;
-  margin-left: 2.25%;
-  width: 90px;
+  top: 100%;
+  margin-left: 2%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 120px;
   background-color: white;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
   overflow: hidden;
   z-index: 1;
+  font-size: 30px;
 `;
 
 const DropdownOption = styled.div`
-  padding: 3px;
+  padding: 5px;
   text-align: center;
   background-color: ${theme.colors["main-purple"]};
   color: #fff;
@@ -76,20 +80,24 @@ const Title = styled.p`
   margin-left: 2%;
   font-weight: bold;
   color: black;
-  font-size: 15px;
+  font-size: 35px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const TopCategoryContainer = styled.div`
   display: flex;
+  padding-bottom: 20px;
 `;
 const BottomCategoryContainer = styled.div`
+  padding-left: 2%;
   display: flex;
-  gap: 20px;
+  gap: 100px;
 `;
 const SynthesisScoreBox = styled.div``;
 const SynthesisScore = styled.div`
-  width: 320px;
-  height: 230px;
+  width: 450px;
+  height: 370px;
   border: 1px gray solid;
   border-radius: 10px;
   display: flex;
@@ -99,28 +107,31 @@ const SynthesisScore = styled.div`
 `;
 const Score = styled.div`
   margin: auto;
-  font-size: 50px;
+  font-size: 110px;
   font-weight: bold;
-  margin: 10px 0;
+  margin: 10px 0px 5px 0px;
 `;
 const Percentage = styled.div`
   color: ${theme.colors["main-purple"]};
-  font-size: 14px;
+  font-size: 35px;
+  margin: 0;
 `;
 const SwitchBox = styled.div`
   display: flex;
-  gap: 25px;
+  gap: 30px;
   align-items: center;
+  padding-bottom: 10px;
 `;
 const SwitchButton = styled.button`
   justify-content: center;
-  height: 25px;
-  width: 45px;
+  height: 45px;
+  width: 80px;
   border: none;
-  border-radius: 7px;
+  border-radius: 10px;
   background-color: ${theme.colors["main-purple"]};
   color: white;
   font-weight: bold;
+  font-size: 25px;
 `;
 const DistributionBox = styled.div``;
 const LinegraphBox = styled.div`
@@ -257,8 +268,8 @@ const Analytics = () => {
 
   useEffect(() => {
     const data = [
-      { name: "나의 점수", score: 90, fill: "#7AA2E3" },
-      { name: "평균 점수", score: 75, fill: "#C9DDFD" },
+      { name: "나의 점수", score: 82, fill: "#7AA2E3" },
+      { name: "평균 점수", score: 71, fill: "#C9DDFD" },
       { name: "나의 점수", score: 61, fill: "#A2A6FF" },
       { name: "평균 점수", score: 50, fill: "#EEEFFF" },
       { name: "나의 점수", score: 40, fill: "#6AD4DD" },
@@ -323,7 +334,7 @@ const Analytics = () => {
         </SynthesisScoreBox>
         <DistributionBox>
           <SwitchBox>
-            <Title>{showLineGraph ? "워라밸 분포" : "항목 별 분포도"}</Title>
+            <Title>{showLineGraph ? "워라밸 차트" : "항목 별 분포도"}</Title>
             <SwitchButton onClick={toggleChart}>변경</SwitchButton>
           </SwitchBox>
           {showLineGraph ? (

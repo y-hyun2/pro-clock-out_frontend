@@ -23,7 +23,7 @@ const LineGraph = ({ data }) => {
   };
 
   return (
-    <ResponsiveContainer width={700} height={230}>
+    <ResponsiveContainer width={1500} height={350}>
       <LineChart
         data={data}
         margin={{
@@ -39,31 +39,31 @@ const LineGraph = ({ data }) => {
           type="linear"
           dataKey="value1"
           stroke={theme.colors["main-blue"]}
-          strokeWidth={3}
+          strokeWidth={6}
         />
         <Line
           type="linear"
           dataKey="value2"
           stroke={theme.colors["main-light-green"]}
-          strokeWidth={3}
+          strokeWidth={6}
         />
         <Line
           type="linear"
           dataKey="value3"
           stroke={theme.colors["main-light-purple"]}
-          strokeWidth={3}
+          strokeWidth={6}
         />
         <Line
           type="linear"
           dataKey="value4"
           stroke={theme.colors["main-green"]}
-          strokeWidth={3}
+          strokeWidth={6}
         />
         <Line
           type="linear"
           dataKey="value5"
           stroke={theme.colors["main-purple"]}
-          strokeWidth={3}
+          strokeWidth={6}
         />
       </LineChart>
     </ResponsiveContainer>

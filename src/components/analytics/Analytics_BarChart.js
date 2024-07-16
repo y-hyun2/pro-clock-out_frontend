@@ -18,7 +18,7 @@ function Analytics_BarChart({ data }) {
         y={y - 10}
         fill={fill}
         textAnchor="middle"
-        fontSize="10px"
+        fontSize="15px"
         fontWeight={800}
       >
         {`${value}점`}
@@ -27,26 +27,26 @@ function Analytics_BarChart({ data }) {
   };
 
   return (
-    <ResponsiveContainer width={150} height={100}>
+    <ResponsiveContainer width={250} height={160}>
       <BarChart
         data={chartData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 30, right: 10, left: 10, bottom: 5 }}
       >
         <XAxis
           dataKey="name"
           axisLine={false}
           tickLine={false}
-          tick={{ fontSize: "10px" }}
+          tick={{ fontSize: "15px" }}
           fontWeight={800}
         />
         <Bar
           dataKey="score"
-          barSize={30}
+          barSize={70}
           radius={[7, 7, 0, 0]}
           label={({ x, y, width, value, fill }) =>
             renderCustomBarLabel({ x, y, width, value, fill })
           }
-          fill={({ payload }) => payload.fill} // 각 바의 fill 속성을 데이터에 맞춰 설정
+          fill={({ payload }) => payload.fill}
         />
       </BarChart>
     </ResponsiveContainer>
