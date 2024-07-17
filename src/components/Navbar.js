@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-// 로고 이미지 import
 import logoImage from "../img/logo.png";
 
 const Navbar = () => {
@@ -30,6 +29,10 @@ const Navbar = () => {
     navigate("/recommend");
   };
 
+  const goToMypage = () => {
+    navigate("/mypage");
+  };
+
   return (
     <div>
       <Container>
@@ -42,8 +45,8 @@ const Navbar = () => {
           <Button onClick={goToCalander}>캘린더</Button>
           <Button onClick={goToDaily}>데일리</Button>
           <Button onClick={goToRecommend}>추천활동</Button>
+          <Button onClick={goToMypage}>마이페이지(임시)</Button>
         </ButtonWrapper>
-
         <LoginButton onClick={goToLogin}>로그인</LoginButton>
       </Container>
     </div>
@@ -59,14 +62,13 @@ const Container = styled.div`
   align-items: center;
   height: 8vh;
   width: 100%;
-  margin-bottom: 1vh;
+  margin-bottom: 0;
   border-bottom: 1px solid gray;
 `;
 
 const ButtonBase = styled.button`
   padding: 10px;
   margin-right: 1rem;
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -89,10 +91,11 @@ const LogoText = styled.span`
   margin-left: 3.5rem;
 `;
 
+//마이페이지(임시) 때문에 약간 비좁아보일 수 있음. 추후 간격 조정할것임.
 const Button = styled(ButtonBase)`
   background-color: white;
-  margin-right: 10rem;
-  font-size: 35px;
+  margin-right: 8rem;
+  font-size: 2.5rem;
 `;
 
 const LoginButton = styled(ButtonBase)`
