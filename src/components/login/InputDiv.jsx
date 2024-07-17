@@ -2,31 +2,24 @@ import React from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme";
 
-const InputDiv = ({ placeholder }) => {
-  return (
-    <UserInputDiv placeholder={placeholder} />
-  );
+const InputDiv = ({ placeholder, type }) => {
+  return <InputField type={type} placeholder={placeholder} />;
 };
 
 export default InputDiv;
 
-const UserInputDiv = styled.input`
+const InputField = styled.input`
   width: 45rem;
-  height: 5.8rem;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-top: 2rem;
-  padding-left: 2rem;
-  border-radius: 1.5rem;
+  height: 6rem;
   border: 0.3rem solid lightgray;
+  border-radius: 1.5rem;
+  margin-bottom: 1.5rem;
+  margin-right: 0rem;
+  font-size: 2rem;
   padding-left: 1rem;
-
+  font-weight: bold;
   &:focus {
     border-color: ${theme.colors["main-purple"]};
     outline: none;
-  }
-
-  ::placeholder {
-    color: lightgray;
   }
 `;

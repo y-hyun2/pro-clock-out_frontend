@@ -18,7 +18,7 @@ const LoginPage = () => {
   return (
     <Wrapper>
       <LogoImage src={logoImage} alt="Logo" />
-      <InputDiv placeholder="이메일" />
+      <InputDiv placeholder="이메일" type="text" /> {/* type 속성 추가 */}
       <PasswordInput placeholder="비밀번호" />
 
       <FindPassword>비밀번호를 잊어버리셨나요?</FindPassword>
