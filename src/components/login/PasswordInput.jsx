@@ -1,3 +1,4 @@
+// PasswordInput.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import hideImage from "../../img/hideImage.png";
@@ -13,9 +14,9 @@ const PasswordInput = ({ placeholder }) => {
 
   return (
     <PasswordWrapper>
-      <InputDiv placeholder={placeholder}
-        type={passwordVisible ? "text" : "password"}
-        
+      <InputDiv
+        placeholder={placeholder}
+        type={passwordVisible ? "text" : "password"} // type 속성을 전달
       />
       <ToggleButton onClick={togglePasswordVisibility}>
         <ToggleImage
@@ -32,7 +33,7 @@ export default PasswordInput;
 const ToggleButton = styled.button`
   position: absolute;
   right: 1.7rem;
-  top: 3.7rem;
+  top: 2rem;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -49,4 +50,3 @@ const PasswordWrapper = styled.div`
   width: 46.6rem;
   height: 4rem;
 `;
-

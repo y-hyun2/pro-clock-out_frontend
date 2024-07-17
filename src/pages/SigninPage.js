@@ -6,12 +6,13 @@ import PasswordInput from "../components/login/PasswordInput";
 import LoginButton from "../components/login/LoginButton";
 import KakaoLogin from "../components/login/KakaoLogin";
 
-const Signin = () => {
+const SigninPage = () => {
   const navigate = useNavigate();
 
   const goToLogin = () => {
     navigate("/login");
   };
+
   return (
     <div>
       <Wrapper>
@@ -22,25 +23,22 @@ const Signin = () => {
         <AccountWrapper>
           <AccountTitle>계정을 생성하세요</AccountTitle>
 
-          {/* <DivButtonWrapper>
-            <ShortInputDiv placeholder="닉네임" />
-            <IdentifyButton>중복 확인</IdentifyButton>
-          </DivButtonWrapper> */}
-
           <DivButtonWrapper>
             <ShortInputDiv placeholder="이메일" />
             <IdentifyButton>인증 요청</IdentifyButton>
           </DivButtonWrapper>
 
-          <PasswordInputWrapper style={{ marginTop: "-2rem" }}>
+          <PasswordInputWrapper style={{ marginTop: "0rem" }}>
             <PasswordInput placeholder="비밀번호" />
           </PasswordInputWrapper>
 
-          <PasswordInputWrapper style={{ marginTop: "3.9rem" }}>
+          <PasswordInputWrapper style={{ marginTop: "4.2rem" }}>
             <PasswordInput placeholder="비밀번호 확인" />
           </PasswordInputWrapper>
+
           <LoginButton>회원가입</LoginButton>
           <KakaoLogin></KakaoLogin>
+
           <SigninWrapper>
             <LoginQuestion>이미 계정이 있으신가요?</LoginQuestion>
             <SigninButton onClick={goToLogin}>로그인하기</SigninButton>
@@ -51,15 +49,13 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default SigninPage;
 
-//전체 Wrapper
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-//왼쪽 타이틀 div
 const TitleDiv = styled.div`
   background: linear-gradient(
     ${theme.colors["main-blue"]},
@@ -90,7 +86,6 @@ const Title = styled.h1`
   padding-left: 26rem;
 `;
 
-//오른쪽 계정 생성 div
 const AccountWrapper = styled.div`
   display: flex;
   width: 45%;
@@ -104,13 +99,11 @@ const AccountTitle = styled.h1`
   margin-bottom: 7rem;
 `;
 
-//이메일 + 인증요청 버튼 Wrapper
 const DivButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-//이메일 input
 const ShortInputDiv = styled.input`
   width: 33rem;
   height: 6rem;
@@ -128,7 +121,6 @@ const ShortInputDiv = styled.input`
   }
 `;
 
-//중복확인, 인증 요청 버튼
 const IdentifyButton = styled.button`
   height: 6rem;
   width: 11rem;
@@ -141,10 +133,9 @@ const IdentifyButton = styled.button`
   margin-top: 0.3rem;
 `;
 
-// PasswordInput 래퍼 div
 const PasswordInputWrapper = styled.div`
   margin-top: ${(props) => props.marginTop || "0"};
-  width: 100%;
+  width: 60rem;
   display: flex;
   justify-content: center;
 `;
@@ -164,3 +155,4 @@ const SigninButton = styled.a`
   margin-left: 3rem;
   margin-top: 2rem;
 `;
+
