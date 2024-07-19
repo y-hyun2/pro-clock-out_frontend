@@ -107,9 +107,9 @@ export default Mypage;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  margin-left: 14rem;
+  margin-left: 8rem;
   margin-bottom: 2rem;
-  margin-top: 11rem;
+  margin-top: 10rem;
 `;
 
 // const SideWrapper

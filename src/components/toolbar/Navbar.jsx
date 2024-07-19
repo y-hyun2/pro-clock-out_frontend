@@ -1,13 +1,10 @@
+import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import logoImage from "../img/logo.png";
+import MainLogo from "../logo/MainLogo";
 
 const Navbar = () => {
   const navigate = useNavigate();
-
-  const goToMain = () => {
-    navigate("/");
-  };
 
   const goToAnalytics = () => {
     navigate("/analytics");
@@ -36,10 +33,7 @@ const Navbar = () => {
   return (
     <div>
       <Container>
-        <LogoButton onClick={goToMain}>
-          <LogoImage src={logoImage} alt="Logo" />
-          <LogoText>퇴근의 정석</LogoText>
-        </LogoButton>
+        <MainLogo></MainLogo>
         <ButtonWrapper>
           <Button onClick={goToAnalytics}>워라밸 분석</Button>
           <Button onClick={goToCalander}>캘린더</Button>
@@ -63,7 +57,7 @@ const Container = styled.div`
   height: 8vh;
   width: 100%;
   margin-bottom: 0;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid lightgray;
 `;
 
 const ButtonBase = styled.button`
@@ -72,23 +66,6 @@ const ButtonBase = styled.button`
   font-weight: 600;
   border: none;
   cursor: pointer;
-`;
-
-const LogoButton = styled(ButtonBase)`
-  background-color: white;
-  display: flex;
-  align-items: center;
-  margin-left: 3rem;
-`;
-
-const LogoImage = styled.img`
-  height: 5rem;
-  margin-left: 4rem;
-`;
-
-const LogoText = styled.span`
-  font-size: 3rem;
-  margin-left: 3.5rem;
 `;
 
 //마이페이지(임시) 때문에 약간 비좁아보일 수 있음. 추후 간격 조정할것임.
