@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../../img/logo.png";
 
-const MainLogo = ({className}) => {
+const MainLogo = ({ className }) => {
   const navigate = useNavigate();
 
   const goToMain = () => {
@@ -12,7 +12,7 @@ const MainLogo = ({className}) => {
 
   return (
     <LogoButton className={className} onClick={goToMain}>
-      <LogoImage  src={logoImage} alt="Logo" />
+      <LogoImage src={logoImage} alt="Logo" />
       <LogoText>퇴근의 정석</LogoText>
     </LogoButton>
   );
