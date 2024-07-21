@@ -20,11 +20,10 @@ const LoginPage = () => {
       <LogoImage src={logoImage} alt="Logo" />
       <InputDiv placeholder="이메일" type="text" /> {/* type 속성 추가 */}
       <PasswordInput placeholder="비밀번호" />
-
-      <FindPassword>비밀번호를 잊어버리셨나요?</FindPassword>
-      <LoginButton>로그인</LoginButton>
+      <StyledLoginButton>
+        <LoginButton>로그인</LoginButton>
+      </StyledLoginButton>
       <KakaoLogin></KakaoLogin>
-
       <SigninWrapper>
         <LoginQuestion>아직 계정이 없으신가요?</LoginQuestion>
         <SigninButton onClick={goToSignin}>회원가입</SigninButton>
@@ -50,13 +49,6 @@ const LogoImage = styled.img`
   margin-bottom: 2rem;
 `;
 
-const FindPassword = styled.a`
-  font-size: 1.5rem;
-  color: ${theme.colors["main-purple"]};
-  margin-top: 5.5rem;
-  margin-left: 26rem;
-`;
-
 const SigninWrapper = styled.div`
   display: flex;
 `;
@@ -71,4 +63,8 @@ const SigninButton = styled.a`
   font-size: 2rem;
   margin-left: 3rem;
   margin-top: 2rem;
+`;
+
+const StyledLoginButton = styled.div`
+  margin-top: 7rem;
 `;
