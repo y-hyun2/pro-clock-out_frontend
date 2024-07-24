@@ -33,6 +33,7 @@ function Ad({ img, title }) {
 
   const AdTitle = styled.div`
     padding-top: 15px;
+    padding-bottom: 20px;
     padding-left: 10px;
     font-weight: 800;
     font-size: 35px;

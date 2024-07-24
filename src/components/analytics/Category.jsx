@@ -14,10 +14,11 @@ const Container = styled.div`
 
 const Header = styled.div`
   background-color: ${(props) => props.fill};
-  color: black;
+  color: white;
   font-weight: 800;
-  padding: 20px 0;
   font-size: 40px;
+  text-shadow: 2px 3px 3px black;
+  padding: 20px 0;
 `;
 
 const Score = styled.div`
@@ -31,6 +32,7 @@ const Percentage = styled.div`
   color: ${(props) => props.fill};
   font-size: 25px;
   margin-bottom: 6%;
+  text-shadow: 1px 1px 1px black;
 `;
 
 const ChartsContainer = styled.div`
