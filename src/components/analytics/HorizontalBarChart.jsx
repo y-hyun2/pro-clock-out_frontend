@@ -29,7 +29,7 @@ const HorizontalBarChart = ({ data }) => {
   return (
     <BarChart
       width={maxwdth - 300}
-      height={380}
+      height={400}
       data={data}
       layout="vertical"
       margin={{ top: 10, right: 50, left: 40, bottom: 20 }}

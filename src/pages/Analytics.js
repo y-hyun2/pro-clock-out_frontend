@@ -155,7 +155,7 @@ function Analytics() {
     health_avg: 84,
   });
 
-  const [period, setPeriod] = useState("주간");
+  const [period, setPeriod] = useState("일간");
   const [showOptions, setShowOptions] = useState(false);
 
   const categories = [
@@ -211,21 +211,29 @@ function Analytics() {
       ],
     },
   ];
+
+  const [rawsynthesisdata, setRawsynthesisdata] = useState({
+    member_id: 1,
+    prefix: "균형 잡힌 삶을 사는",
+    total_score: 88,
+    total_rank: 11,
+    total_avg: 71,
+  });
+  const [fixedsynthesisdata, setFixedSynthesisdata] = useState([
+    {
+      name: "나의 점수",
+      score: rawsynthesisdata.total_score,
+      fill: "#7A7EE3",
+    },
+    { name: "평균 점수", score: rawsynthesisdata.total_avg, fill: "#DADBFF" },
+  ]);
+
   const total_my_score =
     chartdata.work_score +
     chartdata.rest_score +
     chartdata.sleep_score +
     chartdata.personal_score +
     chartdata.health_score;
-
-  const [synthesisdata, setSynthesisdata] = useState([
-    {
-      name: "나의 점수",
-      score: Math.round(total_my_score / 5),
-      fill: "#7A7EE3",
-    },
-    { name: "평균 점수", score: 71, fill: "#DADBFF" },
-  ]);
 
   const horizondata = [
     {
@@ -383,9 +391,9 @@ function Analytics() {
         <SynthesisScoreBox>
           <Title>종합 워라벨 점수</Title>
           <SynthesisScore>
-            <Score>{Math.round(total_my_score / 5)}점</Score>
-            <Percentage>상위 22%</Percentage>
-            <Analytics_BarChart data={synthesisdata} />
+            <Score>{rawsynthesisdata.total_score}점</Score>
+            <Percentage>상위 {rawsynthesisdata.total_rank}%</Percentage>
+            <Analytics_BarChart data={fixedsynthesisdata} />
           </SynthesisScore>
         </SynthesisScoreBox>
         <DistributionBox>
