@@ -6,7 +6,6 @@ const Footer = () => {
   return (
     <div>
       <FooterDiv>
-        <Wrapper>
           <StyledMainLogo />
           <InnerWrapper>
             <InfoText>example-email@naver.com | instagram @standard</InfoText>
@@ -14,7 +13,6 @@ const Footer = () => {
               Copyright @ 2024 퇴근의정석 All rights reserved.
             </CopyRight>
           </InnerWrapper>
-        </Wrapper>
       </FooterDiv>
     </div>
   );
@@ -23,12 +21,9 @@ const Footer = () => {
 export default Footer;
 
 const FooterDiv = styled.div`
-  border-top: 1px solid lightgray;
+  border-top: 1px solid gray;
   width: 100%;
   margin-top: auto;
-`;
-
-const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -54,7 +49,8 @@ const CopyRight = styled.p`
 `;
 
 const StyledMainLogo = styled(MainLogo)`
-  opacity: 30%;
+  z-index: -1;
   color: gray;
+  opacity: 30%;
   margin-left: 3rem;
 `;
