@@ -10,6 +10,7 @@ const Container = styled.div`
   overflow: hidden;
   text-align: center;
   margin: 2%;
+  margin-left: 3rem;
 `;
 
 const Header = styled.div`
