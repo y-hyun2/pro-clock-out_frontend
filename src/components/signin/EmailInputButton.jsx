@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme";
 import axios from "axios";
+
 const EmailInputButton = ({
   placeholder,
   children,
@@ -11,49 +12,47 @@ const EmailInputButton = ({
   const [inputValue, setInputValue] = useState("");
   const [isbuttonenabled, setIsButtonEnabled] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [isokayemail, setIsokayemail] = useState();
+  const [isokayemail, setIsokayemail] = useState(false);
+
   useEffect(() => {
     const hasAtSymbol = inputValue.includes("@");
     setIsButtonEnabled(inputValue.trim().length > 0 && hasAtSymbol);
     setShowError(!hasAtSymbol && inputValue.trim().length > 0);
   }, [inputValue]);
 
-  // useEffect(() => {
-  //   if (isbuttonenabled && isokayemail) {
-  //     setIsCanSignin(true);
-  //   } else {
-  //     setIsCanSignin(false);
-  //   }
-  // }, [isbuttonenabled, setIsCanSignin]);
-
   useEffect(() => {
-    if (isbuttonenabled) {
+    if (isbuttonenabled && isokayemail) {
       setIsCanSignin(true);
     } else {
       setIsCanSignin(false);
     }
-  }, [isbuttonenabled, setIsCanSignin]);
+  }, [isbuttonenabled, setIsCanSignin, isokayemail]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    setEmail(e.target.value);
   };
 
   const handlesubmit = async () => {
     try {
-      const response = await axios.get(
-        "https://www.proclockout.com/api/v1/oauth2/duplicate_email",
+      const response = await axios.post(
+        "https://www.proclockout.com/api/v1/duplicate/email",
+        { email: inputValue },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("Authorization"),
           },
         }
       );
-      console.log(response.data); // 응답 데이터를 출력합니다.
-      setIsokayemail(response.data);
+      console.log(response.data["duplicated"]);
+      if (!response.data["duplicated"]) {
+        setIsokayemail(true);
+        setEmail(inputValue);
+      } else {
+        setIsokayemail(false);
+        setIsCanSignin(false);
+      }
     } catch (error) {
-      console.error(error); // 에러를 출력합니다.
+      console.error(error); // 에러 출력
     }
   };
 

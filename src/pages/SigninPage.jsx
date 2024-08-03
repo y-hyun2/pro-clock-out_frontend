@@ -104,7 +104,7 @@ const SigninPage = () => {
             setIsCanSignin={setIsCanSignin}
             setEmail={setEmail}
           >
-            인증 요청
+            중복 확인
           </EmailInputButton>
 
           <PasswordInputWrapper style={{ marginTop: "0rem" }}>
