@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { MAIN_DATA } from '../data/Maindata.js';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { MAIN_DATA } from "../data/Maindata.js";
 // import { Main, Analytics, Calendar, Daily, Recommend, Mypage } from './';
-import Main from '../pages/Main.js';
-import Analytics from '../pages/Analytics.js';
-import Calendar from '../pages/Calendar.js';
-import Daily from '../pages/Daily.js';
-import Recommend from '../pages/Recommend.js';
-import Mypage from '../pages/Mypage.js';
+import Main from "../pages/Main.js";
+import Analytics from "../pages/Analytics.js";
+import Calendars from "../pages/Calendar.js";
+import Daily from "../pages/Daily.js";
+import Recommend from "../pages/Recommend.js";
+import Mypage from "../pages/Mypage.js";
 
 const Navbar = () => {
   const [content, setContent] = useState(null); // 초기 값은 null로 설정
@@ -20,9 +20,9 @@ const Navbar = () => {
   const selectComponent = {
     mainpage: <Main />,
     analytics: <Analytics />,
-    calendar: <Calendar />,
+    calendar: <Calendars />,
     daily: <Daily />,
-    recommend: <Recommend/>,
+    recommend: <Recommend />,
     mypage: <Mypage />,
   };
 
@@ -37,7 +37,8 @@ const Navbar = () => {
       </Container>
       {content && (
         <Content>
-          {selectComponent[content]} {/* content에 따라 해당 페이지 컴포넌트 렌더링 */}
+          {selectComponent[content]}{" "}
+          {/* content에 따라 해당 페이지 컴포넌트 렌더링 */}
         </Content>
       )}
     </div>
