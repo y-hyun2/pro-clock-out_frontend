@@ -1,16 +1,18 @@
 import React from "react";
-import Analytics_BarChart from "./Analytics_BarChart";
+import Analytics_BarChart from "../analytics/Analytics_BarChart";
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+margin-left: 0rem;
+`
 const Container = styled.div`
-  width: 430px;
+  width: 395px;
   border: 1px gray solid;
   border-radius: 15px;
   //box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
-  margin: 2%;
-  margin-left: 3rem;
+  margin-right: 2.4rem;
 `;
 
 const Header = styled.div`
@@ -51,6 +53,7 @@ function Category({ categoryData }) {
   }
 
   return (
+    <Wrapper>
     <Container>
       <Header fill={fill}>{title}</Header>
       <Score>{score}점</Score>
@@ -61,6 +64,7 @@ function Category({ categoryData }) {
         ))}
       </ChartsContainer>
     </Container>
+    </Wrapper>
   );
 }
 

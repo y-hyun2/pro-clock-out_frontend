@@ -5,67 +5,65 @@ import styled from "styled-components";
 import Analytics_BarChart from "../components/analytics/Analytics_BarChart";
 import HorizontalBarChart from "../components/analytics/HorizontalBarChart";
 import LineGraph from "../components/analytics/LineGraph";
+import TaskPopup from "../components/analytics/popup/TaskPopup";
+import RestPopup from "../components/analytics/popup/RestPopup";
+import SleepPopup from "../components/analytics/popup/SleepPopup";
+import PersonalPopup from "../components/analytics/popup/PersonalPopup";
+import HealthPopup from "../components/analytics/popup/HealthPopup";
 import theme from "../styles/theme";
 
 const Container = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   display: flex;
   flex-direction: column;
+  padding: 2% 5%;
+  min-height: 100vh;
+  background-color: #f4f5f7;
 `;
 
 const DropdownContainer = styled.div`
   display: flex;
-  justify-content: left;
-  margin-bottom: 5px;
-  position: relative;
+  justify-content: flex-start;
+  margin-bottom: 20px;
 `;
 
 const DropdownWrapper = styled.div`
   display: flex;
-  align-items: left;
-  width: 80px;
-  height: 30px;
-  margin-top: 2%;
-  margin-left: 2%;
-  padding: 5px 15px 10px 15px;
+  align-items: center;
+  width: 120px;
+  height: 40px;
+  padding: 8px 20px;
   border: 1px solid #ccc;
-  border-radius: 15px;
+  border-radius: 20px;
   background-color: #7a7ee3;
   color: #fff;
   cursor: pointer;
 `;
 
 const DropdownText = styled.div`
-  flex: 1;
-  font-size: 22px;
+  font-size: 24px;
   text-align: center;
   font-weight: bold;
-  margin-top: 2px;
 `;
 
 const DropdownIcon = styled.div`
-  flex: 0.5;
-  margin-top: 8px;
-  margin-left: 10px;
+  margin-left: 12px;
 `;
 
 const DropdownOptions = styled.div`
   position: absolute;
   top: 100%;
-  margin-left: 1.8%;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  width: 120px;
+  width: 140px;
   background-color: white;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   z-index: 1;
-  font-size: 30px;
+  font-size: 24px;
 `;
 
 const DropdownOption = styled.div`
-  padding: 5px;
+  padding: 10px;
   text-align: center;
   background-color: ${theme.colors["main-purple"]};
   color: #fff;
@@ -76,42 +74,36 @@ const DropdownOption = styled.div`
 `;
 
 const Title = styled.p`
-  margin-left: 2%;
+  margin: 20px 0;
   font-weight: bold;
   color: black;
-  font-size: 35px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  font-size: 40px;
 `;
 
 const TopCategoryContainer = styled.div`
   display: flex;
-  height: 30rem;
-  width: 100%;
-  padding-bottom: 50px;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 30px;
+  padding-bottom: 60px;
 `;
 
 const BottomCategoryContainer = styled.div`
-  padding-left: 2%;
   display: flex;
-  gap: 100px;
+  gap: 40px;
   width: 100%;
-  height: 35rem;
-  margin-left: 14rem;
-  margin-top: 4rem;
+  height: 40rem;
+  margin-top: 5rem;
 `;
 
 const SynthesisScoreBox = styled.div`
-  width: 600px;
+  width: 700px;
 `;
 
 const SynthesisScore = styled.div`
-  width: 450px;
-  height: 370px;
+  width: 500px;
+  height: 400px;
   border: 1px gray solid;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,104 +111,55 @@ const SynthesisScore = styled.div`
 `;
 
 const Score = styled.div`
-  margin: auto;
-  font-size: 110px;
+  font-size: 120px;
   font-weight: bold;
-  margin: 10px 0px 5px 0px;
+  margin: 10px 0 5px 0;
 `;
 
 const Percentage = styled.div`
   color: ${theme.colors["main-purple"]};
-  font-size: 35px;
+  font-size: 36px;
   margin: 0;
 `;
 
 const SwitchBox = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 40px;
   align-items: center;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 `;
 
 const SwitchButton = styled.button`
-  justify-content: center;
-  height: 45px;
-  width: 80px;
+  height: 50px;
+  width: 100px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: ${theme.colors["main-purple"]};
   color: white;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 28px;
+  cursor: pointer;
 `;
 
 const DistributionBox = styled.div``;
 
 const LinegraphBox = styled.div`
-  border: 0.5px gray solid;
+  border: 1px gray solid;
 `;
 
 const InfoButton = styled.button`
   width: 90%;
-  height: 50px;
+  height: 60px;
   background-color: lightgray;
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 18px;
+  border-radius: 12px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
-  margin-left: 2.8rem;
-`;
-
-const PopupContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-//정보 입력 팝업
-const Popup = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 60rem;
-  height: 40rem;
-`;
-
-const PopupTitle = styled.h3`
-  margin: 0;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-`;
-
-const PopupButton = styled.button`
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: ${theme.colors["main-purple"]};
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
+  margin-top: 15px;
 `;
 
 // Main component
@@ -235,14 +178,14 @@ function Analytics() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupCategory, setPopupCategory] = useState(null);
 
-  const handleInputChange = (e) => {
-    setChartdata({
-      ...chartdata,
-      [popupCategory]: Number(e.target.value),
-    });
+  const handlePopupSave = (score) => {
+    setChartdata((prevData) => ({
+      ...prevData,
+      [popupCategory]: Number(score),
+    }));
   };
 
-  const handlePopupSubmit = () => {
+  const handlePopupClose = () => {
     setShowPopup(false);
   };
 
@@ -259,34 +202,101 @@ function Analytics() {
     setShowLineGraph(!showLineGraph);
   };
 
-  const isDataComplete = Object.values(chartdata).every(value => value !== null);
+  const isDataComplete = Object.values(chartdata).every(
+    (value) => value !== null
+  );
 
   const categories = [
     { title: "작업", key: "work_score", color: "#7AA2E3" },
     { title: "휴식", key: "rest_score", color: "#A2A6FF" },
     { title: "수면", key: "sleep_score", color: "#76e1e2" },
     { title: "개인 생활", key: "personal_score", color: "#97efb6" },
-    { title: "건강", key: "health_score", color: "#FFFBD4" }
+    { title: "건강", key: "health_score", color: "#FFFBD4" },
   ];
 
-  const total_my_score = Object.values(chartdata).reduce((sum, score) => sum + (score || 0), 0);
+  const total_my_score = Object.values(chartdata).reduce(
+    (sum, score) => sum + (score || 0),
+    0
+  );
 
   const horizondata = [
-    { name: "작업", score: Number(((chartdata.work_score / total_my_score) * 100).toFixed(1)), fill: "#7AA2E3" },
-    { name: "휴식", score: Number(((chartdata.rest_score / total_my_score) * 100).toFixed(1)), fill: "#A2A6FF" },
-    { name: "수면", score: Number(((chartdata.sleep_score / total_my_score) * 100).toFixed(1)), fill: "#76e1e2" },
-    { name: "개인생활", score: Number(((chartdata.personal_score / total_my_score) * 100).toFixed(1)), fill: "#97efb6" },
-    { name: "건강", score: Number(((chartdata.health_score / total_my_score) * 100).toFixed(1)), fill: "#FFFBD4" },
+    {
+      name: "작업",
+      score: Number(((chartdata.work_score / total_my_score) * 100).toFixed(1)),
+      fill: "#7AA2E3",
+    },
+    {
+      name: "휴식",
+      score: Number(((chartdata.rest_score / total_my_score) * 100).toFixed(1)),
+      fill: "#A2A6FF",
+    },
+    {
+      name: "수면",
+      score: Number(
+        ((chartdata.sleep_score / total_my_score) * 100).toFixed(1)
+      ),
+      fill: "#76e1e2",
+    },
+    {
+      name: "개인생활",
+      score: Number(
+        ((chartdata.personal_score / total_my_score) * 100).toFixed(1)
+      ),
+      fill: "#97efb6",
+    },
+    {
+      name: "건강",
+      score: Number(
+        ((chartdata.health_score / total_my_score) * 100).toFixed(1)
+      ),
+      fill: "#FFFBD4",
+    },
   ];
 
   const linedata = {
     // Example data
-    total: [{ "2024-07-08": 8 }, { "2024-07-01": 7 }, { "2024-06-24": 6 }, { "2024-06-17": 5 }, { "2024-06-10": 6 }],
-    work: [{ "2024-07-08": 88 }, { "2024-07-01": 68 }, { "2024-06-24": 65 }, { "2024-06-17": 25 }, { "2024-06-10": 46 }],
-    rest: [{ "2024-07-08": 20 }, { "2024-07-01": 72 }, { "2024-06-24": 21 }, { "2024-06-17": 55 }, { "2024-06-10": 56 }],
-    sleep: [{ "2024-07-08": 40 }, { "2024-07-01": 74 }, { "2024-06-24": 64 }, { "2024-06-17": 45 }, { "2024-06-10": 66 }],
-    personal: [{ "2024-07-08": 82 }, { "2024-07-01": 28 }, { "2024-06-24": 61 }, { "2024-06-17": 75 }, { "2024-06-10": 62 }],
-    health: [{ "2024-07-08": 20 }, { "2024-07-01": 55 }, { "2024-06-24": 41 }, { "2024-06-17": 35 }, { "2024-06-10": 46 }],
+    total: [
+      { "2024-07-08": 8 },
+      { "2024-07-01": 7 },
+      { "2024-06-24": 6 },
+      { "2024-06-17": 5 },
+      { "2024-06-10": 6 },
+    ],
+    work: [
+      { "2024-07-08": 88 },
+      { "2024-07-01": 68 },
+      { "2024-06-24": 65 },
+      { "2024-06-17": 25 },
+      { "2024-06-10": 46 },
+    ],
+    rest: [
+      { "2024-07-08": 20 },
+      { "2024-07-01": 72 },
+      { "2024-06-24": 21 },
+      { "2024-06-17": 55 },
+      { "2024-06-10": 56 },
+    ],
+    sleep: [
+      { "2024-07-08": 40 },
+      { "2024-07-01": 74 },
+      { "2024-06-24": 64 },
+      { "2024-06-17": 45 },
+      { "2024-06-10": 66 },
+    ],
+    personal: [
+      { "2024-07-08": 82 },
+      { "2024-07-01": 28 },
+      { "2024-06-24": 61 },
+      { "2024-06-17": 75 },
+      { "2024-06-10": 62 },
+    ],
+    health: [
+      { "2024-07-08": 20 },
+      { "2024-07-01": 55 },
+      { "2024-06-24": 41 },
+      { "2024-06-17": 35 },
+      { "2024-06-10": 46 },
+    ],
   };
 
   return (
@@ -295,14 +305,20 @@ function Analytics() {
         <DropdownWrapper onClick={toggleOptions}>
           <DropdownText>{period}</DropdownText>
           <DropdownIcon>
-            <AiFillCaretDown size={20} color="#FFFBD4" />
+            <AiFillCaretDown size={24} color="#FFFBD4" />
           </DropdownIcon>
         </DropdownWrapper>
         {showOptions && (
           <DropdownOptions>
-            <DropdownOption onClick={() => handleOptionClick("일간")}>일간</DropdownOption>
-            <DropdownOption onClick={() => handleOptionClick("주간")}>주간</DropdownOption>
-            <DropdownOption onClick={() => handleOptionClick("월간")}>월간</DropdownOption>
+            <DropdownOption onClick={() => handleOptionClick("일간")}>
+              일간
+            </DropdownOption>
+            <DropdownOption onClick={() => handleOptionClick("주간")}>
+              주간
+            </DropdownOption>
+            <DropdownOption onClick={() => handleOptionClick("월간")}>
+              월간
+            </DropdownOption>
           </DropdownOptions>
         )}
       </DropdownContainer>
@@ -318,13 +334,26 @@ function Analytics() {
                 percentage: chartdata[category.key] || 0,
                 fill: category.color,
                 data: [
-                  { name: "나의 점수", score: chartdata[category.key] || 0, fill: category.color },
-                  { name: "평균 점수", score: chartdata[category.key] || 0, fill: "#C9DDFD" },
+                  {
+                    name: "나의 점수",
+                    score: chartdata[category.key] || 0,
+                    fill: category.color,
+                  },
+                  {
+                    name: "평균 점수",
+                    score: chartdata[category.key] || 0,
+                    fill: "#C9DDFD",
+                  },
                 ],
               }}
             />
             {chartdata[category.key] === null && (
-              <InfoButton onClick={() => { setPopupCategory(category.key); setShowPopup(true); }}>
+              <InfoButton
+                onClick={() => {
+                  setPopupCategory(category.key);
+                  setShowPopup(true);
+                }}
+              >
                 정보를 입력해주세요
               </InfoButton>
             )}
@@ -339,10 +368,12 @@ function Analytics() {
             <SynthesisScore>
               <Score>{total_my_score}점</Score>
               <Percentage>상위 {Math.floor(Math.random() * 100)}%</Percentage>
-              <Analytics_BarChart data={[
-                { name: "나의 점수", score: total_my_score, fill: "#7A7EE3" },
-                { name: "평균 점수", score: 50, fill: "#DADBFF" },
-              ]} />
+              <Analytics_BarChart
+                data={[
+                  { name: "나의 점수", score: total_my_score, fill: "#7A7EE3" },
+                  { name: "평균 점수", score: 50, fill: "#DADBFF" },
+                ]}
+              />
             </SynthesisScore>
           ) : (
             <Title>모든 항목의 데이터를 입력해주세요</Title>
@@ -364,14 +395,20 @@ function Analytics() {
         </DistributionBox>
       </BottomCategoryContainer>
 
-      {showPopup && (
-        <PopupContainer>
-          <Popup>
-            <PopupTitle>데이터를 입력해주세요</PopupTitle>
-            <Input type="number" min="0" max="100" onChange={handleInputChange} />
-            <PopupButton onClick={handlePopupSubmit}>제출</PopupButton>
-          </Popup>
-        </PopupContainer>
+      {showPopup && popupCategory === "work_score" && (
+        <TaskPopup onClose={handlePopupClose} onSave={handlePopupSave} />
+      )}
+      {showPopup && popupCategory === "rest_score" && (
+        <RestPopup onClose={handlePopupClose} onSave={handlePopupSave} />
+      )}
+      {showPopup && popupCategory === "sleep_score" && (
+        <SleepPopup onClose={handlePopupClose} onSave={handlePopupSave} />
+      )}
+      {showPopup && popupCategory === "personal_score" && (
+        <PersonalPopup onClose={handlePopupClose} onSave={handlePopupSave} />
+      )}
+      {showPopup && popupCategory === "health_score" && (
+        <HealthPopup onClose={handlePopupClose} onSave={handlePopupSave} />
       )}
     </Container>
   );
