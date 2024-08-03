@@ -5,11 +5,11 @@ import AccountTitle from "./AccountTitle";
 import Titlediv from "./TitleDiv";
 import LoginButton from "../login/LoginButton";
 import NicknameButton from "./NicknameButton";
-
+import { useNavigate } from "react-router-dom";
 const Nickname = () => {
   const [nickname, setNickname] = useState("");
   console.log(nickname);
-
+  const navigate = useNavigate();
   const handleNickname = async () => {
     alert("닉네임 설정");
     try {
@@ -27,6 +27,8 @@ const Nickname = () => {
         }
       );
       console.log(response);
+      alert("환영합니다!");
+      navigate("/");
     } catch (error) {
       console.error("Error response:", error.response);
     }

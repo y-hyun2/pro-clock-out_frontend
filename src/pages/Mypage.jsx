@@ -8,9 +8,11 @@ import theme from "../styles/theme";
 import { useNavigate } from "react-router-dom";
 import Lifelist from "../components/mypage/Lifelist";
 
+import { useAuth } from "../AuthContext";
+
 const Mypage = () => {
   const navigate = useNavigate();
-
+  const { logout, isLoggedIn } = useAuth();
   // 이미지 업로드 state
   const [uploadedImage, setUploadedImage] = useState(null);
 
@@ -30,10 +32,17 @@ const Mypage = () => {
     navigate("/analytics");
   };
 
-  const goToLogin = () => {
-    navigate("/login");
+  const handleLogout = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("authorization");
+      logout();
+      console.log(isLoggedIn);
+      alert("로그아웃 되었습니다.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    }
   };
-
   //추후 조건문을 통해 5단계로 멘트 나눠야 함
   let life = "균형 잡힌";
 
@@ -129,7 +138,7 @@ const Mypage = () => {
           <AiSolution>
             <AiSolutionContent>{aiSolutionContent}</AiSolutionContent>
           </AiSolution>
-          <Logout onClick={goToLogin}>로그아웃</Logout>
+          <Logout onClick={handleLogout}>로그아웃</Logout>
           <Withdrawal>회원 탈퇴</Withdrawal>
         </RightWrapper>
       </Wrapper>

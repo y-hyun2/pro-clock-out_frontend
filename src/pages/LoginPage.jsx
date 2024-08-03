@@ -9,11 +9,13 @@ import LoginButton from "../components/login/LoginButton";
 import KakaoLogin from "../components/login/KakaoLogin";
 import axios from "axios";
 
+import { useAuth } from "../AuthContext";
+
 const LoginPage = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
-
+  const { login, isLoggedIn } = useAuth();
   const goToSignin = () => {
     navigate("signin");
   };
@@ -42,6 +44,9 @@ const LoginPage = () => {
       console.log(response);
       const token = response.headers["authorization"];
       const nickname_res = response.headers["nickname"];
+      //로그인 상태 업데이트
+      login();
+      console.log(isLoggedIn);
       if (token) {
         console.log(token);
         localStorage.setItem("authorization", token);

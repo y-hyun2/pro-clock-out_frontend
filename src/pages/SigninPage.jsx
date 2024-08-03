@@ -74,6 +74,8 @@ const SigninPage = () => {
           }
         );
         console.log("Response:", response);
+        alert("회원가입 성공~");
+        navigate("/login");
       } catch (error) {
         console.error("Error response:", error.response);
       }
