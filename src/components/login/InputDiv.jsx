@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme";
 
-const InputDiv = ({ placeholder, type }) => {
-  return <InputField type={type} placeholder={placeholder} />;
+const InputDiv = ({ placeholder, type, handleInput }) => {
+  return (
+    <InputField type={type} placeholder={placeholder} onChange={handleInput} />
+  );
 };
 
 export default InputDiv;

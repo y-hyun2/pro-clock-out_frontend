@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import logoImage from "../img/logo.png";
 import theme from "../styles/theme";
@@ -7,21 +7,64 @@ import PasswordInput from "../components/login/PasswordInput";
 import InputDiv from "../components/login/InputDiv";
 import LoginButton from "../components/login/LoginButton";
 import KakaoLogin from "../components/login/KakaoLogin";
+import axios from "axios";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const navigate = useNavigate();
 
   const goToSignin = () => {
     navigate("signin");
   };
+  const handleEmailInput = (event) => {
+    setEmail(event.target.value);
+  };
+  // API 명세서 보고 KEY 값, 엔드포인트 수정하기
+  const requestData = {
+    email: email,
+    password: password,
+  };
 
+  console.log("email", email, "password", password, "requestdata", requestData);
+  const handleLogin = async () => {
+    alert("로그인 시도");
+    try {
+      const response = await axios.post(
+        "https://www.proclockout.com/api/v1/login",
+        requestData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      const token = response.headers["authorization"];
+      const nickname_res = response.headers["nickname"];
+      if (token) {
+        console.log(token);
+        localStorage.setItem("authorization", token);
+      }
+      if (nickname_res == "hexcode") {
+        alert("닉네임 설정으로 이동합니다.");
+        navigate("/login/signin/nickname");
+      }
+    } catch (error) {
+      console.error("Error response:", error.response);
+    }
+  };
   return (
     <Wrapper>
       <LogoImage src={logoImage} alt="Logo" />
-      <InputDiv placeholder="이메일" type="text" /> {/* type 속성 추가 */}
-      <PasswordInput placeholder="비밀번호" />
+      <InputDiv
+        placeholder="이메일"
+        type="text"
+        handleInput={handleEmailInput}
+      />
+      <PasswordInput placeholder="비밀번호" setPassword={setPassword} />
       <StyledLoginButton>
-        <LoginButton>로그인</LoginButton>
+        <LoginButton onClick={handleLogin}>로그인</LoginButton>
       </StyledLoginButton>
       <KakaoLogin></KakaoLogin>
       <SigninWrapper>

@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
-function Ad({ img, title }) {
+function Ad({ img, title, cate, color, url }) {
   const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
     justify-content: flex-start;
+    width: 460px;
   `;
 
   const ImageContainer = styled.div`
@@ -31,6 +32,12 @@ function Ad({ img, title }) {
     transition: filter 0.3s;
   `;
 
+  const BotContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `;
+
   const AdTitle = styled.div`
     padding-top: 15px;
     padding-bottom: 20px;
@@ -38,7 +45,7 @@ function Ad({ img, title }) {
     font-weight: 800;
     font-size: 35px;
     word-wrap: break-word;
-    width: 150px;
+    width: 350px;
   `;
 
   const HoverText = styled.a`
@@ -61,20 +68,33 @@ function Ad({ img, title }) {
       pointer-events: auto;
     }
   `;
-
+  const Category = styled.div`
+    // 가로-세로 모두 중앙 정렬
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 28%;
+    font-size: 28px;
+    font-weight: 800;
+    border: 5px solid ${(props) => props.color || "#000000"};
+    border-radius: 15px;
+    color: ${(props) => props.color || "#000000"};
+  `;
   return (
     <Wrapper>
       <ImageContainer>
         <Adimg src={img} alt="광고 이미지" />
-        <HoverText
-          href="https://www.naver.com/"
-          target="_blank"
-          rel="nofollow noopener"
-        >
+        <HoverText href={url} target="_blank" rel="nofollow noopener">
           상세보기
         </HoverText>
       </ImageContainer>
-      <AdTitle>{title}</AdTitle>
+      <BotContainer>
+        <AdTitle>{title}</AdTitle>
+        <Category color={color} border={color}>
+          {cate}
+        </Category>
+      </BotContainer>
     </Wrapper>
   );
 }

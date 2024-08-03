@@ -2,14 +2,15 @@ import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import Ad from "../components/recommend/Ad";
-import img1 from "../img/Ad_img1_1.png";
-import img2 from "../img/Ad_img3_1.png";
-import img3 from "../img/Ad_img4_1.png";
-import img4 from "../img/Ad_img1_2.png";
-import img5 from "../img/Ad_img2_2.png";
-import img6 from "../img/Ad_img3_2.png";
-import img7 from "../img/Ad_img4_2.png";
-
+import img1 from "../img/img1.png";
+import img2 from "../img/img2.png";
+import img3 from "../img/img3.png";
+import img4 from "../img/img4.png";
+import img5 from "../img/img5.png";
+import img6 from "../img/img6.png";
+import img7 from "../img/img7.jpg";
+import img8 from "../img/img8.png";
+import theme from "../styles/theme";
 const OuterWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   padding-left: 8%;
@@ -35,13 +36,62 @@ const AdContainer = styled.div`
 
 const Recommend = () => {
   const [imgarr, setImgarr] = useState([
-    { img: img1, title: "Title 1" },
-    { img: img2, title: "Title 2" },
-    { img: img3, title: "Title 3" },
-    { img: img4, title: "Title 4" },
-    { img: img5, title: "Title 5" },
-    { img: img6, title: "Title 6" },
-    { img: img7, title: "Title 7" },
+    {
+      img: img1,
+      title: "쉬엄쉬엄 한강 요가",
+      cate: "휴식",
+      color: `${theme.colors["main-purple"]}`,
+      url: "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240510115158371429",
+    },
+    {
+      img: img2,
+      title: "바른척추지압원 ",
+      cate: "수면",
+      color: `${theme.colors["main-light-green"]}`,
+      url: "https://bareunspine.modoo.at/",
+    },
+    {
+      img: img3,
+      title: "힐링힐스 스파",
+      cate: "수면",
+      color: `${theme.colors["main-light-purple"]}`,
+      url: "https://www.instagram.com/2h_spa/",
+    },
+    {
+      img: img4,
+      title: "도그메이트",
+      cate: "개인생활",
+      color: `${theme.colors["main-blue"]}`,
+      url: "https://www.dogmate.co.kr/",
+    },
+    {
+      img: img5,
+      title: "마곡지압원",
+      cate: "건강",
+      color: "#ffe882",
+      url: "https://magok2677.modoo.at/",
+    },
+    {
+      img: img6,
+      title: "캐리비안베이",
+      cate: "개인생활",
+      color: `${theme.colors["main-blue"]}`,
+      url: "https://www.everland.com/caribbeanbay/home/main",
+    },
+    {
+      img: img7,
+      title: "마이리얼트립",
+      cate: "휴식",
+      color: `${theme.colors["main-purple"]}`,
+      url: "https://www.myrealtrip.com/",
+    },
+    {
+      img: img8,
+      title: "롯데월드",
+      cate: "개인생활",
+      color: `${theme.colors["main-light-green"]}`,
+      url: "https://www.myrealtrip.com/",
+    },
   ]);
 
   // 배열의 길이를 4의 배수로 맞추기 위해 빈 요소 추가
@@ -56,7 +106,15 @@ const Recommend = () => {
       <InnerWrapper>
         {filledImgArr.map((item, index) => (
           <AdContainer key={index}>
-            {item.img ? <Ad img={item.img} title={item.title} /> : null}
+            {item.img ? (
+              <Ad
+                img={item.img}
+                title={item.title}
+                cate={item.cate}
+                color={item.color}
+                url={item.url}
+              />
+            ) : null}
             {/* img가 null이 아니면 Ad 컴포넌트를 렌더링 */}
           </AdContainer>
         ))}

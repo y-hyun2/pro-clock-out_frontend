@@ -1,16 +1,84 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import theme from "../styles/theme";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../components/login/PasswordInput";
-import LoginButton from "../components/login/LoginButton";
+import Signin from "../components/signin/Signin";
 import KakaoLogin from "../components/login/KakaoLogin";
 import AccountTitle from "../components/signin/AccountTitle";
 import EmailInputButton from "../components/signin/EmailInputButton";
 import Titlediv from "../components/signin/TitleDiv";
 
 const SigninPage = () => {
+  const [firstpassword, setFirstPassword] = useState("");
+  const [secondpassword, setSecondpassword] = useState("");
+  const [email, setEmail] = useState();
+  const [issame, setIsSame] = useState(false);
+  const [iscansignin, setIsCanSignin] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      firstpassword &&
+      secondpassword &&
+      firstpassword === secondpassword &&
+      iscansignin
+    ) {
+      setIsSame(true);
+    } else {
+      setIsSame(false);
+    }
+  }, [firstpassword, secondpassword, iscansignin]);
+
+  // const handleSignin = async () => {
+  //   if (iscansignin) {
+  //     try {
+  //       const response = await axios.post(
+  //         "https://www.proclockout.com/api/v1/signup",
+  //         {
+  //           username: email,
+  //           password: firstpassword,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           withCredentials: true,
+  //         }
+  //       );
+  //       console.log(response);
+  //     } catch (error) {
+  //       console.error("Error response:", error.response);
+  //     }
+  //   }
+  // };
+  const handleSignin = async () => {
+    if (iscansignin) {
+      const requestData = {
+        email: email,
+        password: firstpassword,
+      };
+
+      console.log("Request URL:", "https://www.proclockout.com/api/v1/signup");
+      console.log("Request Data:", requestData);
+
+      try {
+        const response = await axios.post(
+          "https://www.proclockout.com/api/v1/signup",
+          requestData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Response:", response);
+      } catch (error) {
+        console.error("Error response:", error.response);
+      }
+    }
+  };
 
   const goToLogin = () => {
     navigate("/login");
@@ -29,18 +97,32 @@ const SigninPage = () => {
 
           <button onClick={goToNickname}>닉네임(임시)</button>
 
-          <EmailInputButton placeholder={"이메일"}>인증 요청</EmailInputButton>
+          <EmailInputButton
+            placeholder={"이메일"}
+            setIsCanSignin={setIsCanSignin}
+            setEmail={setEmail}
+          >
+            인증 요청
+          </EmailInputButton>
 
           <PasswordInputWrapper style={{ marginTop: "0rem" }}>
-            <PasswordInput placeholder="비밀번호" />
+            <PasswordInput
+              placeholder="비밀번호"
+              setPassword={setFirstPassword}
+            />
           </PasswordInputWrapper>
 
           <PasswordInputWrapper style={{ marginTop: "4.2rem" }}>
-            <PasswordInput placeholder="비밀번호 확인" />
+            <PasswordInput
+              placeholder="비밀번호 확인"
+              setPassword={setSecondpassword}
+            />
           </PasswordInputWrapper>
 
           <StyledLoginButton>
-            <LoginButton>회원가입</LoginButton>
+            <Signin issame={issame} onClick={handleSignin}>
+              회원가입
+            </Signin>
           </StyledLoginButton>
           <Link to={"/login/signin/nickname"}>
             <KakaoLogin></KakaoLogin>

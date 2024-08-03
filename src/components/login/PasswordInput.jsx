@@ -5,11 +5,15 @@ import hideImage from "../../img/hideImage.png";
 import showImage from "../../img/showImage.png";
 import InputDiv from "./InputDiv";
 
-const PasswordInput = ({ placeholder }) => {
+const PasswordInput = ({ placeholder, setPassword }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+
+  const handleInput = (event) => {
+    setPassword(event.target.value);
   };
 
   return (
@@ -17,6 +21,7 @@ const PasswordInput = ({ placeholder }) => {
       <InputDiv
         placeholder={placeholder}
         type={passwordVisible ? "text" : "password"} // type 속성을 전달
+        handleInput={handleInput}
       />
       <ToggleButton onClick={togglePasswordVisibility}>
         <ToggleImage

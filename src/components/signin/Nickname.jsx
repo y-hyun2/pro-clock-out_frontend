@@ -1,20 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import AccountTitle from "./AccountTitle";
 import Titlediv from "./TitleDiv";
-import EmailInputButton from "./EmailInputButton";
 import LoginButton from "../login/LoginButton";
+import NicknameButton from "./NicknameButton";
 
 const Nickname = () => {
+  const [nickname, setNickname] = useState("");
+  console.log(nickname);
+
+  const handleNickname = async () => {
+    alert("닉네임 설정");
+    try {
+      const response = await axios.put(
+        "https://www.proclockout.com/api/v1/members/me/profile/nickname",
+        {
+          nickname: nickname,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"), // access 대신 토큰 키 값으로 넣기
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error response:", error.response);
+    }
+  };
+
   return (
     <div>
       <Wrapper>
-        <Titlediv></Titlediv>
+        <Titlediv />
         <NicknameWrapper>
           <AccountTitle>닉네임을 설정해주세요</AccountTitle>
-          <EmailInputButton placeholder={"닉네임"}>중복 확인</EmailInputButton>
+          <NicknameButton placeholder="닉네임" setNickname={setNickname} />
           <StyledLoginButton>
-            <LoginButton>설정 완료</LoginButton>
+            <LoginButton onClick={handleNickname}>설정 완료</LoginButton>
           </StyledLoginButton>
         </NicknameWrapper>
       </Wrapper>
