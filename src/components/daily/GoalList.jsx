@@ -8,6 +8,7 @@ const GoalItem = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  cursor: pointer; /* 클릭 가능하게 스타일 변경 */
 `;
 
 const ColorDot = styled.div`
@@ -84,13 +85,16 @@ const StyledCheckbox = styled.label`
   }
 `;
 
-const GoalList = ({ goals, categoryColors, onCheckboxChange }) => {
+const GoalList = ({ goals, categoryColors, onCheckboxChange, onEditGoal }) => {
   return (
     <ListContainer>
       {goals.map((goal, index) => (
         <GoalItem key={index}>
-          <ColorDot color={categoryColors[goal.category]} />
-          <Content>{goal.content}</Content>
+          <ColorDot
+            color={categoryColors[goal.category]}
+            onClick={() => onEditGoal(goal)}
+          />
+          <Content onClick={() => onEditGoal(goal)}>{goal.content}</Content>
           <Checkbox
             type="checkbox"
             id={`checkbox-${index}`}

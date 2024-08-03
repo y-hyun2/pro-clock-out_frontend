@@ -152,9 +152,28 @@ const Daily = () => {
     }
   };
 
-  const handleAddGoal = (goal) => {
+  const handleAddGoal = (newGoal) => {
     if (!isLocked) {
-      setGoals([...goals, goal]);
+      setGoals((prevGoals) => [...prevGoals, newGoal]);
+    }
+  };
+
+  const handleEditGoal = (updatedGoal) => {
+    if (!isLocked) {
+      setGoals((prevGoals) =>
+        prevGoals.map((goal) => (goal === updatedGoal ? updatedGoal : goal))
+      );
+    }
+  };
+
+  const handleDeleteGoal = (goalToDelete) => {
+    if (!isLocked) {
+      setGoals((prevGoals) =>
+        prevGoals.filter((goal) => goal !== goalToDelete)
+      );
+      setCheckedGoals((prevCheckedGoals) =>
+        prevCheckedGoals.filter((goal) => goal !== goalToDelete)
+      );
     }
   };
 
@@ -164,6 +183,7 @@ const Daily = () => {
       <RightContainer isLocked={isLocked}>
         <Diary
           checkedGoals={checkedGoals}
+          goals={checkedGoals}
           categoryColors={categoryColors}
           content={diaryContent}
           setContent={setDiaryContent}
@@ -187,8 +207,10 @@ const Daily = () => {
       <GoalListContainer
         categoryColors={categoryColors}
         onCheckboxChange={handleCheckboxChange}
-        checkedGoals={checkedGoals}
         onAddGoal={handleAddGoal}
+        onEditGoal={handleEditGoal}
+        onDeleteGoal={handleDeleteGoal}
+        goals={goals}
         isLocked={isLocked}
         style={{ pointerEvents: isLocked ? "none" : "auto" }} // 추가
       />
