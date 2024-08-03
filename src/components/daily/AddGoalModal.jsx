@@ -1,5 +1,5 @@
 // src/components/AddGoalModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "./Modal";
 
@@ -35,13 +35,45 @@ const Button = styled.button`
     background-color: #0056b3;
   }
 `;
+const DeleteButton = styled(Button)`
+  background-color: #dc3545;
 
-const AddGoalModal = ({ onClose, onAddGoal }) => {
-  const [category, setCategory] = useState("작업");
-  const [content, setContent] = useState("");
+  &:hover {
+    background-color: #c82333;
+  }
+`;
+
+const AddGoalModal = ({
+  onClose,
+  onAddGoal,
+  onEditGoal,
+  onDeleteGoal,
+  goal,
+  mode,
+}) => {
+  const [category, setCategory] = useState(goal ? goal.category : "작업");
+  const [content, setContent] = useState(goal ? goal.content : "");
+
+  useEffect(() => {
+    if (goal) {
+      setCategory(goal.category);
+      setContent(goal.content);
+    }
+  }, [goal]);
 
   const handleSubmit = () => {
-    onAddGoal({ category, content });
+    if (mode === "add") {
+      onAddGoal({ category, content });
+    } else if (mode === "edit") {
+      onEditGoal({ ...goal, category, content });
+    }
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (onDeleteGoal) {
+      onDeleteGoal(goal);
+    }
     onClose();
   };
 
@@ -67,7 +99,14 @@ const AddGoalModal = ({ onClose, onAddGoal }) => {
           maxLength={20}
         />
       </FormGroup>
-      <Button onClick={handleSubmit}>추가</Button>
+      {mode === "add" ? (
+        <Button onClick={handleSubmit}>추가</Button>
+      ) : (
+        <>
+          <Button onClick={handleSubmit}>수정</Button>
+          <DeleteButton onClick={handleDelete}>삭제</DeleteButton>
+        </>
+      )}
     </Modal>
   );
 };
