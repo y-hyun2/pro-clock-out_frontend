@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
-const TimeSelector = ({ defaultOption, onSelect }) => {
+const TimeSelector = ({
+  defaultOption,
+  onSelect,
+  interval = 30,
+  maxHours = 24,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultOption);
 
-  // Generate time options in 30-minute intervals, including 24:00
-  const generateTimeOptions = () => {
+  const generateTimeOptions = (interval, maxHours) => {
     const times = [];
-    for (let h = 0; h <= 24; h++) {
-      for (let m = 0; m < 60; m += 30) {
-        if (h === 24 && m > 0) break; // Skip times after 24:00
-        const hours = h.toString().padStart(2, '0');
-        const minutes = m.toString().padStart(2, '0');
+    for (let h = 0; h <= maxHours; h++) {
+      for (let m = 0; m < 60; m += interval) {
+        if (h === maxHours && m > 0) break; // Prevent times like 24:30 if maxHours = 24
+        const hours = h.toString().padStart(2, "0");
+        const minutes = m.toString().padStart(2, "0");
         times.push(`${hours}:${minutes}`);
       }
     }
@@ -20,24 +24,25 @@ const TimeSelector = ({ defaultOption, onSelect }) => {
   };
 
   const formatTimeOption = (option) => {
-    const [hours, minutes] = option.split(':');
+    const [hours, minutes] = option.split(":");
     const formattedHours = parseInt(hours, 10);
     const formattedMinutes = parseInt(minutes, 10);
 
     // Format time as 'X시간 Y분'
     return `${formattedHours}시간 ${
-      formattedMinutes > 0 ? `${formattedMinutes}분` : ''
+      formattedMinutes > 0 ? `${formattedMinutes}분` : ""
     }`.trim();
   };
 
   const parseToDecimal = (option) => {
-    const [hours, minutes] = option.split(':');
+    const [hours, minutes] = option.split(":");
     const decimalHours = parseInt(hours, 10);
     const decimalMinutes = parseInt(minutes, 10) / 60;
     return decimalHours + decimalMinutes;
   };
 
-  const timeOptions = generateTimeOptions();
+  // Generate time options with given interval and maxHours
+  const timeOptions = generateTimeOptions(interval, maxHours);
 
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -47,7 +52,7 @@ const TimeSelector = ({ defaultOption, onSelect }) => {
     setSelectedOption(option);
     setIsOpen(false);
     const decimalTime = parseToDecimal(option);
-    console.log(decimalTime); // Log time as decimal (e.g., 2.5 for 2 hours 30 minutes)
+    console.log(decimalTime);
     onSelect(option);
   };
 
@@ -55,15 +60,12 @@ const TimeSelector = ({ defaultOption, onSelect }) => {
     <Wrapper>
       <DropdownButton onClick={handleToggleDropdown}>
         {formatTimeOption(selectedOption)}
-        <Arrow>{isOpen ? '▲' : '▼'}</Arrow>
+        <Arrow>{isOpen ? "▲" : "▼"}</Arrow>
       </DropdownButton>
       {isOpen && (
         <Dropdown>
           {timeOptions.map((option) => (
-            <DropdownItem
-              key={option}
-              onClick={() => handleSelectOption(option)}
-            >
+            <DropdownItem key={option} onClick={() => handleSelectOption(option)}>
               {formatTimeOption(option)}
             </DropdownItem>
           ))}
@@ -76,7 +78,6 @@ const TimeSelector = ({ defaultOption, onSelect }) => {
 export default TimeSelector;
 
 // Styled Components
-
 const Wrapper = styled.div`
   margin-top: 1rem;
   position: relative;
@@ -116,8 +117,8 @@ const Dropdown = styled.div`
   z-index: 1;
   width: 12rem;
   font-size: 1.5rem;
-  max-height: 150px; /* Show up to 5 items */
-  overflow-y: auto;  /* Enable scrolling */
+  max-height: 150px;
+  overflow-y: auto;
 `;
 
 const DropdownItem = styled.div`

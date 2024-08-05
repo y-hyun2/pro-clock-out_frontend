@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillCaretDown } from "react-icons/ai";
 import Category from "../components/analytics/Category";
 import styled from "styled-components";
@@ -18,19 +18,20 @@ const Container = styled.div`
   flex-direction: column;
   padding: 2% 5%;
   min-height: 100vh;
-  background-color: #f4f5f7;
 `;
 
 const DropdownContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;
+  position: relative;
 `;
 
+//일간, 주간, 월간 Selector Wrapper
 const DropdownWrapper = styled.div`
   display: flex;
   align-items: center;
-  width: 120px;
+  width: 7.7rem;
   height: 40px;
   padding: 8px 20px;
   border: 1px solid #ccc;
@@ -38,6 +39,7 @@ const DropdownWrapper = styled.div`
   background-color: #7a7ee3;
   color: #fff;
   cursor: pointer;
+  position: relative;
 `;
 
 const DropdownText = styled.div`
@@ -51,15 +53,18 @@ const DropdownIcon = styled.div`
 `;
 
 const DropdownOptions = styled.div`
+  width: 4rem;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
+  left: 0;
   width: 140px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 12px;
   overflow: hidden;
-  z-index: 1;
+  z-index: 10;
   font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const DropdownOption = styled.div`
@@ -166,10 +171,15 @@ const InfoButton = styled.button`
 function Analytics() {
   const [chartdata, setChartdata] = useState({
     work_score: null,
+    work_avg: null,
     rest_score: null,
+    rest_avg: null,
     sleep_score: null,
+    sleep_avg: null,
     personal_score: null,
+    personal_avg: null,
     health_score: null,
+    health_avg: null,
   });
 
   const [period, setPeriod] = useState("일간");
@@ -177,6 +187,34 @@ function Analytics() {
   const [showLineGraph, setShowLineGraph] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupCategory, setPopupCategory] = useState(null);
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://www.proclockout.com/api/v1/members/me/wolibals/label?option=week"
+        );
+        const data = await response.json();
+        setChartdata({
+          work_score: data.work_score,
+          work_avg: data.work_avg,
+          rest_score: data.rest_score,
+          rest_avg: data.rest_avg,
+          sleep_score: data.sleep_score,
+          sleep_avg: data.sleep_avg,
+          personal_score: data.personal_score,
+          personal_avg: data.personal_avg,
+          health_score: data.health_score,
+          health_avg: data.health_avg,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array to run once on mount
 
   const handlePopupSave = (score) => {
     setChartdata((prevData) => ({
@@ -207,11 +245,16 @@ function Analytics() {
   );
 
   const categories = [
-    { title: "작업", key: "work_score", color: "#7AA2E3" },
-    { title: "휴식", key: "rest_score", color: "#A2A6FF" },
-    { title: "수면", key: "sleep_score", color: "#76e1e2" },
-    { title: "개인 생활", key: "personal_score", color: "#97efb6" },
-    { title: "건강", key: "health_score", color: "#FFFBD4" },
+    { title: "작업", key: "work_score", avgKey: "work_avg", color: "#7AA2E3" },
+    { title: "휴식", key: "rest_score", avgKey: "rest_avg", color: "#A2A6FF" },
+    { title: "수면", key: "sleep_score", avgKey: "sleep_avg", color: "#76e1e2" },
+    {
+      title: "개인 생활",
+      key: "personal_score",
+      avgKey: "personal_avg",
+      color: "#97efb6",
+    },
+    { title: "건강", key: "health_score", avgKey: "health_avg", color: "#FFFBD4" },
   ];
 
   const total_my_score = Object.values(chartdata).reduce(
@@ -232,9 +275,7 @@ function Analytics() {
     },
     {
       name: "수면",
-      score: Number(
-        ((chartdata.sleep_score / total_my_score) * 100).toFixed(1)
-      ),
+      score: Number(((chartdata.sleep_score / total_my_score) * 100).toFixed(1)),
       fill: "#76e1e2",
     },
     {
@@ -341,29 +382,27 @@ function Analytics() {
                   },
                   {
                     name: "평균 점수",
-                    score: chartdata[category.key] || 0,
+                    score: chartdata[category.avgKey] || 0,
                     fill: "#C9DDFD",
                   },
                 ],
               }}
             />
-            {chartdata[category.key] === null && (
-              <InfoButton
-                onClick={() => {
-                  setPopupCategory(category.key);
-                  setShowPopup(true);
-                }}
-              >
-                정보를 입력해주세요
-              </InfoButton>
-            )}
+            <InfoButton
+              onClick={() => {
+                setPopupCategory(category.key);
+                setShowPopup(true);
+              }}
+            >
+              {isDataComplete ? "정보 수정하기" : "정보를 입력해주세요"}
+            </InfoButton>
           </div>
         ))}
       </TopCategoryContainer>
 
       <BottomCategoryContainer>
         <SynthesisScoreBox>
-          <Title>종합 워라벨 점수</Title>
+          <Title>종합 워라밸 점수</Title>
           {isDataComplete ? (
             <SynthesisScore>
               <Score>{total_my_score}점</Score>
