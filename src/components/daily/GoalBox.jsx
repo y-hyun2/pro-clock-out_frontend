@@ -4,10 +4,10 @@ import styled from "styled-components";
 
 const GoalBoxContainer = styled.div`
   width: 1128px;
-  height: 40px;
   background-color: #dadbff;
   box-sizing: border-box;
   display: flex;
+  flex-wrap: wrap;
   position: relative;
   top: calc(160px + 30px);
   padding: 10px;

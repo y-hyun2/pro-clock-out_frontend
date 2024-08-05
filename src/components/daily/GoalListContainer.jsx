@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import GoalList from "./GoalList";
-import AddGoalModal from "./AddGoalModal";
+import Modal from "./Modal";
 
 const GoalContainer = styled.div`
   width: 350px;
@@ -52,14 +52,42 @@ const GoalListContainer = ({
   categoryColors,
   onCheckboxChange,
   onAddGoal,
+  onEditGoal,
+  onDeleteGoal,
+  goals,
   isLocked,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [goals, setGoals] = useState([]);
+  const [editingGoal, setEditingGoal] = useState(null);
+  const [modalMode, setModalMode] = useState("add"); // 모달 모드
 
-  const handleAddGoal = (goal) => {
-    setGoals([...goals, goal]);
-    onAddGoal(goal); // 상위 컴포넌트로 목표 전달
+  const handleAddGoal = (newGoal) => {
+    if (goals.length < 10) {
+      onAddGoal(newGoal); // Add the new goal
+    } else {
+      alert("목표는 최대 10개까지 추가할 수 있습니다.");
+    }
+  };
+
+  const handleEditGoal = (updatedGoal) => {
+    onEditGoal(updatedGoal); // Update the goal
+  };
+
+  const handleDeleteGoal = (goalToDelete) => {
+    onDeleteGoal(goalToDelete); // Delete the goal
+    setEditingGoal(null); // Clear editing goal
+  };
+
+  const openAddModal = () => {
+    setModalMode("add");
+    setEditingGoal(null); // No goal being edited
+    setModalOpen(true);
+  };
+
+  const openEditModal = (goal) => {
+    setModalMode("edit");
+    setEditingGoal(goal); // Set the goal to be edited
+    setModalOpen(true);
   };
 
   return (
@@ -70,12 +98,16 @@ const GoalListContainer = ({
         goals={goals}
         categoryColors={categoryColors}
         onCheckboxChange={onCheckboxChange}
+        onEditGoal={openEditModal}
       />
-      <AddButton onClick={() => setModalOpen(true)}>+추가하기</AddButton>
+      <AddButton onClick={openAddModal}>+추가하기</AddButton>
       {isModalOpen && (
-        <AddGoalModal
+        <Modal
           onClose={() => setModalOpen(false)}
           onAddGoal={handleAddGoal}
+          onDeleteGoal={handleDeleteGoal}
+          goal={editingGoal}
+          mode={modalMode}
         />
       )}
     </GoalContainer>
