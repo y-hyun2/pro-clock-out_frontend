@@ -5,12 +5,13 @@ import styled from "styled-components";
 import RatingFormContainer from "../components/daily/RatingFormContainer";
 import Diary from "../components/daily/Diary";
 import GoalListContainer from "../components/daily/GoalListContainer";
+import axios from "axios";
 
 const PageContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 100vh; /* 변경 */
+  height: 100vh;
   padding: 20px;
   padding-right: 80px;
   padding-left: 80px;
@@ -95,8 +96,48 @@ const Daily = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const dataToSave = {
+      request: {
+        date: currentDate,
+        workSatisfaction: ratings["작업"],
+        restSatisfaction: ratings["휴식"],
+        sleepSatisfaction: ratings["수면"],
+        personalSatisfaction: ratings["개인생활"],
+        healthSatisfaction: ratings["건강"],
+        content: diaryContent,
+        image_url: diaryImage,
+        completed_goals: checkedGoals,
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        "https://www.proclockout.com/api/v1/daily",
+        dataToSave,
+        {
+          headers: {
+            authorization: localStorage.getItem("authorization"), // 토큰 추가
+          },
+        }
+      );
+      if (response.status === 200) {
+        setSavedData((prevData) => ({
+          ...prevData,
+          [currentDate]: dataToSave.request,
+        }));
+        setIsLocked(true); // 저장 후 화면 잠금
+        setIsEditing(false); // 저장 후 수정 모드 해제
+        alert("저장되었습니다.");
+      }
+    } catch (error) {
+      console.error("저장 중 오류가 발생했습니다:", error);
+      alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleEdit = async (dailyId) => {
+    const dataToEdit = {
       date: currentDate,
       workSatisfaction: ratings["작업"],
       restSatisfaction: ratings["휴식"],
@@ -108,15 +149,29 @@ const Daily = () => {
       completed_goals: checkedGoals,
     };
 
-    setSavedData((prevData) => ({ ...prevData, [currentDate]: dataToSave }));
-    setIsLocked(true); // 저장 후 화면 잠금
-    setIsEditing(false); // 저장 후 수정 모드 해제
-    alert("저장되었습니다.");
-  };
-
-  const handleEdit = () => {
-    setIsLocked(false); // 수정 시작
-    setIsEditing(true); // 수정 모드로 전환
+    try {
+      const response = await axios.put(
+        `https://www.proclockout.com/api/v1/daily/${dailyId}`,
+        dataToEdit,
+        {
+          headers: {
+            authorization: localStorage.getItem("authorization"), // 토큰 추가
+          },
+        }
+      );
+      if (response.status === 200) {
+        setSavedData((prevData) => ({
+          ...prevData,
+          [currentDate]: dataToEdit,
+        }));
+        setIsLocked(false); // 수정 시작
+        setIsEditing(true); // 수정 모드로 전환
+        alert("수정되었습니다.");
+      }
+    } catch (error) {
+      console.error("수정 중 오류가 발생했습니다:", error);
+      alert("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   const handleDateSelect = (date) => {
@@ -202,7 +257,6 @@ const Daily = () => {
       <RatingFormContainer
         onRatingChange={handleRatingChange}
         isLocked={isLocked}
-        style={{ pointerEvents: isLocked ? "none" : "auto" }} // 추가
       />
       <GoalListContainer
         categoryColors={categoryColors}
@@ -212,7 +266,6 @@ const Daily = () => {
         onDeleteGoal={handleDeleteGoal}
         goals={goals}
         isLocked={isLocked}
-        style={{ pointerEvents: isLocked ? "none" : "auto" }} // 추가
       />
     </PageContainer>
   );

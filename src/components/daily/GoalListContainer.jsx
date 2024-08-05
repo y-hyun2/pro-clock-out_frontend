@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import GoalList from "./GoalList";
-import AddGoalModal from "./AddGoalModal";
+import Modal from "./Modal";
 
 const GoalContainer = styled.div`
   width: 350px;
@@ -63,36 +63,30 @@ const GoalListContainer = ({
 
   const handleAddGoal = (newGoal) => {
     if (goals.length < 10) {
-      const updatedGoals = [...goals, newGoal];
-      onAddGoal(updatedGoals); // 상위 컴포넌트로 목표 전달
+      onAddGoal(newGoal); // Add the new goal
     } else {
       alert("목표는 최대 10개까지 추가할 수 있습니다.");
     }
   };
 
   const handleEditGoal = (updatedGoal) => {
-    const updatedGoals = goals.map((goal) =>
-      goal === editingGoal ? updatedGoal : goal
-    );
-    onEditGoal(updatedGoals); // 상위 컴포넌트로 목표 전달
+    onEditGoal(updatedGoal); // Update the goal
   };
 
   const handleDeleteGoal = (goalToDelete) => {
-    const updatedGoals = goals.filter((goal) => goal !== goalToDelete);
-    onDeleteGoal(updatedGoals); // 상위 컴포넌트로 목표 전달
-    setModalOpen(false);
-    setEditingGoal(null);
+    onDeleteGoal(goalToDelete); // Delete the goal
+    setEditingGoal(null); // Clear editing goal
   };
 
   const openAddModal = () => {
     setModalMode("add");
-    setEditingGoal(null);
+    setEditingGoal(null); // No goal being edited
     setModalOpen(true);
   };
 
   const openEditModal = (goal) => {
     setModalMode("edit");
-    setEditingGoal(goal);
+    setEditingGoal(goal); // Set the goal to be edited
     setModalOpen(true);
   };
 
@@ -108,10 +102,9 @@ const GoalListContainer = ({
       />
       <AddButton onClick={openAddModal}>+추가하기</AddButton>
       {isModalOpen && (
-        <AddGoalModal
+        <Modal
           onClose={() => setModalOpen(false)}
           onAddGoal={handleAddGoal}
-          onEditGoal={handleEditGoal}
           onDeleteGoal={handleDeleteGoal}
           goal={editingGoal}
           mode={modalMode}

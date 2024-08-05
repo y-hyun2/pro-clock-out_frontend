@@ -48,36 +48,30 @@ const TooltipContainer = styled.div`
 `;
 
 const data = [
-  { day: "2024-01-01", value: 1 },
-  { day: "2024-01-02", value: 3 },
-  { day: "2024-01-03", value: 5 },
-  { day: "2024-01-04", value: 7 },
-  { day: "2024-01-05", value: 9 },
-  { day: "2024-07-05", value: 9 },
-  { day: "2024-06-15", value: 3 },
-  { day: "2024-08-03", value: 3 },
+  { day: "2024-01-01", value: 10 },
+  { day: "2024-01-02", value: 30 },
+  { day: "2024-01-03", value: 50 },
+  { day: "2024-01-04", value: 70 },
+  { day: "2024-01-05", value: 90 },
+  { day: "2024-07-05", value: 85 },
+  { day: "2024-06-15", value: 40 },
+  { day: "2024-08-03", value: 35 },
 ];
 
 const colorScale = (value) => {
   let color;
-  switch (value) {
-    case 1:
-      color = "#DADBFF";
-      break;
-    case 3:
-      color = "#C0C2F7";
-      break;
-    case 5:
-      color = "#A5A8F0";
-      break;
-    case 7:
-      color = "#969AEB";
-      break;
-    case 9:
-      color = "#7A7EE3";
-      break;
-    default:
-      color = "#eeeeee";
+  if (value >= 1 && value <= 20) {
+    color = "#DADBFF"; // case 1
+  } else if (value >= 21 && value <= 40) {
+    color = "#C0C2F7"; // case 3
+  } else if (value >= 41 && value <= 60) {
+    color = "#A5A8F0"; // case 5
+  } else if (value >= 61 && value <= 80) {
+    color = "#969AEB"; // case 7
+  } else if (value >= 81 && value <= 100) {
+    color = "#7A7EE3"; // case 9
+  } else {
+    color = "#eeeeee";
   }
   return color;
 };
@@ -108,11 +102,11 @@ const countFilledCellsForYear = (data) => {
 
 const FootPrint = ({ onDateSelect }) => {
   const colors = [
-    colorScale(1),
-    colorScale(3),
-    colorScale(5),
-    colorScale(7),
-    colorScale(9),
+    colorScale(10),
+    colorScale(30),
+    colorScale(50),
+    colorScale(70),
+    colorScale(90),
   ];
   // 연도 레전드 숨기기
   const yearLegend = (year) => "";
@@ -157,19 +151,19 @@ const FootPrint = ({ onDateSelect }) => {
           Less
           <SatisfactionItem>
             <div
-              style={{ backgroundColor: colorScale(1), width: 16, height: 16 }}
+              style={{ backgroundColor: colorScale(10), width: 16, height: 16 }}
             ></div>
             <div
-              style={{ backgroundColor: colorScale(3), width: 16, height: 16 }}
+              style={{ backgroundColor: colorScale(30), width: 16, height: 16 }}
             ></div>
             <div
-              style={{ backgroundColor: colorScale(5), width: 16, height: 16 }}
+              style={{ backgroundColor: colorScale(50), width: 16, height: 16 }}
             ></div>
             <div
-              style={{ backgroundColor: colorScale(7), width: 16, height: 16 }}
+              style={{ backgroundColor: colorScale(70), width: 16, height: 16 }}
             ></div>
             <div
-              style={{ backgroundColor: colorScale(9), width: 16, height: 16 }}
+              style={{ backgroundColor: colorScale(90), width: 16, height: 16 }}
             ></div>
           </SatisfactionItem>
           More
