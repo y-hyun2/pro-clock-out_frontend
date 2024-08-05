@@ -14,7 +14,7 @@ const TimeSelector = ({
     const times = [];
     for (let h = 0; h <= maxHours; h++) {
       for (let m = 0; m < 60; m += interval) {
-        if (h === maxHours && m > 0) break; // Prevent times like 24:30 if maxHours = 24
+        if (h === maxHours && m > 0) break;
         const hours = h.toString().padStart(2, "0");
         const minutes = m.toString().padStart(2, "0");
         times.push(`${hours}:${minutes}`);
@@ -28,7 +28,6 @@ const TimeSelector = ({
     const formattedHours = parseInt(hours, 10);
     const formattedMinutes = parseInt(minutes, 10);
 
-    // Format time as 'X시간 Y분'
     return `${formattedHours}시간 ${
       formattedMinutes > 0 ? `${formattedMinutes}분` : ""
     }`.trim();
@@ -41,7 +40,6 @@ const TimeSelector = ({
     return decimalHours + decimalMinutes;
   };
 
-  // Generate time options with given interval and maxHours
   const timeOptions = generateTimeOptions(interval, maxHours);
 
   const handleToggleDropdown = () => {
@@ -65,7 +63,10 @@ const TimeSelector = ({
       {isOpen && (
         <Dropdown>
           {timeOptions.map((option) => (
-            <DropdownItem key={option} onClick={() => handleSelectOption(option)}>
+            <DropdownItem
+              key={option}
+              onClick={() => handleSelectOption(option)}
+            >
               {formatTimeOption(option)}
             </DropdownItem>
           ))}
@@ -77,7 +78,6 @@ const TimeSelector = ({
 
 export default TimeSelector;
 
-// Styled Components
 const Wrapper = styled.div`
   margin-top: 1rem;
   position: relative;

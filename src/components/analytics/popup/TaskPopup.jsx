@@ -6,7 +6,6 @@ import TimeSelector from "./TimeSelector";
 import WorkoutCount from "./WorkoutCount";
 import axios from "axios";
 
-// styled components
 const PopupContainer = styled.div`
   position: fixed;
   top: 0;
@@ -26,7 +25,7 @@ const Popup = styled.div`
   background: white;
   padding: 30px;
   border-radius: 1.5rem;
-  width: 50rem;
+  width: 52rem;
   height: 65rem;
   position: relative;
 `;
@@ -63,6 +62,12 @@ const MiddleQuestionWrapper = styled.div`
   margin-top: 2.5rem;
 `;
 
+const MiddleQuestionWrapper2 = styled.div`
+  justify-content: left;
+  margin-left: 3.5rem;
+  margin-top: 1.8rem;
+`;
+
 const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
   const colors = [
     "#FF8A8A",
@@ -76,7 +81,6 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
     "#7AA2E3",
   ];
 
-  // Initialize states
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedTimeInitial, setSelectedTimeInitial] = useState("08:00");
   const [workoutCount, setWorkoutCount] = useState(null);
@@ -88,28 +92,31 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
       setSelectedTime(initialData.selectedTime);
       setSelectedTimeInitial(initialData.selectedTime);
     }
-    if (initialData.workoutCount !== undefined) setWorkoutCount(initialData.workoutCount);
-    if (initialData.taskStressScore !== undefined) setTaskStressScore(initialData.taskStressScore);
-    if (initialData.taskSatisfactionScore !== undefined) setTaskSatisfactionScore(initialData.taskSatisfactionScore);
+    if (initialData.workoutCount !== undefined)
+      setWorkoutCount(initialData.workoutCount);
+    if (initialData.taskStressScore !== undefined)
+      setTaskStressScore(initialData.taskStressScore);
+    if (initialData.taskSatisfactionScore !== undefined)
+      setTaskSatisfactionScore(initialData.taskSatisfactionScore);
   }, [initialData]);
 
   const handleTimeSelect = (time) => {
-    console.log('Time selected:', time);
+    console.log("Time selected:", time);
     setSelectedTime(time);
   };
 
   const handleSelectWorkoutCount = (count) => {
-    console.log('주 출근 횟수:', count);
+    console.log("주 출근 횟수:", count);
     setWorkoutCount(count);
   };
 
   const handleTaskStressChange = (score) => {
-    console.log('업무 스트레스 점수:', score);
+    console.log("업무 스트레스 점수:", score);
     setTaskStressScore(score);
   };
 
   const handleTaskSatisfactionChange = (score) => {
-    console.log('업무 만족도 점수:', score);
+    console.log("업무 만족도 점수:", score);
     setTaskSatisfactionScore(score);
   };
 
@@ -125,26 +132,32 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
 
   const handleSaveClick = async () => {
     if (!isFormValid()) {
-      alert('모든 값을 올바르게 입력해주세요.');
+      alert("모든 값을 입력해주세요.");
       return;
     }
 
     try {
       const token = localStorage.getItem("Authorization");
 
-      const response = await axios.post('https://www.proclockout.com/api/v1/members/me/wolibals/work', {
-        day_working_hours: parseFloat(selectedTime.split(':')[0]) + parseFloat(selectedTime.split(':')[1]) / 60,
-        week_working_days: workoutCount,
-        work_stress: taskStressScore,
-        work_satisfaction: taskSatisfactionScore,
-      }, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : '', // Use token from local storage
+      const response = await axios.post(
+        "https://www.proclockout.com/api/v1/members/me/wolibals/work",
+        {
+          day_working_hours:
+            parseFloat(selectedTime.split(":")[0]) +
+            parseFloat(selectedTime.split(":")[1]) / 60,
+          week_working_days: workoutCount,
+          work_stress: taskStressScore,
+          work_satisfaction: taskSatisfactionScore,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"),
+          },
         }
-      });
-
-      console.log('Data saved successfully:', response.data);
+      );
+      console.log(response);
+      console.log("Data saved successfully:", response);
       onSave({
         selectedTime,
         workoutCount,
@@ -153,8 +166,8 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
       });
       onClose();
     } catch (error) {
-      console.error('Error while saving data:', error);
-      alert('데이터를 저장하는 중 오류가 발생했습니다.');
+      console.error("Error while saving data:", error);
+      alert("데이터를 저장하는 중 오류가 발생했습니다.");
     }
   };
 
@@ -186,10 +199,12 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
           </MiddleQuestionWrapper>
         </TopQuestionWrapper>
         <MiddleQuestionWrapper>
-          <Question
-            title="업무 스트레스"
-            description="업무를 하며 받는 스트레스 정도를 표현해주세요."
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="업무 스트레스"
+              description="업무를 하며 받는 스트레스 정도를 표현해주세요."
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             value={taskStressScore}
             onChange={handleTaskStressChange}
@@ -198,10 +213,13 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
         </MiddleQuestionWrapper>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="업무 만족도"
-            description="본인 업무의 환경, 사람, 적성 등에 대한 만족도를 표현해주세요."
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="업무 만족도"
+              description="본인 업무의 환경, 사람, 적성 등에 대한 만족도를 표현해주세요."
+            />
+          </MiddleQuestionWrapper2>
+
           <SelectButtons
             value={taskSatisfactionScore}
             onChange={handleTaskSatisfactionChange}

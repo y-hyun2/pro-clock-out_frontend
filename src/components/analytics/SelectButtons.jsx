@@ -34,6 +34,7 @@ function SelectButtons({ buttonColors = [], value, onChange }) {
           {selectedButtonIndex === index && <CheckIcon size={size}>✓</CheckIcon>}
         </StyledButton>
       ))}
+      <SatisfactionWrapper><SatisfactionText>매우 불만족</SatisfactionText><SatisfactionText>매우 만족</SatisfactionText></SatisfactionWrapper>
     </Container>
   );
 }
@@ -76,3 +77,14 @@ const CheckIcon = styled.div`
   transition: color 0.3s ease-in-out;
   font-weight: bold;
 `;
+
+const SatisfactionWrapper = styled.div`
+  gap: 29.5rem;
+  display: flex;
+  flex-direction: row;
+`;
+
+const SatisfactionText = styled.p`
+font-size: 1.2rem;
+margin: 0;
+`

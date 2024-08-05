@@ -4,7 +4,7 @@ import SelectButtons from "../SelectButtons";
 import Question from "../Question";
 import WorkoutCount from "./WorkoutCount";
 import TimeSelector from "./TimeSelector";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -25,8 +25,8 @@ const Popup = styled.div`
   background: white;
   padding: 30px;
   border-radius: 1.5rem;
-  width: 50rem;
-  height: 65rem;
+  width: 53rem;
+  height: 82rem;
   position: relative;
 `;
 
@@ -46,7 +46,7 @@ const PopupButton = styled.button`
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 5rem;
 `;
 
 const TopQuestionWrapper = styled.div`
@@ -58,11 +58,17 @@ const TopQuestionWrapper = styled.div`
 
 const MiddleQuestionWrapper = styled.div`
   justify-content: left;
-  margin-top: 1rem;
+  margin-top: 3rem;
+  margin-left: 1rem;
+`;
+
+const MiddleQuestionWrapper2 = styled.div`
+  justify-content: left;
+  margin-left: 3.5rem;
+  margin-top: 1.8rem;
 `;
 
 const HealthPopup = ({ onClose, onSave }) => {
-  // State management
   const [aerobicWorkoutCount, setAerobicWorkoutCount] = useState(null);
   const [aerobicWorkoutTime, setAerobicWorkoutTime] = useState("00:00");
 
@@ -84,13 +90,11 @@ const HealthPopup = ({ onClose, onSave }) => {
     "#F2E88E",
   ];
 
-  // Convert time in "HH:MM" format to decimal hours
   const convertTimeToDecimal = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours + minutes / 60;
   };
 
-  // Handle workout frequency selection
   const handleSelect = (option, type) => {
     if (type === "aerobic") {
       setAerobicWorkoutCount(option);
@@ -101,7 +105,6 @@ const HealthPopup = ({ onClose, onSave }) => {
     }
   };
 
-  // Handle workout time selection
   const handleTimeSelect = (time, type) => {
     if (type === "aerobic") {
       setAerobicWorkoutTime(time);
@@ -112,7 +115,6 @@ const HealthPopup = ({ onClose, onSave }) => {
     }
   };
 
-  // Validate form data
   const validateForm = () => {
     if (aerobicWorkoutCount === null) {
       alert("주 유산소 운동 횟수를 입력해주세요.");
@@ -152,22 +154,19 @@ const HealthPopup = ({ onClose, onSave }) => {
       };
 
       try {
-        // Retrieve token from localStorage
         const token = localStorage.getItem("Authorization");
 
-        // Send POST request with headers
         const response = await axios.post(
           "https://www.proclockout.com/api/v1/members/me/wolibals/health",
           requestData,
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: token ? `Bearer ${token}` : '',
+              authorization: localStorage.getItem("authorization"),
             },
           }
         );
 
-        // Handle response and save data
         console.log("Data saved successfully:", response.data);
         onSave(requestData);
         onClose();
@@ -236,10 +235,12 @@ const HealthPopup = ({ onClose, onSave }) => {
         </TopQuestionWrapper>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="균형 잡힌 식사"
-            description="평소에 균형 잡힌 식사를 하고 계신가요?"
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="균형 잡힌 식사"
+              description="평소에 균형 잡힌 식사를 하고 계신가요?"
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             buttonColors={colors}
             value={balancedMealScore}
@@ -251,10 +252,12 @@ const HealthPopup = ({ onClose, onSave }) => {
         </MiddleQuestionWrapper>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="건강 만족도"
-            description="현재 건강 상태에 대한 만족도를 표시해주세요."
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="건강 만족도"
+              description="현재 건강 상태에 대한 만족도를 표시해주세요."
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             buttonColors={colors}
             value={healthSatisfactionScore}

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const WorkoutCount = ({ defaultOption, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +24,7 @@ const WorkoutCount = ({ defaultOption, onSelect }) => {
     <Wrapper>
       <DropdownButton onClick={handleToggleDropdown}>
         {selectedOption}
-        <Arrow>{isOpen ? '▲' : '▼'}</Arrow>
+        <Arrow>{isOpen ? "▲" : "▼"}</Arrow>
       </DropdownButton>
       {isOpen && (
         <Dropdown>
@@ -44,8 +43,6 @@ const WorkoutCount = ({ defaultOption, onSelect }) => {
 };
 
 export default WorkoutCount;
-
-// Styled Components
 
 const Wrapper = styled.div`
   margin-top: 1rem;
@@ -89,7 +86,7 @@ const Dropdown = styled.div`
   width: 8rem;
   font-size: 1.5rem;
   max-height: 150px; /* 최대 5개의 항목 표시 */
-  overflow-y: auto;  /* 스크롤링 활성화 */
+  overflow-y: auto; /* 스크롤링 활성화 */
 `;
 
 const DropdownItem = styled.div`

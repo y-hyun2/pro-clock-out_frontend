@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const TimeSlider = ({ onSelect }) => {
   const [startTime, setStartTime] = useState(null); // 시작 시간
@@ -23,15 +23,15 @@ const TimeSlider = ({ onSelect }) => {
         time >= Math.min(startTime, endTime) &&
         time <= Math.max(startTime, endTime)
       ) {
-        return 'highlight';
+        return "highlight";
       }
     } else if (startTime !== null) {
       // 시작 시간이 설정된 경우 하이라이트 추가
       if (time === startTime) {
-        return 'selected';
+        return "selected";
       }
     }
-    return '';
+    return "";
   };
 
   const handleSelectTime = (time) => {
@@ -43,7 +43,7 @@ const TimeSlider = ({ onSelect }) => {
         setEndTime(time);
         onSelect({
           startTime: Math.floor(startTime * 2) / 2, // 30분 단위로 반올림
-          endTime: Math.ceil(time * 2) / 2, // 30분 단위로 반올림
+          endTime: Math.ceil(time * 2) / 2 + 0.5, // 30분 단위로 반올림
         });
       } else {
         // 시작 시간보다 작은 시간이 클릭되면 범위 초기화
@@ -57,6 +57,7 @@ const TimeSlider = ({ onSelect }) => {
     }
   };
 
+  //총수면시간
   // 선택된 시간 범위를 "n시간 n분" 형식으로 변환
   const getDurationText = () => {
     if (startTime !== null && endTime !== null) {
@@ -65,7 +66,7 @@ const TimeSlider = ({ onSelect }) => {
       const minutes = durationMinutes % 60;
       return `총 수면 시간 : ${hours}시간 ${minutes}분`;
     }
-    return '범위를 선택하세요';
+    return "범위를 선택하세요";
   };
 
   // 시간을 "오후/AM HH시" 형식으로 변환
@@ -73,7 +74,7 @@ const TimeSlider = ({ onSelect }) => {
     const isNextDay = time >= 24;
     const hours = Math.floor(time % 24);
     const minutes = (time % 1) * 60;
-    const formattedMinutes = minutes > 0 ? `${minutes}분` : '';
+    const formattedMinutes = minutes > 0 ? `${minutes}분` : "";
     const displayTime = isNextDay
       ? `다음날 ${hours}시 ${formattedMinutes}`
       : `${hours}시 ${formattedMinutes}`;
@@ -91,31 +92,27 @@ const TimeSlider = ({ onSelect }) => {
           />
         ))}
       </TimeBar>
-      
+
       <SelectedTimeDisplay>
         <SliderTimeTextWrapper>
-      <SliderTimeText>12</SliderTimeText>
-      <SliderTimeText>18</SliderTimeText>
-      <SliderTimeText>00</SliderTimeText>
-      <SliderTimeText>06</SliderTimeText>
-      <SliderTimeText>12</SliderTimeText>
-      <SliderTimeText>18</SliderTimeText>
-      <SliderTimeText>24</SliderTimeText>
-      </SliderTimeTextWrapper>
+          <SliderTimeText>12</SliderTimeText>
+          <SliderTimeText>18</SliderTimeText>
+          <SliderTimeText>00</SliderTimeText>
+          <SliderTimeText>06</SliderTimeText>
+          <SliderTimeText>12</SliderTimeText>
+          <SliderTimeText>18</SliderTimeText>
+          <SliderTimeText>24</SliderTimeText>
+        </SliderTimeTextWrapper>
         <TimeRangeText>
           {startTime !== null && endTime !== null
             ? `${formatTime(startTime)} ~ ${formatTime(endTime + 0.5)}`
-            : '취침 시간 ~ 기상 시간'}
+            : "취침 시간 ~ 기상 시간"}
         </TimeRangeText>
-        <DurationText>
-          {getDurationText()}
-        </DurationText>
+        <DurationText>{getDurationText()}</DurationText>
       </SelectedTimeDisplay>
     </SliderContainer>
   );
 };
-
-// Styled Components
 
 const SliderContainer = styled.div`
   width: 100%;
@@ -128,7 +125,7 @@ const SliderContainer = styled.div`
 const TimeBar = styled.div`
   display: flex;
   flex-direction: row;
-  width: 99.8%;
+  width: 98%;
   height: 1.5rem;
   background-color: #ffffff;
   border-radius: 5px;
@@ -138,7 +135,7 @@ const TimeBar = styled.div`
 `;
 
 const TimeBlock = styled.div`
-  width: 10.6px;
+  width: 93%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -194,10 +191,10 @@ const TimeRangeText = styled.div`
 `;
 
 const SliderTimeTextWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 6.6rem;
-    margin-top: -0.3rem;
+  display: flex;
+  flex-direction: row;
+  gap: 6.6rem;
+  margin-top: -0.3rem;
 `;
 const SliderTimeText = styled.p`
   font-size: 1rem;

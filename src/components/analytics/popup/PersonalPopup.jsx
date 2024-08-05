@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SelectButtons from "../SelectButtons";
 import Question from "../Question";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -46,16 +46,20 @@ const PopupButton = styled.button`
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: bold;
-  margin-top: 3rem;
+  margin-top: 3.8rem;
 `;
 
 const MiddleQuestionWrapper = styled.div`
   justify-content: left;
-  margin-top: 3rem;
+`;
+
+const MiddleQuestionWrapper2 = styled.div`
+  justify-content: left;
+  margin-left: 3.5rem;
+  padding-top: 2.5rem;
 `;
 
 const PersonalPopup = ({ onClose, onSave }) => {
-  // State management
   const [friendFamilyScore, setFriendFamilyScore] = useState(null);
   const [hobbyScore, setHobbyScore] = useState(null);
   const [personalLifeScore, setPersonalLifeScore] = useState(null);
@@ -72,7 +76,6 @@ const PersonalPopup = ({ onClose, onSave }) => {
     "#97E7E1",
   ];
 
-  // Validate form data
   const isFormValid = () => {
     return (
       friendFamilyScore !== null &&
@@ -81,11 +84,9 @@ const PersonalPopup = ({ onClose, onSave }) => {
     );
   };
 
-  // Handle save button click
   const handleSaveClick = async () => {
     if (isFormValid()) {
       try {
-        // Prepare request data in the required format
         const requestData = {
           together_time: friendFamilyScore,
           hobby_time: hobbyScore,
@@ -94,18 +95,23 @@ const PersonalPopup = ({ onClose, onSave }) => {
 
         const response = await axios.post(
           "https://www.proclockout.com/api/v1/members/me/wolibals/personal",
-          requestData
+          requestData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
         );
 
-        console.log("Data saved successfully:", response.data);
+        console.log("Data saved successfully:", response);
         onSave(requestData);
         onClose();
       } catch (error) {
         console.error("Error while saving data:", error);
-        alert("데이터를 저장하는 중 오류가 발생했습니다."); 
+        alert("데이터를 저장하는 중 오류가 발생했습니다.");
       }
     } else {
-     
       if (friendFamilyScore === null) {
         alert("친구 및 가족과의 시간 점수를 입력해주세요.");
       } else if (hobbyScore === null) {
@@ -122,10 +128,12 @@ const PersonalPopup = ({ onClose, onSave }) => {
         <PopupTitle>개인 생활 데이터를 입력해주세요</PopupTitle>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="친구 및 가족과의 시간"
-            description="친구 및 가족과 충분히 많은 시간을 보내시나요?"
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="친구 및 가족과의 시간"
+              description="친구 및 가족과 충분히 많은 시간을 보내시나요?"
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             buttonColors={colors}
             value={friendFamilyScore}
@@ -134,10 +142,12 @@ const PersonalPopup = ({ onClose, onSave }) => {
         </MiddleQuestionWrapper>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="취미 활동 시간"
-            description="평소에 취미 활동을 위한 시간을 충분히 내고 있나요?"
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="취미 활동 시간"
+              description="평소에 취미 활동을 위한 시간을 충분히 내고 있나요?"
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             buttonColors={colors}
             value={hobbyScore}
@@ -146,10 +156,12 @@ const PersonalPopup = ({ onClose, onSave }) => {
         </MiddleQuestionWrapper>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="개인 생활 만족도"
-            description="주변 사람들과의 시간, 취미 활동 등 개인 생활의 질에 대한 만족도를 표시해주세요."
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="개인 생활 만족도"
+              description="주변 사람들과의 시간, 취미 활동 등 개인 생활의 질에 대한 만족도를 표시해주세요."
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             buttonColors={colors}
             value={personalLifeScore}
