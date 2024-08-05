@@ -16,6 +16,21 @@ const EventCategories = ({
     },
     { 작업: [], 휴식: [], 수면: [], 개인생활: [], 건강: [], 기타: [] }
   );
+  /**
+   * acc[label]이 존재하는지 확인하고, 존재하지 않으면 초기화
+   * const categories = events.reduce(
+  (acc, event) => {
+    const label = event.label;
+    if (!acc[label]) {
+      acc[label] = []; // acc[label]이 존재하지 않으면 빈 배열로 초기화
+    }
+    acc[label].push(event);
+    return acc;
+  },
+  { 작업: [], 휴식: [], 수면: [], 개인생활: [], 건강: [], 기타: [] }
+);
+ */
+
   const handleCheckboxChange = (label) => (event) => {
     const isChecked = event.target.checked;
     onCategoryChange(label, isChecked);

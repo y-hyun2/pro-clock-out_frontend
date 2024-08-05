@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
@@ -7,7 +7,7 @@ import EventCategories from "../components/calendar/EventCategories";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import { startOfWeek, endOfWeek } from "date-fns"; // 날짜 포맷을 위한 라이브러리
-
+import axios from "axios";
 const categoryColors = {
   작업: "#7AA2E3",
   휴식: "#7A7EE3",
@@ -55,6 +55,34 @@ const Calendars = () => {
       [label]: isChecked,
     }));
   };
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://www.proclockout.com/api/v1/calendars",
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             authorization: localStorage.getItem("authorization"),
+  //           },
+  //         }
+  //       );
+  //       console.log(typeof response.data);
+  //       // response.data가 null이거나 배열이 아닐 경우 빈 배열로 설정
+  //       if (!response.data) {
+  //         setEvents([]);
+  //       } else if (Array.isArray(response.data)) {
+  //         setEvents(response.data);
+  //       } else {
+  //         setEvents([response.data]);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching events:", error);
+  //     }
+  //   };
+
+  //   fetchEvents();
+  // }, []);
 
   // 필터링된 이벤트만 반환
   const filteredEvents = events.filter(

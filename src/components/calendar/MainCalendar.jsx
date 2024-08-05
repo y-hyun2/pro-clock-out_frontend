@@ -16,7 +16,7 @@ import EventModal from "./EventModal";
 import Dropdown from "./Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
-
+import axios from "axios";
 // Create unique event ID
 const createEventId = () => String(Date.now());
 
@@ -76,7 +76,7 @@ const MainCalendar = ({
   };
 
   // 이벤트 저장 핸들러
-  const saveEvent = (eventToSave) => {
+  const saveEvent = async (eventToSave) => {
     setEvents((prevEvents) => {
       const eventIndex = prevEvents.findIndex(
         (event) => event.calendar_id === eventToSave.calendar_id
@@ -91,6 +91,44 @@ const MainCalendar = ({
       }
     });
     closeModal();
+    console.log(eventToSave);
+    const formatDateWithoutTimezone = (dateString) => {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    };
+
+    // 변환된 데이터를 사용하여 요청
+    const clientdata = {
+      label: eventToSave.label,
+      title: eventToSave.title,
+      location: eventToSave.location,
+      start_time: formatDateWithoutTimezone(eventToSave.start_time),
+      end_time: formatDateWithoutTimezone(eventToSave.end_time),
+      notes: "노트",
+    };
+    console.log("보낼 데이터", clientdata);
+
+    try {
+      const response = await axios.post(
+        "https://www.proclockout.com/api/v1/calendars",
+        clientdata,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error); // 에러 출력
+    }
   };
 
   // 초기 뷰 설정
