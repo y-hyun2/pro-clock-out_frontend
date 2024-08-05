@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import SelectButtons from "../SelectButtons";
 import Question from "../Question";
 import TimeSelector from "./TimeSelector";
-
+import axios from "axios";
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -24,14 +24,16 @@ const Popup = styled.div`
   background: white;
   padding: 30px;
   border-radius: 1.5rem;
-  width: 45rem;
-  height: 40rem;
+  width: 50rem;
+  height: 45rem;
   position: relative;
 `;
 
 const PopupTitle = styled.h3`
   margin-top: 3rem;
+  margin-bottom: 3rem;
   font-size: 3rem;
+  font-weight: bold;
   color: #a2a6ff;
 `;
 
@@ -52,7 +54,7 @@ const TopQuestionWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 2rem;
-  gap: 4.5rem;
+  gap: 4rem;
 `;
 
 const MiddleQuestionWrapper = styled.div`
@@ -61,14 +63,11 @@ const MiddleQuestionWrapper = styled.div`
 `;
 
 const SideWrapper = styled.div`
-   display: flex;
-   flex-direction: column;
-
+  display: flex;
+  flex-direction: column;
 `;
 
-// 컴포넌트 함수
-const RestPopup = ({ onClose, onSave, taskScore, onInputChange, title }) => {
-  // Prevent click events from bubbling up to the PopupContainer
+const RestPopup = ({ onClose, onSave, initialRestScore, title }) => {
   const handlePopupClick = (e) => {
     e.stopPropagation();
   };
@@ -85,11 +84,82 @@ const RestPopup = ({ onClose, onSave, taskScore, onInputChange, title }) => {
     "#A2A6FF",
   ];
 
-  const [selectedTime, setSelectedTime] = useState('00:00');
+  // 기본값을 0시간으로 설정하고, 선택 여부를 추적하기 위한 상태 추가
+  const [workdayRest, setWorkdayRest] = useState("00:00");
+  const [dayoffRest, setDayoffRest] = useState("00:00");
+  const [restScore, setRestScore] = useState(initialRestScore || null);
 
-  const handleTimeSelect = (time) => {
-    setSelectedTime(time);
-    console.log('Selected Time:', time);
+  // Track whether the user has selected a time
+  const [isWorkdayRestSelected, setIsWorkdayRestSelected] = useState(false);
+  const [isDayoffRestSelected, setIsDayoffRestSelected] = useState(false);
+
+  const handleTimeSelectChange = (time) => {
+    setWorkdayRest(time);
+    setIsWorkdayRestSelected(true); // Mark as selected
+    console.log("근무일 휴식 시간:", time);
+  };
+
+  const handleTimeSelectChange2 = (time2) => {
+    setDayoffRest(time2);
+    setIsDayoffRestSelected(true); // Mark as selected
+    console.log("휴무일 휴식 시간:", time2);
+  };
+
+  // 선택되지 않았을 때, 기본값을 0으로 간주하고 선택했는지 확인
+  const isRestFormValid = () => {
+    // Validate if the user has selected time or not
+    return (
+      isWorkdayRestSelected && // Ensure workday time is selected
+      isDayoffRestSelected && // Ensure dayoff time is selected
+      restScore !== null // Ensure restScore is selected
+    );
+  };
+
+  const handleRestScoreChange = (score) => {
+    setRestScore(score);
+    console.log("휴식 만족도 점수:", score);
+  };
+
+  const handleSaveClick = async () => {
+    if (isRestFormValid()) {
+      try {
+        // 시간 계산 로직에서 NaN 방지
+        const workdayRestHours =
+          parseFloat(workdayRest.split(":")[0]) +
+          parseFloat(workdayRest.split(":")[1]) / 60;
+        const dayoffRestHours =
+          parseFloat(dayoffRest.split(":")[0]) +
+          parseFloat(dayoffRest.split(":")[1]) / 60;
+
+        const response = await axios.post("https://www.proclockout.com/api/v1/restdata", {
+          workday_rest: workdayRestHours,
+          dayoff_rest: dayoffRestHours,
+          rest_satisfaction: restScore,
+        });
+
+        console.log("Data saved successfully:", response.data);
+        onSave({
+          workdayRest,
+          dayoffRest,
+          restScore,
+        });
+        onClose();
+      } catch (error) {
+        console.error("Error while saving data:", error);
+        alert("데이터를 저장하는 중 오류가 발생했습니다.");
+      }
+    } else {
+      // Alert 메시지 추가: 선택하지 않았을 때만
+      if (!isWorkdayRestSelected) {
+        alert("근무일 휴식 시간을 선택해주세요.");
+      }
+      if (!isDayoffRestSelected) {
+        alert("휴무일 휴식 시간을 선택해주세요.");
+      }
+      if (restScore === null) {
+        alert("휴식 만족도를 입력해주세요.");
+      }
+    }
   };
 
   return (
@@ -98,24 +168,24 @@ const RestPopup = ({ onClose, onSave, taskScore, onInputChange, title }) => {
         <PopupTitle>{title || "휴식 데이터를 입력해주세요"}</PopupTitle>
         <TopQuestionWrapper>
           <SideWrapper>
-          <Question
-            title="근무일 휴식 시간"
-            description="근무일 기준 평균적인 휴식 시간을 입력해주세요."
-          />
-          <TimeSelector
-             onSelect={handleTimeSelect} 
-             defaultOption={selectedTime} 
-          />
+            <Question
+              title="근무일 휴식 시간"
+              description="근무일 기준 평균적인 휴식 시간을 입력해주세요."
+            />
+            <TimeSelector
+              onSelect={handleTimeSelectChange}
+              defaultOption={workdayRest}
+            />
           </SideWrapper>
           <SideWrapper>
-          <Question
-            title="휴무일 휴식 시간"
-            description="휴무일 기준 평균적인 휴식 시간을 입력해주세요."
-          />
-          <TimeSelector
-             onSelect={handleTimeSelect} 
-             defaultOption={selectedTime} 
-          />
+            <Question
+              title="휴무일 휴식 시간"
+              description="휴무일 기준 평균적인 휴식 시간을 입력해주세요."
+            />
+            <TimeSelector
+              onSelect={handleTimeSelectChange2}
+              defaultOption={dayoffRest}
+            />
           </SideWrapper>
         </TopQuestionWrapper>
         <MiddleQuestionWrapper>
@@ -124,19 +194,12 @@ const RestPopup = ({ onClose, onSave, taskScore, onInputChange, title }) => {
             description="하루 휴식 시간에 대한 만족도를 나타내주세요."
           />
           <SelectButtons
-            value={taskScore}
-            onChange={onInputChange}
+            value={restScore}
+            onChange={handleRestScoreChange}
             buttonColors={colors}
           />
         </MiddleQuestionWrapper>
-        <PopupButton
-          onClick={() => {
-            onSave();
-            onClose();
-          }}
-        >
-          저장
-        </PopupButton>
+        <PopupButton onClick={handleSaveClick}>저장</PopupButton>
       </Popup>
     </PopupContainer>
   );

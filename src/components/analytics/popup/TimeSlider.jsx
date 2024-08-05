@@ -19,7 +19,10 @@ const TimeSlider = ({ onSelect }) => {
   // 선택된 범위에 따라 하이라이트된 시간 블록을 반환
   const getHighlightClass = (time) => {
     if (startTime !== null && endTime !== null) {
-      if (time >= Math.min(startTime, endTime) && time <= Math.max(startTime, endTime)) {
+      if (
+        time >= Math.min(startTime, endTime) &&
+        time <= Math.max(startTime, endTime)
+      ) {
         return 'highlight';
       }
     } else if (startTime !== null) {
@@ -40,7 +43,7 @@ const TimeSlider = ({ onSelect }) => {
         setEndTime(time);
         onSelect({
           startTime: Math.floor(startTime * 2) / 2, // 30분 단위로 반올림
-          endTime: Math.ceil(time * 2) / 2 // 30분 단위로 반올림
+          endTime: Math.ceil(time * 2) / 2, // 30분 단위로 반올림
         });
       } else {
         // 시작 시간보다 작은 시간이 클릭되면 범위 초기화
@@ -71,7 +74,9 @@ const TimeSlider = ({ onSelect }) => {
     const hours = Math.floor(time % 24);
     const minutes = (time % 1) * 60;
     const formattedMinutes = minutes > 0 ? `${minutes}분` : '';
-    const displayTime = isNextDay ? `다음날 ${hours}시 ${formattedMinutes}` : `${hours}시 ${formattedMinutes}`;
+    const displayTime = isNextDay
+      ? `다음날 ${hours}시 ${formattedMinutes}`
+      : `${hours}시 ${formattedMinutes}`;
     return displayTime.trim();
   };
 
@@ -86,12 +91,24 @@ const TimeSlider = ({ onSelect }) => {
           />
         ))}
       </TimeBar>
+      
       <SelectedTimeDisplay>
+        <SliderTimeTextWrapper>
+      <SliderTimeText>12</SliderTimeText>
+      <SliderTimeText>18</SliderTimeText>
+      <SliderTimeText>00</SliderTimeText>
+      <SliderTimeText>06</SliderTimeText>
+      <SliderTimeText>12</SliderTimeText>
+      <SliderTimeText>18</SliderTimeText>
+      <SliderTimeText>24</SliderTimeText>
+      </SliderTimeTextWrapper>
         <TimeRangeText>
-          {startTime !== null && endTime !== null ? `${formatTime(startTime)} ~ ${formatTime(endTime  + 0.5)}` : '취침 시간 ~ 기상 시간'}
+          {startTime !== null && endTime !== null
+            ? `${formatTime(startTime)} ~ ${formatTime(endTime + 0.5)}`
+            : '취침 시간 ~ 기상 시간'}
         </TimeRangeText>
         <DurationText>
-          {startTime !== null && endTime === null ? `총 수면 시간 : 30분` : getDurationText()}
+          {getDurationText()}
         </DurationText>
       </SelectedTimeDisplay>
     </SliderContainer>
@@ -101,12 +118,11 @@ const TimeSlider = ({ onSelect }) => {
 // Styled Components
 
 const SliderContainer = styled.div`
-  width: 100%; 
+  width: 100%;
   margin: 20px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 `;
 
 const TimeBar = styled.div`
@@ -116,14 +132,13 @@ const TimeBar = styled.div`
   height: 1.5rem;
   background-color: #ffffff;
   border-radius: 5px;
-  border: 1px solid #6AD4DD;
+  border: 1px solid #6ad4dd;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
 `;
 
 const TimeBlock = styled.div`
-    width: 10.6px;
+  width: 10.6px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -132,24 +147,23 @@ const TimeBlock = styled.div`
   background-color: #fff;
   transition: background-color 0.3s;
   font-weight: bold;
-  
-  
+
   &:nth-child(2n) {
-    border-right: 1px solid #6AD4DD;
+    border-right: 1px solid #6ad4dd;
   }
 
   &.highlight {
-    background-color: #CCFFFB;
+    background-color: #ccfffb;
     color: white;
   }
 
   &.selected {
-    background-color: #B3E5FC;
+    background-color: #b3e5fc;
     color: #000;
   }
 
   &:hover {
-    background-color: #CCFFFB;
+    background-color: #ccfffb;
     color: white;
   }
 
@@ -166,7 +180,7 @@ const SelectedTimeDisplay = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  text-align: left; /* 텍스트 왼쪽 정렬 */
+  text-align: left;
 `;
 
 const DurationText = styled.div`
@@ -176,7 +190,20 @@ const DurationText = styled.div`
 
 const TimeRangeText = styled.div`
   font-size: 1.5rem;
-  color: #6AD4DD;
+  color: #6ad4dd;
+`;
+
+const SliderTimeTextWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 6.6rem;
+    margin-top: -0.3rem;
+`;
+const SliderTimeText = styled.p`
+  font-size: 1rem;
+  color: lightgray;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
 `;
 
 export default TimeSlider;

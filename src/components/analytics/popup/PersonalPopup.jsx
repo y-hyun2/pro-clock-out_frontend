@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import SelectButtons from "../SelectButtons";
 import Question from "../Question";
+import axios from "axios"; // Import axios for HTTP requests
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -22,15 +23,17 @@ const Popup = styled.div`
   background: white;
   padding: 30px;
   border-radius: 1.5rem;
-  width: 45rem;
+  width: 53rem;
   height: 65rem;
   position: relative;
 `;
 
 const PopupTitle = styled.h3`
   margin-top: 3rem;
+  margin-bottom: 3rem;
   font-size: 3rem;
-  color: #97E7E1;
+  font-weight: bold;
+  color: #97e7e1;
 `;
 
 const PopupButton = styled.button`
@@ -38,12 +41,12 @@ const PopupButton = styled.button`
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background-color: #97E7E1;
+  background-color: #97e7e1;
   color: white;
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 3rem;
 `;
 
 const MiddleQuestionWrapper = styled.div`
@@ -51,55 +54,110 @@ const MiddleQuestionWrapper = styled.div`
   margin-top: 3rem;
 `;
 
-const PersonalPopup = ({ onClose, onSave, taskScore, onInputChange }) => {
-  // Prevent click events from bubbling up to the PopupContainer
-  const handlePopupClick = (e) => {
-    e.stopPropagation();
+const PersonalPopup = ({ onClose, onSave }) => {
+  // State management
+  const [friendFamilyScore, setFriendFamilyScore] = useState(null);
+  const [hobbyScore, setHobbyScore] = useState(null);
+  const [personalLifeScore, setPersonalLifeScore] = useState(null);
+
+  const colors = [
+    "#FF8A8A",
+    "#FF8A8A",
+    "#FF8A8A",
+    "#FF8A8A",
+    "#CCCCCC",
+    "#97E7E1",
+    "#97E7E1",
+    "#97E7E1",
+    "#97E7E1",
+  ];
+
+  // Validate form data
+  const isFormValid = () => {
+    return (
+      friendFamilyScore !== null &&
+      hobbyScore !== null &&
+      personalLifeScore !== null
+    );
   };
-  const colors = ['#FF8A8A', '#FF8A8A', '#FF8A8A', '#FF8A8A', '#CCCCCC', '#97E7E1', '#97E7E1', '#97E7E1', '#97E7E1'];
+
+  // Handle save button click
+  const handleSaveClick = async () => {
+    if (isFormValid()) {
+      try {
+        // Prepare request data in the required format
+        const requestData = {
+          together_time: friendFamilyScore,
+          hobby_time: hobbyScore,
+          personal_satisfaction: personalLifeScore,
+        };
+
+        const response = await axios.post(
+          "https://www.proclockout.com/api/v1/members/me/wolibals/personal",
+          requestData
+        );
+
+        console.log("Data saved successfully:", response.data);
+        onSave(requestData);
+        onClose();
+      } catch (error) {
+        console.error("Error while saving data:", error);
+        alert("데이터를 저장하는 중 오류가 발생했습니다."); 
+      }
+    } else {
+     
+      if (friendFamilyScore === null) {
+        alert("친구 및 가족과의 시간 점수를 입력해주세요.");
+      } else if (hobbyScore === null) {
+        alert("취미 활동 시간 점수를 입력해주세요.");
+      } else if (personalLifeScore === null) {
+        alert("개인 생활 만족도 점수를 입력해주세요.");
+      }
+    }
+  };
 
   return (
     <PopupContainer onClick={onClose}>
-      <Popup onClick={handlePopupClick}>
+      <Popup onClick={(e) => e.stopPropagation()}>
         <PopupTitle>개인 생활 데이터를 입력해주세요</PopupTitle>
+
         <MiddleQuestionWrapper>
-        <Question
+          <Question
             title="친구 및 가족과의 시간"
             description="친구 및 가족과 충분히 많은 시간을 보내시나요?"
           />
           <SelectButtons
-          buttonColors={colors}
-          value={taskScore}
-          onChange={onInputChange}
-        />
+            buttonColors={colors}
+            value={friendFamilyScore}
+            onChange={setFriendFamilyScore}
+          />
         </MiddleQuestionWrapper>
+
         <MiddleQuestionWrapper>
           <Question
             title="취미 활동 시간"
             description="평소에 취미 활동을 위한 시간을 충분히 내고 있나요?"
           />
-        <SelectButtons
-        buttonColors={colors}
-          value={taskScore}
-          onChange={onInputChange}
-        />
+          <SelectButtons
+            buttonColors={colors}
+            value={hobbyScore}
+            onChange={setHobbyScore}
+          />
         </MiddleQuestionWrapper>
 
         <MiddleQuestionWrapper>
-        <Question
+          <Question
             title="개인 생활 만족도"
             description="주변 사람들과의 시간, 취미 활동 등 개인 생활의 질에 대한 만족도를 표시해주세요."
           />
-        <SelectButtons
-        buttonColors={colors}
-          value={taskScore}
-          onChange={onInputChange}
-        />
+          <SelectButtons
+            buttonColors={colors}
+            value={personalLifeScore}
+            onChange={setPersonalLifeScore}
+          />
         </MiddleQuestionWrapper>
-        <PopupButton onClick={() => {
-          onSave();
-          onClose();
-        }}>저장</PopupButton>
+
+        <PopupButton onClick={handleSaveClick}>저장</PopupButton>
       </Popup>
     </PopupContainer>
   );

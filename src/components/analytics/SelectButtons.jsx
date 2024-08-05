@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-function SelectButtons({ buttonColors = [] }) {
-  // 선택된 버튼의 인덱스를 저장하는 상태
-  const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
+function SelectButtons({ buttonColors = [], value, onChange }) {
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState(value);
 
-  // 버튼 클릭 시 호출되는 핸들러
   const handleClick = (index) => {
-    // 선택된 버튼이 이미 선택된 상태일 경우 취소
-    setSelectedButtonIndex(selectedButtonIndex === index ? null : index);
+    const newIndex = selectedButtonIndex === index ? null : index;
+    setSelectedButtonIndex(newIndex);
+
+    if (newIndex !== null) {
+      const score = newIndex + 1;
+      console.log(`Selected score: ${score}`);
+      onChange(score);  // 선택된 점수를 부모 컴포넌트로 전달
+    } else {
+      console.log('Deselected button');
+      onChange(null);  // 선택이 해제되면 null을 전달
+    }
   };
 
   // 버튼 크기 설정
@@ -17,7 +24,7 @@ function SelectButtons({ buttonColors = [] }) {
   return (
     <Container>
       {buttonSizes.map((size, index) => (
-        <StyledButton 
+        <StyledButton
           key={index}
           onClick={() => handleClick(index)}
           selected={selectedButtonIndex === index}
