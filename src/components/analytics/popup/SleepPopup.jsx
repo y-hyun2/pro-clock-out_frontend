@@ -3,7 +3,7 @@ import styled from "styled-components";
 import SelectButtons from "../SelectButtons";
 import Question from "../Question";
 import TimeSlider from "./TimeSlider";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -62,6 +62,11 @@ const MiddleQuestionWrapper = styled.div`
   margin-top: 2rem;
 `;
 
+const MiddleQuestionWrapper2 = styled.div`
+  justify-content: left;
+  margin-left: 1.8rem;
+`;
+
 const SleepPopup = ({
   onClose,
   onSave,
@@ -110,32 +115,57 @@ const SleepPopup = ({
   const handleSaveClick = async () => {
     if (isSleepFormValid()) {
       try {
-        // Request Body 형식에 맞게 데이터 준비
+        // localStorage에서 토큰 가져오기
+        const token = localStorage.getItem("authorization");
+
+        // 토큰이 존재하지 않을 경우에 대한 처리
+        if (!token) {
+          console.error("토큰이 없습니다.");
+          alert("로그인이 필요합니다.");
+          return;
+        }
+
         const requestData = {
-          workday_bedtime: workDayBedtime,
-          workday_wakeup: workDayWakeup,
-          dayoff_bedtime: dayOffBedtime,
-          dayoff_wakeup: dayOffWakeup,
+          workday_bedtime: workDayBedtime.startTime,
+          workday_wakeup: workDayBedtime.endTime,
+          dayoff_bedtime: dayOffBedtime.startTime,
+          dayoff_wakeup: dayOffBedtime.endTime,
           sleep_satisfaction: sleepScore,
         };
+
+        console.log("Request Data:", requestData);
 
         // API 요청 보내기
         const response = await axios.post(
           "https://www.proclockout.com/api/v1/members/me/wolibals/sleep",
-          requestData
+          requestData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+          }
         );
 
-        console.log("Data saved successfully:", response.data);
-        onSave({
-          workDayBedtime,
-          workDayWakeup,
-          dayOffBedtime,
-          dayOffWakeup,
-          sleepScore,
-        });
+        console.log("Data saved successfully:", response);
+        onSave(requestData);
         onClose();
       } catch (error) {
         console.error("Error while saving data:", error);
+
+        if (error.response) {
+          console.error("에러 응답 데이터:", error.response.data);
+          console.error("에러 응답 상태 코드:", error.response.status);
+          console.error("에러 응답 헤더:", error.response.headers);
+        } else if (error.request) {
+          console.error(
+            "요청이 전송되었지만 응답을 받지 못했습니다:",
+            error.request
+          );
+        } else {
+          console.error("요청 설정 중 문제가 발생했습니다:", error.message);
+        }
+
         alert("데이터를 저장하는 중 오류가 발생했습니다.");
       }
     } else {
@@ -189,10 +219,12 @@ const SleepPopup = ({
         </TopQuestionWrapper>
 
         <MiddleQuestionWrapper>
-          <Question
-            title="수면 만족도"
-            description="수면의 질에 대한 만족도를 나타내주세요."
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="수면 만족도"
+              description="수면의 질에 대한 만족도를 나타내주세요."
+            />
+          </MiddleQuestionWrapper2>
 
           <SelectButtons
             value={sleepScore}

@@ -67,6 +67,11 @@ const SideWrapper = styled.div`
   flex-direction: column;
 `;
 
+const MiddleQuestionWrapper2 = styled.div`
+  justify-content: left;
+  margin-left: 1.3rem;
+`;
+
 const RestPopup = ({ onClose, onSave, initialRestScore, title }) => {
   const handlePopupClick = (e) => {
     e.stopPropagation();
@@ -89,30 +94,24 @@ const RestPopup = ({ onClose, onSave, initialRestScore, title }) => {
   const [dayoffRest, setDayoffRest] = useState("00:00");
   const [restScore, setRestScore] = useState(initialRestScore || null);
 
-  // Track whether the user has selected a time
   const [isWorkdayRestSelected, setIsWorkdayRestSelected] = useState(false);
   const [isDayoffRestSelected, setIsDayoffRestSelected] = useState(false);
 
   const handleTimeSelectChange = (time) => {
     setWorkdayRest(time);
-    setIsWorkdayRestSelected(true); // Mark as selected
+    setIsWorkdayRestSelected(true);
     console.log("근무일 휴식 시간:", time);
   };
 
   const handleTimeSelectChange2 = (time2) => {
     setDayoffRest(time2);
-    setIsDayoffRestSelected(true); // Mark as selected
+    setIsDayoffRestSelected(true);
     console.log("휴무일 휴식 시간:", time2);
   };
 
   // 선택되지 않았을 때, 기본값을 0으로 간주하고 선택했는지 확인
   const isRestFormValid = () => {
-    // Validate if the user has selected time or not
-    return (
-      isWorkdayRestSelected && // Ensure workday time is selected
-      isDayoffRestSelected && // Ensure dayoff time is selected
-      restScore !== null // Ensure restScore is selected
-    );
+    return isWorkdayRestSelected && isDayoffRestSelected && restScore !== null;
   };
 
   const handleRestScoreChange = (score) => {
@@ -131,13 +130,22 @@ const RestPopup = ({ onClose, onSave, initialRestScore, title }) => {
           parseFloat(dayoffRest.split(":")[0]) +
           parseFloat(dayoffRest.split(":")[1]) / 60;
 
-        const response = await axios.post("https://www.proclockout.com/api/v1/restdata", {
-          workday_rest: workdayRestHours,
-          dayoff_rest: dayoffRestHours,
-          rest_satisfaction: restScore,
-        });
+        const response = await axios.post(
+          "https://www.proclockout.com/api/v1/members/me/wolibals/rest",
+          {
+            workday_rest: workdayRestHours,
+            dayoff_rest: dayoffRestHours,
+            rest_satisfaction: restScore,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
 
-        console.log("Data saved successfully:", response.data);
+        console.log("Data saved successfully:", response);
         onSave({
           workdayRest,
           dayoffRest,
@@ -189,10 +197,12 @@ const RestPopup = ({ onClose, onSave, initialRestScore, title }) => {
           </SideWrapper>
         </TopQuestionWrapper>
         <MiddleQuestionWrapper>
-          <Question
-            title="휴식 만족도"
-            description="하루 휴식 시간에 대한 만족도를 나타내주세요."
-          />
+          <MiddleQuestionWrapper2>
+            <Question
+              title="휴식 만족도"
+              description="하루 휴식 시간에 대한 만족도를 나타내주세요."
+            />
+          </MiddleQuestionWrapper2>
           <SelectButtons
             value={restScore}
             onChange={handleRestScoreChange}
