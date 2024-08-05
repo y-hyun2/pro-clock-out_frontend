@@ -97,7 +97,7 @@ const SigninPage = () => {
         <AccountWrapper>
           <AccountTitle>계정을 생성하세요</AccountTitle>
 
-          <button onClick={goToNickname}>닉네임(임시)</button>
+          {/* <button onClick={goToNickname}>닉네임(임시)</button> */}
 
           <EmailInputButton
             placeholder={"이메일"}
