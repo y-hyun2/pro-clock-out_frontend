@@ -193,7 +193,7 @@ function Analytics() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://www.proclockout.com/api/v1/members/me/wolibals/label?option=week"
+          "https://proclockout.web.app/analytics"
         );
         const data = await response.json();
         setChartdata({
