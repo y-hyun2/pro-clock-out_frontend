@@ -1,17 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme";
+import axios from "axios";
 
-const EmailInputButton = ({placeholder, children}) => {
-return (
+const EmailInputButton = ({
+  placeholder,
+  children,
+  setIsCanSignin,
+  setEmail,
+}) => {
+  const [inputValue, setInputValue] = useState("");
+  const [isbuttonenabled, setIsButtonEnabled] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [isokayemail, setIsokayemail] = useState(false);
+
+  useEffect(() => {
+    const hasAtSymbol = inputValue.includes("@");
+    setIsButtonEnabled(inputValue.trim().length > 0 && hasAtSymbol);
+    setShowError(!hasAtSymbol && inputValue.trim().length > 0);
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (isbuttonenabled && isokayemail) {
+      setIsCanSignin(true);
+    } else {
+      setIsCanSignin(false);
+    }
+  }, [isbuttonenabled, setIsCanSignin, isokayemail]);
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handlesubmit = async () => {
+    try {
+      const response = await axios.post(
+        "https://www.proclockout.com/api/v1/duplicate/email",
+        { email: inputValue },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data["duplicated"]);
+      if (!response.data["duplicated"]) {
+        setIsokayemail(true);
+        setEmail(inputValue);
+      } else {
+        setIsokayemail(false);
+        setIsCanSignin(false);
+      }
+    } catch (error) {
+      console.error(error); // 에러 출력
+    }
+  };
+
+  return (
     <div>
-       <DivButtonWrapper>
-            <ShortInputDiv placeholder={placeholder} />
-            <IdentifyButton>{children}</IdentifyButton>
-          </DivButtonWrapper> 
+      <DivButtonWrapper>
+        <ShortInputDiv
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={handleInputChange}
+        />
+        <IdentifyButton
+          disabled={!isbuttonenabled}
+          isbuttonenabled={isbuttonenabled}
+          onClick={handlesubmit}
+        >
+          {children}
+        </IdentifyButton>
+      </DivButtonWrapper>
+      {showError && <ErrorText>@ 문자를 포함하여 입력해주세요.</ErrorText>}
     </div>
-)
-}
+  );
+};
 
 export default EmailInputButton;
 
@@ -41,10 +105,23 @@ const IdentifyButton = styled.button`
   height: 6rem;
   width: 11rem;
   border: none;
-  background-color: ${theme.colors["main-light-purple"]};
+  background-color: ${({ isbuttonenabled }) =>
+    isbuttonenabled
+      ? theme.colors["main-purple"]
+      : theme.colors["main-light-purple"]};
   color: white;
   font-size: 2rem;
   font-weight: bolder;
   border-radius: 1rem;
   margin-top: 0.3rem;
+  cursor: ${({ isbuttonenabled }) =>
+    isbuttonenabled ? "pointer" : "not-allowed"};
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  font-size: 1.5rem;
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+  margin-left: 0.5rem;
 `;

@@ -2,8 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme";
 
-const LoginButton = ({ children }) => {
-  return <Login>{children}</Login>;
+const LoginButton = ({ children, onClick }) => {
+  function handleClick() {
+    onClick();
+  }
+  return <Login onClick={handleClick}>{children}</Login>;
 };
 
 const Login = styled.button`
