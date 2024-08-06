@@ -75,7 +75,7 @@ const LoginPage = () => {
       <StyledLoginButton>
         <LoginButton onClick={handleLogin}>로그인</LoginButton>
       </StyledLoginButton>
-      <KakaoLogin></KakaoLogin>
+      {/* {   <KakaoLogin></KakaoLogin>} */}
       <SigninWrapper>
         <LoginQuestion>아직 계정이 없으신가요?</LoginQuestion>
         <SigninButton onClick={goToSignin}>회원가입</SigninButton>
@@ -103,18 +103,22 @@ const LogoImage = styled.img`
 
 const SigninWrapper = styled.div`
   display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const LoginQuestion = styled.p`
   color: gray;
   font-size: 2rem;
+  margin-top: 15px;
 `;
 
 const SigninButton = styled.a`
   color: ${theme.colors["main-purple"]};
   font-size: 2rem;
   margin-left: 3rem;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
 `;
 
 const StyledLoginButton = styled.div`

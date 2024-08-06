@@ -46,12 +46,16 @@ const ToggleButton = styled.button`
 `;
 
 const ToggleImage = styled.img`
+  position: absolute;
+  top: -10px;
+  right: 20px;
   width: 3rem;
   height: 3rem;
 `;
 
 const PasswordWrapper = styled.div`
   position: relative;
+  margin-left: 20px;
   width: 46.6rem;
   height: 4rem;
 `;
