@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FootPrint from "../components/daily/FootPrint";
 import Date from "../components/daily/Date";
 import styled from "styled-components";
@@ -6,6 +6,7 @@ import RatingFormContainer from "../components/daily/RatingFormContainer";
 import Diary from "../components/daily/Diary";
 import GoalListContainer from "../components/daily/GoalListContainer";
 import axios from "axios";
+import fetchGoals from "../components/daily/api/fetchGoals";
 
 const PageContainer = styled.div`
   display: flex;
@@ -32,11 +33,11 @@ const SaveButton = styled.button`
   padding: 10px 20px;
   height: 40px;
   width: 140px;
-  color: white;
+  category: white;
   border: none;
   border-radius: 5px;
   cursor: ${(props) => (props.isLocked ? "not-allowed" : "pointer")};
-  background-color: ${(props) =>
+  background-category: ${(props) =>
     props.isLocked
       ? "#cccccc"
       : props.isEditing
@@ -45,17 +46,17 @@ const SaveButton = styled.button`
   pointer-events: auto; /* 항상 클릭 가능 */
 
   &:hover {
-    background-color: ${(props) =>
+    background-category: ${(props) =>
       props.isLocked ? "#cccccc" : props.isEditing ? "#6a6fc3" : "#696969"};
   }
 
   &:active {
-    background-color: ${(props) =>
+    background-category: ${(props) =>
       props.isLocked ? "#cccccc" : props.isEditing ? "#5a5fc3" : "#696969"};
   }
 `;
 
-const categoryColors = {
+const categorycategorys = {
   작업: "#7AA2E3",
   휴식: "#A2A6FF",
   개인생활: "#97E7E1",
@@ -63,6 +64,7 @@ const categoryColors = {
   건강: "#F2E88E",
   기타: "#696969",
 };
+console.log(categorycategorys.작업);
 
 const Daily = () => {
   const [checkedGoals, setCheckedGoals] = useState([]);
@@ -81,6 +83,19 @@ const Daily = () => {
   const [isLocked, setIsLocked] = useState(false); // 화면 잠금을 위한 상태
   const [isEditing, setIsEditing] = useState(true); // 수정 모드 상태
 
+  const loadGoals = async () => {
+    try {
+      const goalsData = await fetchGoals();
+      setGoals(goalsData);
+    } catch (error) {
+      console.error("목표활동을 로드하는 중 오류가 발생했습니다:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadGoals();
+  }, []);
+
   const handleCheckboxChange = (goal) => {
     if (!isLocked) {
       setCheckedGoals((prevGoals) =>
@@ -97,8 +112,33 @@ const Daily = () => {
   };
 
   const handleSave = async () => {
-    const dataToSave = {
-      request: {
+    try {
+      // 이미지 업로드
+      let imageUrl = null;
+      if (diaryImage) {
+        const imageFormData = new FormData();
+        imageFormData.append("file", diaryImage);
+
+        const imageResponse = await axios.post(
+          "https://www.proclockout.com//api/v1/daily/image", // 서버의 이미지 업로드 엔드포인트
+          imageFormData,
+          {
+            headers: {
+              Authorization: localStorage.getItem("authorization"),
+              // Content-Type은 axios가 자동으로 설정합니다.
+            },
+          }
+        );
+
+        if (imageResponse.status === 200) {
+          imageUrl = imageResponse.data.imageUrl; // 서버가 반환하는 이미지 URL에 맞춰 수정
+        } else {
+          throw new Error("이미지 업로드에 실패했습니다.");
+        }
+      }
+
+      // JSON 데이터 업로드
+      const jsonData = {
         date: currentDate,
         workSatisfaction: ratings["작업"],
         restSatisfaction: ratings["휴식"],
@@ -106,29 +146,30 @@ const Daily = () => {
         personalSatisfaction: ratings["개인생활"],
         healthSatisfaction: ratings["건강"],
         content: diaryContent,
-        image_url: diaryImage,
         completed_goals: checkedGoals,
-      },
-    };
+      };
 
-    try {
-      const response = await axios.post(
+      const jsonResponse = await axios.post(
         "https://www.proclockout.com/api/v1/daily",
-        dataToSave,
+        { request: jsonData }, // JSON 데이터는 객체 형태로 감싸서 전송
         {
           headers: {
-            authorization: localStorage.getItem("authorization"), // 토큰 추가
+            Authorization: localStorage.getItem("authorization"),
+            "Content-Type": "application/json",
           },
         }
       );
-      if (response.status === 200) {
+
+      if (jsonResponse.status === 200) {
         setSavedData((prevData) => ({
           ...prevData,
-          [currentDate]: dataToSave.request,
+          [currentDate]: jsonData,
         }));
-        setIsLocked(true); // 저장 후 화면 잠금
-        setIsEditing(false); // 저장 후 수정 모드 해제
+        setIsLocked(true);
+        setIsEditing(false);
         alert("저장되었습니다.");
+      } else {
+        throw new Error("데이터 저장에 실패했습니다.");
       }
     } catch (error) {
       console.error("저장 중 오류가 발생했습니다:", error);
@@ -136,43 +177,197 @@ const Daily = () => {
     }
   };
 
-  const handleEdit = async (dailyId) => {
-    const dataToEdit = {
-      date: currentDate,
-      workSatisfaction: ratings["작업"],
-      restSatisfaction: ratings["휴식"],
-      sleepSatisfaction: ratings["수면"],
-      personalSatisfaction: ratings["개인생활"],
-      healthSatisfaction: ratings["건강"],
-      content: diaryContent,
-      image_url: diaryImage,
-      completed_goals: checkedGoals,
-    };
+  // const handleSave = () => {
+  //   const dataToSave = {
+  //     date: currentDate,
+  //     workSatisfaction: ratings["작업"],
+  //     restSatisfaction: ratings["휴식"],
+  //     sleepSatisfaction: ratings["수면"],
+  //     personalSatisfaction: ratings["개인생활"],
+  //     healthSatisfaction: ratings["건강"],
+  //     content: diaryContent,
+  //     image_url: diaryImage,
+  //     completed_goals: checkedGoals,
+  //   };
 
+  //   setSavedData((prevData) => ({ ...prevData, [currentDate]: dataToSave }));
+  //   setIsLocked(true); // 저장 후 화면 잠금
+  //   setIsEditing(false); // 저장 후 수정 모드 해제
+  //   alert("저장되었습니다.");
+  // };
+
+  // const handleEdit = () => {
+  //   setIsLocked(false); // 수정 시작
+  //   setIsEditing(true); // 수정 모드로 전환
+  // };
+
+  // const handleSave = async () => {
+  //   const formData = new FormData();
+
+  //   const jsonRequest = JSON.stringify({
+  //     date: currentDate,
+  //     workSatisfaction: ratings["작업"],
+  //     restSatisfaction: ratings["휴식"],
+  //     sleepSatisfaction: ratings["수면"],
+  //     personalSatisfaction: ratings["개인생활"],
+  //     healthSatisfaction: ratings["건강"],
+  //     content: diaryContent,
+  //     completed_goals: checkedGoals,
+  //   });
+
+  //   formData.append("request", jsonRequest);
+
+  //   if (diaryImage) {
+  //     formData.append("file", diaryImage);
+  //   }
+
+  //   // FormData의 내용을 콘솔에 출력
+  //   for (let pair of formData.entries()) {
+  //     console.log(`${pair[0]}: ${pair[1]}`);
+  //   }
+  //   console.log(localStorage.getItem("authorization"));
+
+  //   try {
+  //     const response = await axios.post(
+  //       "https://www.proclockout.com/api/v1/daily",
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: `${localStorage.getItem("authorization")}`,
+  //           // `Content-Type` 헤더는 설정하지 않음
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       setSavedData((prevData) => ({
+  //         ...prevData,
+  //         [currentDate]: JSON.parse(jsonRequest),
+  //       }));
+  //       setIsLocked(true);
+  //       setIsEditing(false);
+  //       alert("저장되었습니다.");
+  //     }
+  //   } catch (error) {
+  //     console.error("저장 중 오류가 발생했습니다:", error);
+  //     alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+  //   }
+  // };
+  const handleEdit = async (dailyId) => {
     try {
-      const response = await axios.put(
+      // // 이미지 업로드
+      // let imageUrl = null;
+      // if (diaryImage) {
+      //   const imageFormData = new FormData();
+      //   imageFormData.append("file", diaryImage);
+
+      //   const imageResponse = await axios.put(
+      //     `https://www.proclockout.com/api/v1/daily/image`, // 서버의 이미지 업로드 엔드포인트
+      //     imageFormData,
+      //     {
+      //       headers: {
+      //         Authorization: localStorage.getItem("authorization"),
+      //         // Content-Type은 axios가 자동으로 설정합니다.
+      //       },
+      //     }
+      //   );
+
+      //   if (imageResponse.status === 200) {
+      //     imageUrl = imageResponse.data.imageUrl; // 서버가 반환하는 이미지 URL에 맞춰 수정
+      //   } else {
+      //     throw new Error("이미지 업로드에 실패했습니다.");
+      //   }
+      // }
+
+      // JSON 데이터 업로드
+      const jsonData = {
+        date: currentDate,
+        workSatisfaction: ratings["작업"],
+        restSatisfaction: ratings["휴식"],
+        sleepSatisfaction: ratings["수면"],
+        personalSatisfaction: ratings["개인생활"],
+        healthSatisfaction: ratings["건강"],
+        content: diaryContent,
+        completed_goals: checkedGoals,
+      };
+
+      const jsonResponse = await axios.put(
         `https://www.proclockout.com/api/v1/daily/${dailyId}`,
-        dataToEdit,
+        jsonData,
         {
           headers: {
-            authorization: localStorage.getItem("authorization"), // 토큰 추가
+            Authorization: localStorage.getItem("authorization"),
+            "Content-Type": "application/json",
           },
         }
       );
-      if (response.status === 200) {
+      console.log("JSON Data:", jsonData); // JSON 데이터를 콘솔에 출력
+
+      if (jsonResponse.status === 200) {
         setSavedData((prevData) => ({
           ...prevData,
-          [currentDate]: dataToEdit,
+          [currentDate]: jsonData,
         }));
-        setIsLocked(false); // 수정 시작
-        setIsEditing(true); // 수정 모드로 전환
+        setIsLocked(false); // 수정 후 화면 잠금
+        setIsEditing(true); // 수정 후 수정 모드 해제
         alert("수정되었습니다.");
+      } else {
+        throw new Error("데이터 수정에 실패했습니다.");
       }
     } catch (error) {
       console.error("수정 중 오류가 발생했습니다:", error);
       alert("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+
+  //   const formData = new FormData();
+
+  //   // JSON 데이터 추가
+  //   formData.append(
+  //     "request",
+  //     JSON.stringify({
+  //       date: currentDate,
+  //       workSatisfaction: ratings["작업"],
+  //       restSatisfaction: ratings["휴식"],
+  //       sleepSatisfaction: ratings["수면"],
+  //       personalSatisfaction: ratings["개인생활"],
+  //       healthSatisfaction: ratings["건강"],
+  //       content: diaryContent,
+  //       image_url: diaryImage, // 수정 시에는 파일을 직접 보내지 않고, URL을 추가할 수 있습니다.
+  //       completed_goals: checkedGoals,
+  //     })
+  //   );
+
+  //   // 이미지 파일 추가 (파일이 있을 경우)
+  //   if (diaryImage) {
+  //     formData.append("file", diaryImage); // 파일을 추가합니다
+  //   }
+
+  //   try {
+  //     const response = await axios.put(
+  //       `https://www.proclockout.com/api/v1/daily/${dailyId}`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${localStorage.getItem("authorization")}`, // 토큰 추가
+  //         },
+  //       }
+  //     );
+  //     if (response.status === 200) {
+  //       setSavedData((prevData) => ({
+  //         ...prevData,
+  //         [currentDate]: JSON.parse(formData.get("request")),
+  //       }));
+  //       setIsLocked(false); // 수정 후 화면 잠금
+  //       setIsEditing(true); // 수정 후 수정 모드 해제
+  //       alert("수정되었습니다.");
+  //     }
+  //   } catch (error) {
+  //     console.error("수정 중 오류가 발생했습니다:", error);
+  //     alert("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+  //   }
+  // };
 
   const handleDateSelect = (date) => {
     if (savedData[date]) {
@@ -207,28 +402,52 @@ const Daily = () => {
     }
   };
 
-  const handleAddGoal = (newGoal) => {
+  const handleAddGoal = async (newGoal) => {
+    console.log(newGoal);
     if (!isLocked) {
-      setGoals((prevGoals) => [...prevGoals, newGoal]);
+      try {
+        const response = await axios.post(
+          "https://www.proclockout.com/api/v1/daily/goals",
+          {
+            content: newGoal.content,
+            category: newGoal.category,
+          },
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
+
+        const addedGoal = response.data;
+        setGoals((prevGoals) => [...prevGoals, addedGoal]);
+        await loadGoals(); // 추가 후 목표 목록 다시 불러오기
+      } catch (error) {
+        console.error("목표활동 추가 중 오류가 발생했습니다:", error);
+      }
     }
   };
 
-  const handleEditGoal = (updatedGoal) => {
+  const handleDeleteGoal = async (goalId) => {
     if (!isLocked) {
-      setGoals((prevGoals) =>
-        prevGoals.map((goal) => (goal === updatedGoal ? updatedGoal : goal))
-      );
-    }
-  };
+      try {
+        await axios.delete(
+          `https://www.proclockout.com/api/v1/daily/goals/${goalId}`,
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
 
-  const handleDeleteGoal = (goalToDelete) => {
-    if (!isLocked) {
-      setGoals((prevGoals) =>
-        prevGoals.filter((goal) => goal !== goalToDelete)
-      );
-      setCheckedGoals((prevCheckedGoals) =>
-        prevCheckedGoals.filter((goal) => goal !== goalToDelete)
-      );
+        setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== goalId));
+        setCheckedGoals((prevCheckedGoals) =>
+          prevCheckedGoals.filter((goal) => goal.id !== goalId)
+        );
+        await loadGoals(); // 삭제 후 목표 목록 다시 불러오기
+      } catch (error) {
+        console.error("목표활동 삭제 중 오류가 발생했습니다:", error);
+      }
     }
   };
 
@@ -239,7 +458,7 @@ const Daily = () => {
         <Diary
           checkedGoals={checkedGoals}
           goals={checkedGoals}
-          categoryColors={categoryColors}
+          categorycategorys={categorycategorys}
           content={diaryContent}
           setContent={setDiaryContent}
           image={diaryImage}
@@ -258,15 +477,14 @@ const Daily = () => {
         onRatingChange={handleRatingChange}
         isLocked={isLocked}
       />
-      <GoalListContainer
-        categoryColors={categoryColors}
+      {/* <GoalListContainer
+        categorycategorys={categorycategorys}
         onCheckboxChange={handleCheckboxChange}
         onAddGoal={handleAddGoal}
-        onEditGoal={handleEditGoal}
         onDeleteGoal={handleDeleteGoal}
         goals={goals}
         isLocked={isLocked}
-      />
+      /> */}
     </PageContainer>
   );
 };
