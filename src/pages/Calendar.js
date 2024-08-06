@@ -67,15 +67,8 @@ const Calendars = () => {
   //           },
   //         }
   //       );
-  //       console.log(typeof response.data);
-  //       // response.data가 null이거나 배열이 아닐 경우 빈 배열로 설정
-  //       if (!response.data) {
-  //         setEvents([]);
-  //       } else if (Array.isArray(response.data)) {
-  //         setEvents(response.data);
-  //       } else {
-  //         setEvents([response.data]);
-  //       }
+  //       console.log("get으로 받은 data", response.data);
+  //       // setEvents(response.data);
   //     } catch (error) {
   //       console.error("Error fetching events:", error);
   //     }
@@ -83,6 +76,44 @@ const Calendars = () => {
 
   //   fetchEvents();
   // }, []);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/calendars",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
+        console.log("get으로 받은 data", response.data);
+
+        const data = response.data;
+
+        if (Array.isArray(data)) {
+          const formattedEvents = data.map((event) => ({
+            calendar_id: event.id,
+            label: event.label,
+            title: event.title,
+            location: event.location,
+            start_time: event.startTime,
+            end_time: event.endtime,
+            notes: event.notes,
+          }));
+          console.log("포멧 데이터", formattedEvents);
+          setEvents(formattedEvents);
+        } else {
+          console.error("Unexpected data format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   // 필터링된 이벤트만 반환
   const filteredEvents = events.filter(
