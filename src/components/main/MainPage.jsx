@@ -26,8 +26,9 @@ const fade = keyframes`
 `;
 
 const MainContainer = styled.div`
-  position: absolute;
-  top: 200px;
+  display: flex;
+  /* position: absolute; */
+  /* top: 200px; */
   display: flex;
   flex-direction: row;
   justify-content: center;

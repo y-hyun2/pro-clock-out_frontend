@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import MainLogo from "../logo/MainLogo";
+import { useAuth } from "../../AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth(); // assuming logout is provided by useAuth
 
   const goToAnalytics = () => {
     navigate("/analytics");
@@ -30,18 +32,34 @@ const Navbar = () => {
     navigate("/mypage");
   };
 
+  const handleLogout = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("authorization");
+      logout();
+      console.log(isLoggedIn);
+      alert("로그아웃 되었습니다.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    }
+  };
+
   return (
     <div>
       <Container>
         <MainLogo></MainLogo>
-        <ButtonWrapper>
-          <Button onClick={goToAnalytics}>워라밸 분석</Button>
-          <Button onClick={goToCalander}>캘린더</Button>
-          <Button onClick={goToDaily}>데일리</Button>
-          <Button onClick={goToRecommend}>추천활동</Button>
-          <Button onClick={goToMypage}>마이페이지(임시)</Button>
-        </ButtonWrapper>
-        <LoginButton onClick={goToLogin}>로그인</LoginButton>
+        {isLoggedIn && (
+          <ButtonWrapper>
+            <Button onClick={goToAnalytics}>워라밸 분석</Button>
+            <Button onClick={goToCalander}>캘린더</Button>
+            <Button onClick={goToDaily}>데일리</Button>
+            <Button onClick={goToRecommend}>추천활동</Button>
+            <Button onClick={goToMypage}>마이페이지</Button>
+          </ButtonWrapper>
+        )}
+        <LoginButton onClick={isLoggedIn ? handleLogout : goToLogin}>
+          {isLoggedIn ? "로그아웃" : "로그인"}
+        </LoginButton>
       </Container>
     </div>
   );
