@@ -6,7 +6,6 @@ import { useAuth } from "../../AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("authorization");
   const { isLoggedIn, logout } = useAuth(); // assuming logout is provided by useAuth
 
   const goToAnalytics = () => {
@@ -49,7 +48,7 @@ const Navbar = () => {
     <div>
       <Container>
         <MainLogo></MainLogo>
-        {token && (
+        {isLoggedIn && (
           <ButtonWrapper>
             <Button onClick={goToAnalytics}>워라밸 분석</Button>
             <Button onClick={goToCalander}>캘린더</Button>
@@ -58,8 +57,8 @@ const Navbar = () => {
             <Button onClick={goToMypage}>마이페이지</Button>
           </ButtonWrapper>
         )}
-        <LoginButton onClick={token ? handleLogout : goToLogin}>
-          {token ? "로그아웃" : "로그인"}
+        <LoginButton onClick={isLoggedIn ? handleLogout : goToLogin}>
+          {isLoggedIn ? "로그아웃" : "로그인"}
         </LoginButton>
       </Container>
     </div>
@@ -87,7 +86,6 @@ const ButtonBase = styled.button`
   cursor: pointer;
 `;
 
-//마이페이지(임시) 때문에 약간 비좁아보일 수 있음. 추후 간격 조정할것임.
 const Button = styled(ButtonBase)`
   background-color: white;
   margin-right: 8rem;
