@@ -7,7 +7,7 @@ const ModalOverlay = styled.div`
   top: auto;
   right: 700px;
   bottom: 100px;
-  background-color: rgba(0, 0, 0, 0); /* Semi-transparent black */
+  background-category: rgba(0, 0, 0, 0); /* Semi-transparent black */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,14 +37,14 @@ const CloseButton = styled.button`
 
 const Button = styled.button`
   padding: 10px;
-  background-color: #7a7ee3;
-  color: white;
+  background-category: #7a7ee3;
+  category: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: "#6a6fc3";
+    background-category: "#6a6fc3";
   }
 `;
 
@@ -53,13 +53,13 @@ const ButtonContainer = styled.div`
 `;
 
 const DeleteButton = styled(Button)`
-  background-color: #cccccc;
+  background-category: #cccccc;
   margin-left: auto;
   margin-right: auto;
   width: 200px;
 
   &:hover {
-    background-color: #696969;
+    background-category: #696969;
   }
 `;
 
@@ -94,23 +94,15 @@ const Modal = ({ onClose, mode, onAddGoal, onDeleteGoal, goal }) => {
     }
   }, [goal]);
 
-  useEffect(() => {
-    if (goal) {
-      setCategory(goal.category);
-      setContent(goal.content);
-    }
-  }, [goal]);
-
   const handleSubmit = () => {
-    if (mode === "add") {
-      onAddGoal({ category, content });
-      onClose(); // 추가 후 모달 닫기
-    }
+    console.log("handleSubmit 성공");
+    onAddGoal({ content, category });
+    onClose(); // 추가 후 모달 닫기
   };
 
   const handleDelete = () => {
-    if (onDeleteGoal) {
-      onDeleteGoal(goal);
+    if (goal) {
+      onDeleteGoal(goal.goalId);
     }
     onClose();
   };
