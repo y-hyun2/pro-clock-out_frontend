@@ -140,7 +140,7 @@ const TaskPopup = ({ onClose, onSave, initialData = {} }) => {
       const token = localStorage.getItem("Authorization");
 
       const response = await axios.post(
-        "https://www.proclockout.com/api/v1/members/me/wolibals/work",
+        "https://www.proclockout.com/api/v1/wolibals/work",
         {
           day_working_hours:
             parseFloat(selectedTime.split(":")[0]) +

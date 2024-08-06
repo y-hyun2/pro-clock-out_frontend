@@ -94,7 +94,7 @@ const PersonalPopup = ({ onClose, onSave }) => {
         };
 
         const response = await axios.post(
-          "https://www.proclockout.com/api/v1/members/me/wolibals/personal",
+          "https://www.proclockout.com/api/v1/wolibals/personal",
           requestData,
           {
             headers: {

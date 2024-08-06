@@ -157,7 +157,7 @@ const HealthPopup = ({ onClose, onSave }) => {
         const token = localStorage.getItem("Authorization");
 
         const response = await axios.post(
-          "https://www.proclockout.com/api/v1/members/me/wolibals/health",
+          "https://www.proclockout.com/api/v1/wolibals/health",
           requestData,
           {
             headers: {
