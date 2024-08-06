@@ -2,17 +2,6 @@
   "hosting": {
     "site": "proclockout",
     "public": "build",
-    "headers": 
-      {
-        "source": "/analytics",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "http://localhost:3000" 
-          }
-        
-    ]
-    ,
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -25,4 +14,4 @@
       }
     ]
   }
-}}
+}
