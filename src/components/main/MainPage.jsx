@@ -27,8 +27,8 @@ const fade = keyframes`
 
 const MainContainer = styled.div`
   display: flex;
-  /* position: absolute; */
-  /* top: 200px; */
+  /* position: absolute;
+  top: 200px; */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -38,6 +38,7 @@ const MainContainer = styled.div`
   background: linear-gradient(#dadbff, #ffffff);
   text-align: center;
   padding: 20px;
+  z-index: 0;
 `;
 
 const Title = styled.h1`
