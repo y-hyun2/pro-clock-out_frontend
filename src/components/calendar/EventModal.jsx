@@ -22,7 +22,7 @@ const EventModal = ({ show, handleClose, handleSave, event }) => {
     }
   }, [event]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!label) {
       alert("카테고리를 선택하세요.");
       return;
@@ -49,6 +49,50 @@ const EventModal = ({ show, handleClose, handleSave, event }) => {
       start_time: `${start}T${startTime}`,
       end_time: `${end}T${endTime}`,
     });
+
+    const calendarId = event.calendar_id;
+    // 캘린더 수정 api 호출 부
+    // try {
+    //   const delete_response = await axios.delete(
+    //     `https://www.proclockout.com/api/v1/calendars/${calendarId}`,
+    //     { calendarId },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         authorization: localStorage.getItem("authorization"), // access 대신 토큰 키 값으로 넣기
+    //       },
+    //       withCredentials: true,
+    //     }
+    //   );
+    //   console.log("정상적인 삭제", delete_response);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // try {
+    //   const response = await axios.put(
+    //     `https://www.proclockout.com/api/v1/calendars/${calendarId}`,
+    //     {
+    //       label: label,
+    //       title: title,
+    //       location: location,
+    //       start_time: `${start}T${startTime}`,
+    //       end_time: `${end}T${endTime}`,
+    //       notes: " ",
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         authorization: localStorage.getItem("authorization"), // access 대신 토큰 키 값으로 넣기
+    //       },
+    //       withCredentials: true,
+    //     }
+    //   );
+    //   console.log(response);
+    //   alert("수정사항이 저장되었습니다.");
+    // } catch (error) {
+    //   console.error("Error response:", error.response);
+    // }
+
     handleClose();
   };
 
@@ -56,7 +100,7 @@ const EventModal = ({ show, handleClose, handleSave, event }) => {
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>
-          이벤트 {event && event.calendar_id ? "수정" : "추가"}
+          이벤트 {event && event.calendar_id ? "추가" : "수정"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

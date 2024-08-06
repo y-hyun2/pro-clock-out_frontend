@@ -278,3 +278,4 @@ const MainCalendar = ({
   );
 };
 export default MainCalendar;
+// eventmodal에서 event : current event를 캘린더 일정 상세 조회 등으로 불러오기
