@@ -1,5 +1,6 @@
 // src/GoalListContainer.js
 import React, { useState } from "react";
+import axios from "axios"; // axios 임포트 추가
 import styled from "styled-components";
 import GoalList from "./GoalList";
 import Modal from "./Modal";
@@ -24,13 +25,13 @@ const AddButton = styled.button`
   position: relative;
   //   left: 20px;
   padding: 10px 20px;
-  color: #9d9d9d;
+  category: #9d9d9d;
   border: none;
-  background-color: transparent;
+  background-category: transparent;
   cursor: pointer;
 
   &:hover {
-    color: #7a7ee3;
+    category: #7a7ee3;
   }
 `;
 
@@ -49,10 +50,9 @@ const FormBlock = styled.div`
 `;
 
 const GoalListContainer = ({
-  categoryColors,
+  categorycategorys,
   onCheckboxChange,
   onAddGoal,
-  onEditGoal,
   onDeleteGoal,
   goals,
   isLocked,
@@ -61,22 +61,49 @@ const GoalListContainer = ({
   const [editingGoal, setEditingGoal] = useState(null);
   const [modalMode, setModalMode] = useState("add"); // 모달 모드
 
-  const handleAddGoal = (newGoal) => {
-    if (goals.length < 10) {
-      onAddGoal(newGoal); // Add the new goal
-    } else {
-      alert("목표는 최대 10개까지 추가할 수 있습니다.");
-    }
-  };
+  // const handleAddGoal = async (newGoal) => {
+  //   if (goals.length < 10) {
+  //     try {
+  //       const response = await axios.post(
+  //         "https://www.proclockout.com/api/v1/daily/goals",
+  //         {
+  //           content: newGoal.content,
+  //           category: newGoal.category,
+  //         },
+  //         {
+  //           headers: {
+  //             authorization: localStorage.getItem("authorization"),
+  //           },
+  //         }
+  //       );
 
-  const handleEditGoal = (updatedGoal) => {
-    onEditGoal(updatedGoal); // Update the goal
-  };
+  //       const addedGoal = response.data;
+  //       console.log(addedGoal);
+  //       onAddGoal(addedGoal); // Add the new goal
+  //       setModalOpen(false); // 추가 후 모달 닫기
+  //     } catch (error) {
+  //       console.error("목표활동 추가 중 오류가 발생했습니다:", error);
+  //     }
+  //   } else {
+  //     alert("목표는 최대 10개까지 추가할 수 있습니다.");
+  //   }
+  // };
 
-  const handleDeleteGoal = (goalToDelete) => {
-    onDeleteGoal(goalToDelete); // Delete the goal
-    setEditingGoal(null); // Clear editing goal
-  };
+  // const handleDeleteGoal = async (goalId) => {
+  //   try {
+  //     await axios.delete(
+  //       `https://www.proclockout.com/api/v1/daily/goals/${goalId}`,
+  //       {
+  //         headers: {
+  //           authorization: localStorage.getItem("authorization"),
+  //         },
+  //       }
+  //     );
+  //     onDeleteGoal(goalId); // Remove the goal from state
+  //   } catch (error) {
+  //     console.error("목표활동 삭제 중 오류가 발생했습니다:", error);
+  //   }
+  // };
 
   const openAddModal = () => {
     setModalMode("add");
@@ -96,7 +123,7 @@ const GoalListContainer = ({
       <FormBlock />
       <GoalList
         goals={goals}
-        categoryColors={categoryColors}
+        categorycategorys={categorycategorys}
         onCheckboxChange={onCheckboxChange}
         onEditGoal={openEditModal}
       />
@@ -104,8 +131,8 @@ const GoalListContainer = ({
       {isModalOpen && (
         <Modal
           onClose={() => setModalOpen(false)}
-          onAddGoal={handleAddGoal}
-          onDeleteGoal={handleDeleteGoal}
+          onAddGoal={onAddGoal}
+          onDeleteGoal={onDeleteGoal}
           goal={editingGoal}
           mode={modalMode}
         />

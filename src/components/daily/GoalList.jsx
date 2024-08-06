@@ -86,26 +86,28 @@ const StyledCheckbox = styled.label`
 `;
 
 const GoalList = ({ goals, categoryColors, onCheckboxChange, onEditGoal }) => {
+  //   console.log(goals[0].name);
   return (
     <ListContainer>
-      {goals.map((goal, index) => (
-        <GoalItem key={index}>
-          <ColorDot
-            color={categoryColors[goal.category]}
-            onClick={() => onEditGoal(goal)}
-          />
-          <Content onClick={() => onEditGoal(goal)}>{goal.content}</Content>
-          <Checkbox
-            type="checkbox"
-            id={`checkbox-${index}`}
-            onChange={() => onCheckboxChange(goal)}
-          />
-          <StyledCheckbox
-            color={categoryColors[goal.category]}
-            htmlFor={`checkbox-${index}`}
-          />
-        </GoalItem>
-      ))}
+      {goals &&
+        goals.map((goal, index) => (
+          <GoalItem key={index}>
+            <ColorDot
+              color={categoryColors[goal.category]}
+              onClick={() => onEditGoal(goal)}
+            />
+            <Content onClick={() => onGoalClick(goal)}>{goal.content}</Content>
+            <Checkbox
+              type="checkbox"
+              id={`checkbox-${index}`}
+              onChange={() => onCheckboxChange(goal)}
+            />
+            <StyledCheckbox
+              color={categoryColors[goal.category]}
+              htmlFor={`checkbox-${index}`}
+            />
+          </GoalItem>
+        ))}
     </ListContainer>
   );
 };
