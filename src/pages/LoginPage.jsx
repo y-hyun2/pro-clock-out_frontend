@@ -30,7 +30,6 @@ const LoginPage = () => {
 
   console.log("email", email, "password", password, "requestdata", requestData);
   const handleLogin = async () => {
-    alert("로그인 시도");
     try {
       const response = await axios.post(
         "https://www.proclockout.com/api/v1/login",
@@ -42,11 +41,13 @@ const LoginPage = () => {
         }
       );
       console.log(response);
+
       const token = response.headers["authorization"];
       const nickname_res = response.headers["nickname"];
       //로그인 상태 업데이트
       login();
       console.log(isLoggedIn);
+      alert("로그인에 성공하였습니다");
       if (token) {
         console.log(token);
         localStorage.setItem("authorization", token);
@@ -54,6 +55,9 @@ const LoginPage = () => {
       if (nickname_res == "hexcode") {
         alert("닉네임 설정으로 이동합니다.");
         navigate("/login/signin/nickname");
+      } else {
+        alert("홈 화면으로 이동합니다.");
+        navigate("/");
       }
     } catch (error) {
       console.error("Error response:", error.response);

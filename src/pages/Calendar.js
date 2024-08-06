@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import { startOfWeek, endOfWeek } from "date-fns"; // 날짜 포맷을 위한 라이브러리
 import axios from "axios";
+
 const categoryColors = {
   작업: "#7AA2E3",
   휴식: "#7A7EE3",

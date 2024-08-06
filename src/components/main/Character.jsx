@@ -34,17 +34,17 @@ const Character = ({ userName, daysTogether }) => {
 };
 
 const Container = styled.div`
-  position: absolute;
-  bottom: 30px; 
-  width: 888.229px
+  position: flex;
+  bottom: 30px;
+  width: 888.229px;
   flex-direction: row;
-  left: 50%
+  left: 30%;
   margin: 0 auto; /* 가운데 정렬을 위한 마진 설정 */
   height: 333px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-//   transform: translateX(-50%); /* 가운데 정렬 */
+  //   transform: translateX(-50%); /* 가운데 정렬 */
 `;
 const ImageContainer = styled.div`
   /* 추가된 스타일 */
