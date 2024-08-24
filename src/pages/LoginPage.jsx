@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import logoImage from "../img/logo.png";
+import logoImage from "../img/logos/logo.png";
 import theme from "../styles/theme";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "../components/login/PasswordInput";

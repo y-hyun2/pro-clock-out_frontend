@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logoImage from "../../img/logo.png";
+import logoImage from "../../img/logos/logo.png";
+import logoText from "../../img/logos/logo_txt.png";
 
 const MainLogo = ({ className }) => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const MainLogo = ({ className }) => {
   return (
     <LogoButton className={className} onClick={goToMain}>
       <LogoImage src={logoImage} alt="Logo" />
-      <LogoText>퇴근의 정석</LogoText>
+      <LogoText src={logoText} alt="LogoText"></LogoText>
     </LogoButton>
   );
 };
@@ -36,11 +37,12 @@ const LogoButton = styled(ButtonBase)`
 `;
 
 const LogoImage = styled.img`
-  height: 5rem;
+  height: 60px;
   margin-left: 4rem;
 `;
 
-const LogoText = styled.span`
+const LogoText = styled.img`
+  height: 50px;
   font-size: 3rem;
   margin-left: 1rem;
 `;

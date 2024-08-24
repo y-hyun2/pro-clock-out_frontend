@@ -22,7 +22,7 @@ const Character = ({ userName, daysTogether }) => {
 
   return (
     <Container>
-      <GlobalStyled />
+      {/* <GlobalStyled /> */}
       <ImageContainer>
         <Image src={gifUrl} alt="Character Image" />
       </ImageContainer>
