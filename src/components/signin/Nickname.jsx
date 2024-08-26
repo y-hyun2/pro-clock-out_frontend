@@ -8,10 +8,9 @@ import NicknameButton from "./NicknameButton";
 import { useNavigate } from "react-router-dom";
 const Nickname = () => {
   const [nickname, setNickname] = useState("");
-  console.log(nickname);
+
   const navigate = useNavigate();
   const handleNickname = async () => {
-    alert("닉네임 설정");
     try {
       const response = await axios.put(
         "https://www.proclockout.com/api/v1/members/me/profile/nickname",
@@ -21,13 +20,13 @@ const Nickname = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            authorization: localStorage.getItem("authorization"), // access 대신 토큰 키 값으로 넣기
+            authorization: localStorage.getItem("authorization"),
           },
           withCredentials: true,
         }
       );
-      console.log(response);
-      alert("환영합니다!");
+      //console.log(response);
+      alert("닉네임이 수정되었습니다.");
       navigate("/");
     } catch (error) {
       console.error("Error response:", error.response);
