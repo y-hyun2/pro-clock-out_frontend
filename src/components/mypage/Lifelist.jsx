@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
+import axios from "axios";
 // 선택지 배열
 const LIFESTYLE_LIST = [
-  { id: 0, data: "건강한 삶" },
-  { id: 1, data: "부유한 삶" },
-  { id: 2, data: "발전하는 삶" },
-  { id: 3, data: "목표를 잘 실천하는 삶" },
-  { id: 4, data: "행복한 삶" },
+  { id: 0, data: "부유한 삶" },
+  { id: 1, data: "편안한 삶" },
+  { id: 2, data: "화목한 삶" },
+  { id: 3, data: "여유로운 삶" },
+  { id: 4, data: "사랑이 가득한 삶" },
+  { id: 5, data: "숙면하는 삶" },
+  { id: 6, data: "배려하는 삶" },
+  { id: 7, data: "적게 일하는 삶" },
+  { id: 8, data: "바른 삶" },
+  { id: 9, data: "건강한 삶" },
 ];
 
 const Lifelist = ({ onSelect }) => {
-  // 선택된 항목 상태
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]); // 선택된 항목 상태
   const [isModalOpen, setIsModalOpen] = useState(true); // Modal open state
 
   // 체크박스 상태 변경
@@ -23,16 +27,36 @@ const Lifelist = ({ onSelect }) => {
         : [...prevSelectedItems, id]
     );
   };
-
+  console.log(selectedItems);
   // "선택 저장" 버튼 클릭 시 호출
-  const handleSaveSelection = () => {
+  // API 호출 코드도 담당하는 함수
+
+  const handleSaveSelection = async () => {
     const selectedLifestyles = LIFESTYLE_LIST.filter((item) =>
       selectedItems.includes(item.id)
     );
     onSelect(selectedLifestyles); // 부모 컴포넌트로 선택된 항목 전달
-    setIsModalOpen(false); // Close the modal after saving selection
-  };
+    const requestData = selectedLifestyles.map((item) => item.data);
+    // console.log(requestData);
+    try {
+      const response = await axios.put(
+        "https://www.proclockout.com/api/v1/members/me/profile/lifestyle",
+        { life: requestData },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"),
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error response:", error.response);
+    }
 
+    setIsModalOpen(false);
+  };
   // 오버레이 클릭 시 모달 닫기
   const handleOverlayClick = () => {
     setIsModalOpen(false);
