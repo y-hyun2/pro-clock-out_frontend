@@ -104,7 +104,7 @@ const services = [
   { name: "여유", width: "131px" },
 ];
 
-const MainPage = () => {
+const MainBanner = () => {
   const [currentIndex, setCurrentIndex] = useState(2);
   const [animationState, setAnimationState] = useState("none");
 
@@ -156,4 +156,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default MainBanner;

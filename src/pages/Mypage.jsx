@@ -40,6 +40,7 @@ const Mypage = () => {
   const [email, setEmail] = useState("");
   const [score, setScore] = useState(0);
   const [percentage, setPercentage] = useState(11);
+  const [daysTogether, setDaysTogether] = useState(0);
 
   let lifelist_data = [];
   const selectedIds = [];
@@ -72,9 +73,19 @@ const Mypage = () => {
         );
 
         console.log("selectedLifestyles", selectedIds);
-
-        // 상태 업데이트
         setSelectedLifestyles(selectedIds);
+
+        // D-day 정보 가져오기
+        const ddayResponse = await axios.get(
+          "https://www.proclockout.com/api/v1/members/me/dday",
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
+        setDaysTogether(ddayResponse.data.dday);  // D-day 상태 업데이트
+
       } catch (error) {
         console.error("Error response:", error.response);
       }
@@ -177,7 +188,7 @@ const Mypage = () => {
 
         <Divider></Divider>
         <RightWrapper>
-          <Cheer>시작이 반이다. 화이팅!</Cheer>
+          <DDay>{nickname}님과 함께한지 {daysTogether}일</DDay>
           <RightText>나의 워라벨</RightText>
           <Balance>
             <BalanceTitle>
@@ -339,8 +350,8 @@ const RightWrapper = styled.div`
   margin-top: -4.5rem;
 `;
 
-//AI 활용한 응원 문구. 우선 Static하게 넣어둠.
-const Cheer = styled.h1`
+//함께한 시간. 우선 Static하게 넣어둠.
+const DDay = styled.h1`
   font-size: 4.5rem;
   margin-top: 0;
   margin-bottom: 5rem;
