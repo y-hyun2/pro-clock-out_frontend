@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled, { createGlobalStyle, keyframes, css } from "styled-components";
 
-const GlobalStyled = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+// const GlobalStyled = createGlobalStyle`
+//   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 
-  body {
-    font-family: 'Noto Sans', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    overflow: hidden;
-  }
-`;
+//   body {
+//     font-family: 'Noto Sans', sans-serif;
+//     margin: 0;
+//     padding: 0;
+//     box-sizing: border-box;
+//     display: flex;
+//     justify-content: center;
+//     align-items: start;
+//     overflow: hidden;
+//   }
+// `;
 
 const ANIMATION_DURATION = "0.5s"; // 애니메이션 시간
 const ANIMATION_TIMING_FUNCTION = "ease-in-out";
@@ -37,7 +37,6 @@ const MainContainer = styled.div`
   height: 573px;
   background: linear-gradient(#dadbff, #ffffff);
   text-align: center;
-  padding: 20px;
   z-index: 0;
 `;
 
@@ -125,7 +124,7 @@ const MainPage = () => {
 
   return (
     <MainContainer>
-      <GlobalStyled />
+      {/* <GlobalStyled /> */}
       <Title>
         <LeftText>워라밸로 찾는</LeftText>
         <TitleWrapper width={services[currentIndex].width}>

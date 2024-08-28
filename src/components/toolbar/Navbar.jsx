@@ -68,13 +68,10 @@ const Navbar = () => {
 export default Navbar;
 
 const Container = styled.div`
-  padding-top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 8vh;
   width: 100%;
-  margin-bottom: 0;
   border-bottom: 1px solid lightgray;
 `;
 

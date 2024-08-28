@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# 퇴근의정석 프론트엔드
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+퇴근의정석은 사용자의 일과 생활 패턴을 분석하여 최적의 워라밸(Work-Life Balance)을 유지하도록 돕는 플랫폼입니다. 본 레포지토리는 퇴근의정석 플랫폼의 프론트엔드 애플리케이션 코드와 관련된 내용을 포함하고 있습니다.
 
-## Available Scripts
+## 목차
 
-In the project directory, you can run:
+1. [프로젝트 개요](#프로젝트-개요)
+2. [주요 기능](#주요-기능)
+3. [사용 기술](#사용-기술)
 
-### `npm start`
+## 프로젝트 개요
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+현대 사회의 바쁜 일상에서 많은 사람들이 일과 개인 생활의 균형을 찾지 못해 번아웃과 우울증과 같은 정신적 어려움을 겪고 있습니다. '퇴근의정석'은 이러한 문제를 해결하고자 개인의 업무와 생활 패턴을 분석하고, 데이터를 기반으로 최적의 워라밸을 찾을 수 있도록 돕는 서비스입니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 주요 기능
 
-### `npm test`
+1. **워라밸 분석 도구**  
+   - 사용자의 일과 생활 패턴을 분석하여 워라밸 점수를 산출합니다.
+   - 작업 시간, 휴식 시간, 수면 패턴, 운동 시간 등의 데이터를 수집하고 분석하여 점수를 시각적으로 보여줍니다.
+   - 개선 방향에 대한 제안을 제공합니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **균형 잡힌 일정 관리**  
+   - 사용자의 업무 일정과 개인 생활 일정을 통합적으로 관리할 수 있는 기능을 제공합니다.
+   - 일정 추가, 우선순위 설정, 시간 관리 도구 등을 통해 효율적인 시간 관리를 돕습니다.
+   - 일정 충돌 시 우선도가 높은 일정을 추천합니다.
 
-### `npm run build`
+3. **워라밸 개선 추천**  
+   - 사용자 맞춤형 워라밸 개선 방안을 제시합니다.
+   - 행동 제안, 스트레스 관리 방법, 휴식 권장 사항 등을 제공합니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **실시간 분석과 통계**  
+   - 일과 생활 패턴을 실시간으로 분석하여 시각화된 데이터를 제공합니다.
+   - 워라밸 개선 상황을 모니터링하고, 통계적 정보를 통해 개선 효과를 확인할 수 있습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 사용 기술
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **React**: 사용자 인터페이스를 위한 라이브러리
+- **Axios**: API 호출
+- **Styled-components**: 스타일링 솔루션
