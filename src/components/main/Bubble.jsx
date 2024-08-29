@@ -1,5 +1,18 @@
-import styled from "styled-components";
-import { colors } from "../../styles/theme"; // colors에서 가져올 경우 해당 경로 확인 필요
+import styled, { keyframes } from "styled-components";
+import { colors } from "../../styles/theme";
+
+// 통통 튀는 애니메이션 정의
+const bounce = keyframes`
+  0%, 20%, 50%, 75%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+`;
 
 const BubbleStyles = styled.div`
   display: flex;
@@ -16,6 +29,9 @@ const BubbleStyles = styled.div`
   height: auto;
   box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
   position: relative; /* 말풍선 꼬리 위치 설정에 필요 */
+
+  /* 애니메이션 적용 */
+  animation: ${bounce} 2s infinite;
 
   // 말풍선 꼬리
   &:after {

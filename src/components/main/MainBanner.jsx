@@ -1,156 +1,194 @@
 import React, { useState, useEffect } from "react";
-import styled, { createGlobalStyle, keyframes, css } from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { colors } from "../../styles/theme";
 
-// const GlobalStyled = createGlobalStyle`
-//   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+const ANIMATION_DURATION = "1s";
+const DISPLAY_DURATION = 2000; // 2초 동안 텍스트가 고정된 채로 보임
 
-//   body {
-//     font-family: 'Noto Sans', sans-serif;
-//     margin: 0;
-//     padding: 0;
-//     box-sizing: border-box;
-//     display: flex;
-//     justify-content: center;
-//     align-items: start;
-//     overflow: hidden;
-//   }
-// `;
+// 애니메이션 정의
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+`;
 
-const ANIMATION_DURATION = "0.5s"; // 애니메이션 시간
-const ANIMATION_TIMING_FUNCTION = "ease-in-out";
-const DISPLAY_DURATION = 2500; // 중앙 글자가 표시되는 시간
+const fadeOut = keyframes`
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
+`;
 
-const fade = keyframes`
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+const slideIn = keyframes`
+  from {
+    transform: translateY(0);
+    opacity: 0.5;
+    font-size: 2rem;
+  }
+  to {
+    transform: translateY(100px);
+    opacity: 1;
+    font-size: 4rem;
+    font-weight: 600;
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateY(0);
+    opacity: 1;
+    font-size: 4rem;
+    font-weight: 600;
+  }
+  to {
+    transform: translateY(100px);
+    opacity: 0.5;
+    font-size: 2rem;
+  }
 `;
 
 const MainContainer = styled.div`
-  display: flex;
-  /* position: absolute;
-  top: 200px; */
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 573px;
-  background: linear-gradient(#dadbff, #ffffff);
+  height: 50%;
+  background: linear-gradient(${colors.rest}, ${colors.white});
   text-align: center;
-  z-index: 0;
+  font-weight: 500;
 `;
 
-const Title = styled.h1`
-  font-size: 2.5rem;
-  color: #333;
-  margin: 0;
+const Title = styled.div`
+  color: ${colors.black};
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: relative;
-  z-index: 1;
+  width: 100%;
+  max-width: 1500px;
+  padding: 0 20px;
+  white-space: nowrap;
 `;
 
 const LeftText = styled.div`
-  margin-right: 10px;
+  margin-right: 50px;
+  flex: 1;
+  text-align: right;
+  font-weight: 600;
+  font-family: "Gmarket Sans Bold", sans-serif;
+  font-size: 4rem;
 `;
 
-const RightAlignedText = styled.div`
-  margin-left: 10px;
-  text-align: right;
+const RightText = styled.div`
+  margin-left: 50px;
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+  font-family: "Gmarket Sans Bold", sans-serif;
+  font-size: 4rem;
 `;
 
 const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  width: ${({ width }) => width || "100%"};
-  height: 300px;
+  width: 500px;
 `;
 
 const TitleItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
   width: 100%;
   height: 100px;
   text-align: center;
   white-space: nowrap;
-  opacity: ${({ isCurrent }) => (isCurrent ? 1 : 0.5)};
-  animation: ${({ state }) =>
-    state === "fade"
-      ? css`
-          ${fade} ${ANIMATION_DURATION} ${ANIMATION_TIMING_FUNCTION} forwards
-        `
-      : "none"};
-  color: ${({ isCurrent }) => (isCurrent ? "#7A7EE3" : "rgba(0, 0, 0, 0.5)")};
-  transition: transform ${ANIMATION_DURATION} ${ANIMATION_TIMING_FUNCTION};
+  font-size: 2rem;
+  color: ${colors.main};
+  opacity: 0.5;
 `;
 
-const ServiceName = styled.span`
-  display: inline-flex;
-  height: 100%;
-  align-items: center;
+const TopWrapper = styled.div`
+  position: relative;
+  height: 100px;
 `;
 
-const services = [
-  { name: "나만의 시간", width: "300px" },
-  { name: "행복", width: "131px" },
-  { name: "즐거움", width: "196px" },
-  { name: "여유", width: "131px" },
-];
+const NewTitleItem = styled(TitleItem)`
+  opacity: 0;
+  position: absolute;
+  animation: ${(props) => (props.animate ? fadeIn : "none")} ${ANIMATION_DURATION} ease-in-out;
+`;
+
+const TopTitleItem = styled(TitleItem)`
+  position: absolute;
+  animation: ${(props) => (props.animate ? slideIn : "none")} ${ANIMATION_DURATION} ease-in-out;
+`;
+
+const MainTitleItem = styled(TitleItem)`
+  font-weight: bold;
+  font-size: 4rem;
+  opacity: 1;
+  animation: ${(props) => (props.animate ? slideOut : "none")} ${ANIMATION_DURATION} ease-in-out;
+`;
+
+const BottomTitleItem = styled(TitleItem)`
+  height: 100px;
+  animation: ${(props) => (props.animate ? fadeOut : "none")} ${ANIMATION_DURATION} ease-in-out;
+`;
+
+const services = ["나만의 시간", "행복", "즐거움", "한잔의 여유", "활기찬 하루", "재물"];
 
 const MainBanner = () => {
+  const [newIndex, setNewIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(2);
-  const [animationState, setAnimationState] = useState("none");
+  const [nextIndex, setNextIndex] = useState(3);
+  const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setAnimationState("fade");
+    const animateSequence = () => {
+      setAnimate(true);
       setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % services.length);
-        setAnimationState("none");
+        setNewIndex((index) => (((index - 1) + services.length) % services.length));
+        setPrevIndex((index) => (((index - 1) + services.length) % services.length));
+        setCurrentIndex((index) => (((index - 1) + services.length) % services.length));
+        setNextIndex((index) => (((index - 1) + services.length) % services.length));
+        setAnimate(false);
       }, parseFloat(ANIMATION_DURATION) * 1000);
-    }, DISPLAY_DURATION);
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+    };
 
-  const prevIndex = (currentIndex - 1 + services.length) % services.length;
-  const nextIndex = (currentIndex + 1) % services.length;
+    const timer = setInterval(animateSequence, DISPLAY_DURATION + parseFloat(ANIMATION_DURATION) * 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <MainContainer>
-      {/* <GlobalStyled /> */}
       <Title>
         <LeftText>워라밸로 찾는</LeftText>
-        <TitleWrapper width={services[currentIndex].width}>
-          <TitleItem
-            state={animationState}
-            style={{ top: "0px" }}
-            isCurrent={false}
-          >
-            <ServiceName>{services[prevIndex].name}</ServiceName>
-          </TitleItem>
-          <TitleItem
-            state={animationState}
-            style={{ top: "100px" }}
-            isCurrent={true}
-          >
-            <ServiceName>{services[currentIndex].name}</ServiceName>
-          </TitleItem>
-          <TitleItem
-            state={animationState}
-            style={{ top: "200px" }}
-            isCurrent={false}
-          >
-            <ServiceName>{services[nextIndex].name}</ServiceName>
-          </TitleItem>
+        <TitleWrapper>
+          <TopWrapper>
+            <NewTitleItem animate={animate}>
+              {services[newIndex]}
+            </NewTitleItem>
+            <TopTitleItem animate={animate}>
+              {services[prevIndex]}
+            </TopTitleItem>
+          </TopWrapper>
+          <MainTitleItem animate={animate}>
+            {services[currentIndex]}
+          </MainTitleItem>
+          <BottomTitleItem animate={animate}>
+            {services[nextIndex]}
+          </BottomTitleItem>
         </TitleWrapper>
-        <RightAlignedText>퇴근의 정석</RightAlignedText>
+        <RightText>퇴근의 정석</RightText>
       </Title>
     </MainContainer>
   );

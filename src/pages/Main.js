@@ -27,7 +27,7 @@ const Container = styled.div`
 
 // Character와 Bubble이 위치할 하단 컨테이너
 const BottomContainer = styled.div`
-  flex: 1;
+  height: 30%;
   display: flex;
   flex-direction: row;
   align-items: center; /* 수직 중앙 정렬 */
