@@ -1,11 +1,16 @@
+const cors = require('cors');
 const express = require('express');
 const axios = require('axios');
 const app = express();
 const port = 5000;
 
+app.use(cors({
+  origin: '*',
+}));
+
 app.use(express.json());
 
-app.get('/api/random-message', async (req, res) => {
+app.get('/api/v1/random-message', async (req, res) => {
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/engines/davinci-codex/completions',
@@ -16,7 +21,7 @@ app.get('/api/random-message', async (req, res) => {
       },
       {
         headers: {
-          'Authorization': `Bearer YOUR_OPENAI_API_KEY`,
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
           'Content-Type': 'application/json',
         },
       }
