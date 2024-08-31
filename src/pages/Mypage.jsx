@@ -66,6 +66,7 @@ const Mypage = () => {
         setNickName(response.data.nickname);
         setEmail(response.data.email);
         setLife(response.data.prefix);
+        setUploadedImage(response.data.photo_url);
         lifelist_data = response.data.life;
 
         const selectedIds = LIFESTYLE_LIST.filter((item) =>
@@ -84,8 +85,7 @@ const Mypage = () => {
             },
           }
         );
-        setDaysTogether(ddayResponse.data.dday);  // D-day 상태 업데이트
-
+        setDaysTogether(ddayResponse.data.dday); // D-day 상태 업데이트
       } catch (error) {
         console.error("Error response:", error.response);
       }
@@ -94,10 +94,34 @@ const Mypage = () => {
     fetchProfile();
   }, []);
 
+  // 프로필 이미지 전송
+  const handlePicture = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.put(
+        "https://www.proclockout.com/api/v1/members/me/profile/image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error uploading picture:", error);
+    }
+  };
   const onChangeImage = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+
     setUploadedImage(imageUrl);
+    handlePicture(file);
   };
 
   const goToAnalytics = () => {
@@ -188,7 +212,9 @@ const Mypage = () => {
 
         <Divider></Divider>
         <RightWrapper>
-          <DDay>{nickname}님과 함께한지 {daysTogether}일</DDay>
+          <DDay>
+            {nickname}님과 함께한지 {daysTogether}일
+          </DDay>
           <RightText>나의 워라벨</RightText>
           <Balance>
             <BalanceTitle>
