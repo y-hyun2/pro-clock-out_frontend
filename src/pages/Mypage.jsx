@@ -1,6 +1,6 @@
 // Mypage.jsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import defaultImage from "../img/mypage-default.png";
 import cameraLogo from "../img/cameraLogo.png";
@@ -9,7 +9,20 @@ import { useNavigate } from "react-router-dom";
 import Lifelist from "../components/mypage/Lifelist";
 
 import { useAuth } from "../AuthContext";
-
+import axios from "axios";
+import { IoMdCreate } from "react-icons/io";
+const LIFESTYLE_LIST = [
+  { id: 0, data: "부유한 삶" },
+  { id: 1, data: "편안한 삶" },
+  { id: 2, data: "화목한 삶" },
+  { id: 3, data: "여유로운 삶" },
+  { id: 4, data: "사랑이 가득한 삶" },
+  { id: 5, data: "숙면하는 삶" },
+  { id: 6, data: "배려하는 삶" },
+  { id: 7, data: "적게 일하는 삶" },
+  { id: 8, data: "바른 삶" },
+  { id: 9, data: "건강한 삶" },
+];
 const Mypage = () => {
   const navigate = useNavigate();
   const { logout, isLoggedIn } = useAuth();
@@ -21,11 +34,94 @@ const Mypage = () => {
 
   // Store selected lifestyles
   const [selectedLifestyles, setSelectedLifestyles] = useState([]);
+  //추후 조건문을 통해 5단계로 멘트 나눠야 함
+  const [life, setLife] = useState("균형 잡힌");
+  const [nickname, setNickName] = useState("");
+  const [email, setEmail] = useState("");
+  const [score, setScore] = useState(0);
+  const [percentage, setPercentage] = useState(11);
+  const [daysTogether, setDaysTogether] = useState(0);
 
+  let lifelist_data = [];
+  const selectedIds = [];
+
+  //추후 AI 개선사항 동적으로 받아와야 함
+  let aiSolutionContent =
+    "밥도 잘 먹고 공부도 열심히 하고 잠을 잘 자세요. 어디까지나 AI 솔루션이므로 자세한 진단은 병원에 가서 받아보세요. 어제 저녁에는 매운 음식을 드셨군요. 매운 음식은 소화기관에 좋지 않으니 자제하기 바랍니다. 회사에서 너무 심한 압박감을 느낀다면 휴가를 내고 쉬는 것을 권장합니다.";
+
+  //페이지 새로고침시 동작
+  //2번 호출되고 있는데, 1번 호출로 바꾸고 싶다면 index.js에서 strictmode 태그 삭제 필요
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/members/me/profile",
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
+        console.log(response.data);
+        setNickName(response.data.nickname);
+        setEmail(response.data.email);
+        setLife(response.data.prefix);
+        setUploadedImage(response.data.photo_url);
+        lifelist_data = response.data.life;
+
+        const selectedIds = LIFESTYLE_LIST.filter((item) =>
+          lifelist_data.includes(item.data)
+        );
+
+        console.log("selectedLifestyles", selectedIds);
+        setSelectedLifestyles(selectedIds);
+
+        // D-day 정보 가져오기
+        const ddayResponse = await axios.get(
+          "https://www.proclockout.com/api/v1/members/me/dday",
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
+        setDaysTogether(ddayResponse.data.dday); // D-day 상태 업데이트
+      } catch (error) {
+        console.error("Error response:", error.response);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // 프로필 이미지 전송
+  const handlePicture = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.put(
+        "https://www.proclockout.com/api/v1/members/me/profile/image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error uploading picture:", error);
+    }
+  };
   const onChangeImage = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+
     setUploadedImage(imageUrl);
+    handlePicture(file);
   };
 
   const goToAnalytics = () => {
@@ -43,21 +139,9 @@ const Mypage = () => {
       }, 1500);
     }
   };
-  //추후 조건문을 통해 5단계로 멘트 나눠야 함
-  let life = "균형 잡힌";
-
-  //서버에서 닉네임 받아와야 함
-  let nickname = "헥스코드";
-
-  //서버에서 점수 받아와야함
-  let score = 88;
-
-  //서버에서 백분율 받아와야 함
-  let percentage = 11;
-
-  //추후 AI 개선사항 동적으로 받아와야 함
-  let aiSolutionContent =
-    "밥도 잘 먹고 공부도 열심히 하고 잠을 잘 자세요. 어디까지나 AI 솔루션이므로 자세한 진단은 병원에 가서 받아보세요. 어제 저녁에는 매운 음식을 드셨군요. 매운 음식은 소화기관에 좋지 않으니 자제하기 바랍니다. 회사에서 너무 심한 압박감을 느낀다면 휴가를 내고 쉬는 것을 권장합니다.";
+  const handelNickname = () => {
+    navigate("/login/signin/nickname");
+  };
 
   // Lifelist 버튼 클릭 시 상태 변경 (클릭시 렌더링)
   const toggleLifelistVisibility = () => {
@@ -66,6 +150,7 @@ const Mypage = () => {
 
   // Lifelist 관리
   const handleLifelistSelect = (selectedLifestyles) => {
+    console.log(selectedLifestyles, "selectedLifestyles");
     setSelectedLifestyles(selectedLifestyles);
     setIsLifelistVisible(false);
   };
@@ -98,10 +183,13 @@ const Mypage = () => {
               <Text>추구하는 삶 | </Text>
               <br></br>
             </TextWrapper>
+            <NicknameModify onClick={handelNickname}>
+              <IoMdCreate style={{ height: "30px", width: "30px" }} />
+            </NicknameModify>
             <InfoWrapper>
-              <Text> 헥스코드</Text>
+              <Text> {nickname}</Text>
               <br></br>
-              <Text> example@email.kr</Text>
+              <Text> {email}</Text>
               <br></br>
 
               <LifestyleTags>
@@ -124,7 +212,9 @@ const Mypage = () => {
 
         <Divider></Divider>
         <RightWrapper>
-          <Cheer>시작이 반이다. 화이팅!</Cheer>
+          <DDay>
+            {nickname}님과 함께한지 {daysTogether}일
+          </DDay>
           <RightText>나의 워라벨</RightText>
           <Balance>
             <BalanceTitle>
@@ -144,7 +234,9 @@ const Mypage = () => {
       </Wrapper>
 
       {/* Lifelist 컴포넌트 조건부 렌더링 */}
-      {isLifelistVisible && <Lifelist onSelect={handleLifelistSelect} />}
+      {isLifelistVisible && (
+        <Lifelist lifelist_data={selectedIds} onSelect={handleLifelistSelect} />
+      )}
     </div>
   );
 };
@@ -232,10 +324,16 @@ const TextWrapper = styled.div`
   text-align: right;
   width: 18rem;
 `;
+const NicknameModify = styled.div`
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  left: 900px;
+  top: 1110px;
+`;
 
 const Text = styled.p`
-  margin-top: 0.7rem;
-  margin-bottom: -0.2rem;
+  margin-bottom: -0.7rem;
   font-size: 2.4rem;
   font-weight: bold;
   white-space: pre;
@@ -278,8 +376,8 @@ const RightWrapper = styled.div`
   margin-top: -4.5rem;
 `;
 
-//AI 활용한 응원 문구. 우선 Static하게 넣어둠.
-const Cheer = styled.h1`
+//함께한 시간. 우선 Static하게 넣어둠.
+const DDay = styled.h1`
   font-size: 4.5rem;
   margin-top: 0;
   margin-bottom: 5rem;

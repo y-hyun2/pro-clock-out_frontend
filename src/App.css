@@ -13,16 +13,6 @@
   }
 }
 
-@font-face {
-  font-family: 'Noto sans';
-  src: url('../src/styles/NotoSansKR-VariableFont_wght.ttf');
-}
-
-body {
-  font-family: 'Noto sans';
-}
-
-
 
 .App-header {
   background-color: #282c34;
