@@ -18,14 +18,12 @@ const Main = () => {
 
 export default Main;
 
-// 전체 페이지를 감싸는 컨테이너
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
 `;
 
-// Character와 Bubble이 위치할 하단 컨테이너
 const BottomContainer = styled.div`
   height: 30%;
   display: flex;

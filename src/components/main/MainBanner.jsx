@@ -117,29 +117,30 @@ const TitleItem = styled.div`
 const TopWrapper = styled.div`
   position: relative;
   height: 100px;
+  width: 100%;
 `;
 
 const NewTitleItem = styled(TitleItem)`
   opacity: 0;
   position: absolute;
-  animation: ${(props) => (props.animate ? fadeIn : "none")} ${ANIMATION_DURATION} ease-in-out;
+  animation: ${(props) => (props.animate ? fadeIn : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
 
 const TopTitleItem = styled(TitleItem)`
   position: absolute;
-  animation: ${(props) => (props.animate ? slideIn : "none")} ${ANIMATION_DURATION} ease-in-out;
+  animation: ${(props) => (props.animate ? slideIn : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
 
 const MainTitleItem = styled(TitleItem)`
   font-weight: bold;
   font-size: 4rem;
   opacity: 1;
-  animation: ${(props) => (props.animate ? slideOut : "none")} ${ANIMATION_DURATION} ease-in-out;
+  animation: ${(props) => (props.animate ? slideOut : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
 
 const BottomTitleItem = styled(TitleItem)`
   height: 100px;
-  animation: ${(props) => (props.animate ? fadeOut : "none")} ${ANIMATION_DURATION} ease-in-out;
+  animation: ${(props) => (props.animate ? fadeOut : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
 
 const services = ["나만의 시간", "행복", "즐거움", "한잔의 여유", "활기찬 하루", "재물"];
