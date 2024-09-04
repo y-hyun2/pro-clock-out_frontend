@@ -1,7 +1,9 @@
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { colors } from "../../styles/theme";
+import axios from "axios";
 
-// 통통 튀는 애니메이션 정의
+// 애니메이션 키프레임 설정
 const bounce = keyframes`
   0%, 20%, 50%, 75%, 100% {
     transform: translateY(0);
@@ -14,6 +16,7 @@ const bounce = keyframes`
   }
 `;
 
+// 스타일 컴포넌트 설정
 const BubbleStyles = styled.div`
   display: flex;
   align-items: center;
@@ -33,7 +36,7 @@ const BubbleStyles = styled.div`
   /* 애니메이션 적용 */
   animation: ${bounce} 2s infinite;
 
-  // 말풍선 꼬리
+  /* 말풍선 꼬리 */
   &:after {
     content: "";
     position: absolute;
@@ -46,7 +49,29 @@ const BubbleStyles = styled.div`
 `;
 
 const Bubble = () => {
-  return <BubbleStyles>오늘도 화이팅!</BubbleStyles>;
+  const [message, setMessage] = useState("오늘도 화이팅!");
+
+  useEffect(() => {
+    const fetchMessage = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/cheer",
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+         }
+        );
+        console.log("response", response.data);
+        setMessage(response.data.message);
+      } catch (error) {
+        console.error("Error response:", error.response);
+      }
+    };
+    fetchMessage();
+  }, []);
+
+  return <BubbleStyles>{message}</BubbleStyles>;
 };
 
 export default Bubble;
