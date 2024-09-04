@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import axios from 'axios';
-import { colors } from '../../styles/theme';
+import React, { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { colors } from "../../styles/theme";
+import axios from "axios";
 
 // 애니메이션 키프레임 설정
 const bounce = keyframes`
@@ -49,35 +49,29 @@ const BubbleStyles = styled.div`
 `;
 
 const Bubble = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("오늘도 화이팅!");
 
   useEffect(() => {
     const fetchMessage = async () => {
       try {
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: "20자 이내의 랜덤 응원 메시지를 작성해줘." }],
-          max_tokens: 60,
-          temperature: 0.7
-        }, {
-          headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        });
-    
-        const aiMessage = response.data.choices[0].message.content.trim();
-        setMessage(aiMessage);
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/cheer",
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+         }
+        );
+        console.log("response", response.data);
+        setMessage(response.data.message);
       } catch (error) {
-        console.error('에러 패칭 메시지:', error);
-        setMessage('응원 메시지를 가져오지 못했습니다.');
+        console.error("Error response:", error.response);
       }
     };
-
     fetchMessage();
   }, []);
-  
-  return <BubbleStyles>{message || '로딩중...'}</BubbleStyles>;
+
+  return <BubbleStyles>{message}</BubbleStyles>;
 };
 
 export default Bubble;
