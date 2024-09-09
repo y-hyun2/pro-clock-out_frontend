@@ -40,25 +40,16 @@ const LoginPage = () => {
           },
         }
       );
-      console.log(response);
-
       const token = response.headers["authorization"];
-      const nickname_res = response.headers["nickname"];
       //로그인 상태 업데이트
       login();
-      console.log(isLoggedIn);
       alert("로그인에 성공하였습니다");
       if (token) {
-        console.log(token);
         localStorage.setItem("authorization", token);
       }
-      if (nickname_res == "hexcode") {
-        alert("닉네임 설정으로 이동합니다.");
-        navigate("/login/signin/nickname");
-      } else {
-        alert("홈 화면으로 이동합니다.");
-        navigate("/");
-      }
+
+      alert("홈 화면으로 이동합니다.");
+      navigate("/");
     } catch (error) {
       console.error("Error response:", error.response);
     }
