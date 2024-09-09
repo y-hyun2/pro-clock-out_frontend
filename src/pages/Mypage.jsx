@@ -11,6 +11,7 @@ import Lifelist from "../components/mypage/Lifelist";
 import { useAuth } from "../AuthContext";
 import axios from "axios";
 import { IoMdCreate } from "react-icons/io";
+import ReactMarkdown from "react-markdown";
 const LIFESTYLE_LIST = [
   { id: 0, data: "부유한 삶" },
   { id: 1, data: "편안한 삶" },
@@ -41,76 +42,88 @@ const Mypage = () => {
   const [score, setScore] = useState(0);
   const [percentage, setPercentage] = useState(0);
   const [daysTogether, setDaysTogether] = useState(0);
-
+  const [aiSolution, setAiSolution] = useState(""); //markdown 형식임
   let lifelist_data = [];
   const selectedIds = [];
-
-  //추후 AI 개선사항 동적으로 받아와야 함
-  let aiSolutionContent =
-    "밥도 잘 먹고 공부도 열심히 하고 잠을 잘 자세요. 어디까지나 AI 솔루션이므로 자세한 진단은 병원에 가서 받아보세요. 어제 저녁에는 매운 음식을 드셨군요. 매운 음식은 소화기관에 좋지 않으니 자제하기 바랍니다. 회사에서 너무 심한 압박감을 느낀다면 휴가를 내고 쉬는 것을 권장합니다.";
 
   //페이지 새로고침시 동작
   //2번 호출되고 있는데, 1번 호출로 바꾸고 싶다면 index.js에서 strictmode 태그 삭제 필요
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get(
-          "https://www.proclockout.com/api/v1/members/me/profile",
-          {
-            headers: {
-              authorization: localStorage.getItem("authorization"),
-            },
-          }
-        );
-        console.log(response.data);
-        setNickName(response.data.nickname);
-        setEmail(response.data.email);
-        setLife(response.data.prefix);
-        setUploadedImage(response.data.photo_url);
-        lifelist_data = response.data.life;
-
-        const selectedIds = LIFESTYLE_LIST.filter((item) =>
-          lifelist_data.includes(item.data)
-        );
-
-        console.log("selectedLifestyles", selectedIds);
-        setSelectedLifestyles(selectedIds);
-
-        // D-day 정보 가져오기
-        const ddayResponse = await axios.get(
-          "https://www.proclockout.com/api/v1/members/me/dday",
-          {
-            headers: {
-              authorization: localStorage.getItem("authorization"),
-            },
-          }
-        );
-        setDaysTogether(ddayResponse.data.dday); // D-day 상태 업데이트
-      } catch (error) {
-        console.error("Error response:", error.response);
-      }
-    };
-    const fetchMyScore = async () => {
-      try {
-        const response = await axios.get(
-          "https://www.proclockout.com/api/v1/wolibals/total",
-          {
-            headers: {
-              authorization: localStorage.getItem("authorization"),
-            },
-          }
-        );
-
-        setPercentage(response.data.rank);
-        setScore(response.data.score);
-      } catch (error) {
-        console.error("Error response:", error.response);
-      }
-    };
     fetchProfile();
     fetchMyScore();
+    fetchAIsolution();
   }, []);
+  // 프로필 정보(좌측) API 연동
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(
+        "https://www.proclockout.com/api/v1/members/me/profile",
+        {
+          headers: {
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+      setNickName(response.data.nickname);
+      setEmail(response.data.email);
+      setLife(response.data.prefix);
+      setUploadedImage(response.data.photo_url);
+      lifelist_data = response.data.life;
 
+      const selectedIds = LIFESTYLE_LIST.filter((item) =>
+        lifelist_data.includes(item.data)
+      );
+
+      setSelectedLifestyles(selectedIds);
+
+      // D-day 정보 가져오기
+      const ddayResponse = await axios.get(
+        "https://www.proclockout.com/api/v1/members/me/dday",
+        {
+          headers: {
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+      setDaysTogether(ddayResponse.data.dday); // D-day 상태 업데이트
+    } catch (error) {
+      console.error("Error response:", error.response);
+    }
+  };
+  // 나의 워라벨 (마이페이지 우측) 연동 API
+  const fetchMyScore = async () => {
+    try {
+      const response = await axios.get(
+        "https://www.proclockout.com/api/v1/wolibals/total",
+        {
+          headers: {
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+
+      setPercentage(response.data.rank);
+      setScore(response.data.score);
+    } catch (error) {
+      console.error("Myscore error response:", error.response);
+    }
+  };
+  // AI 개선 방향 제안 문구 API
+  const fetchAIsolution = async () => {
+    try {
+      const response = await axios.get(
+        "https://www.proclockout.com/api/v1/members/me/solution",
+        {
+          headers: {
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+      setAiSolution(response.data.solution);
+    } catch (error) {
+      console.error("AI solution error:", error.response);
+    }
+  };
   // 프로필 이미지 전송
   const handlePicture = async (file) => {
     const formData = new FormData();
@@ -149,11 +162,10 @@ const Mypage = () => {
     if (isLoggedIn) {
       localStorage.removeItem("authorization");
       logout();
-      console.log(isLoggedIn);
       alert("로그아웃 되었습니다.");
       setTimeout(() => {
         navigate("/login");
-      }, 1500);
+      }, 500);
     }
   };
   const handelNickname = () => {
@@ -243,7 +255,7 @@ const Mypage = () => {
           </Balance>
           <RightText>AI 개선 방향 제안</RightText>
           <AiSolution>
-            <AiSolutionContent>{aiSolutionContent}</AiSolutionContent>
+            <ReactMarkdown>{aiSolution}</ReactMarkdown>
           </AiSolution>
           <Logout onClick={handleLogout}>로그아웃</Logout>
           <Withdrawal>회원 탈퇴</Withdrawal>
@@ -345,8 +357,8 @@ const NicknameModify = styled.div`
   position: absolute;
   height: 50px;
   width: 50px;
-  left: 900px;
-  top: 1110px;
+  left: 870px;
+  top: 1030px;
 `;
 
 const Text = styled.p`
@@ -460,13 +472,15 @@ const DetailView = styled.button`
   background-color: ${theme.colors["main-purple"]};
   cursor: pointer;
 `;
-
+// AI 개선방향 내용을 담는 DIV (내용 넘치면 세로 스크롤 생김)
 const AiSolution = styled.div`
   width: 68rem;
   height: 15rem;
   border: 0.3rem solid;
   border-radius: 2rem;
   border-color: lightgray;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 const AiSolutionContent = styled.p`
