@@ -9,6 +9,7 @@ const Container = styled.div`
   width: 395px;
   border: 1px gray solid;
   border-radius: 15px;
+  //box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
   margin-right: 2.4rem;
@@ -43,7 +44,7 @@ const ChartsContainer = styled.div`
   padding: 20;
 `;
 
-function Category({ categoryData }) {
+function WorkCategory({ categoryData }) {
   const { title, data, score, percentage, fill } = categoryData;
 
   const chunkedData = [];
@@ -67,4 +68,5 @@ function Category({ categoryData }) {
   );
 }
 
-export default Category;
+
+export default WorkCategory;

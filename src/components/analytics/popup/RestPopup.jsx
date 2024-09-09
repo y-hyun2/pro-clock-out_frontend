@@ -130,7 +130,7 @@ const RestPopup = ({ onClose, onSave, initialRestScore, title }) => {
           parseFloat(dayoffRest.split(":")[0]) +
           parseFloat(dayoffRest.split(":")[1]) / 60;
 
-        const response = await axios.post(
+        const response = await axios.put(
           "https://www.proclockout.com/api/v1/wolibals/rest",
           {
             workday_rest: workdayRestHours,
