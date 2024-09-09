@@ -39,7 +39,7 @@ const Mypage = () => {
   const [nickname, setNickName] = useState("");
   const [email, setEmail] = useState("");
   const [score, setScore] = useState(0);
-  const [percentage, setPercentage] = useState(11);
+  const [percentage, setPercentage] = useState(0);
   const [daysTogether, setDaysTogether] = useState(0);
 
   let lifelist_data = [];
@@ -90,8 +90,25 @@ const Mypage = () => {
         console.error("Error response:", error.response);
       }
     };
+    const fetchMyScore = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/wolibals/total",
+          {
+            headers: {
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
 
+        setPercentage(response.data.rank);
+        setScore(response.data.score);
+      } catch (error) {
+        console.error("Error response:", error.response);
+      }
+    };
     fetchProfile();
+    fetchMyScore();
   }, []);
 
   // 프로필 이미지 전송
@@ -119,7 +136,7 @@ const Mypage = () => {
   const onChangeImage = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
-
+    console.log("이미지 변경", file);
     setUploadedImage(imageUrl);
     handlePicture(file);
   };
@@ -221,7 +238,7 @@ const Mypage = () => {
               {life} 삶을 사는 <Nickname>{nickname}</Nickname>님
             </BalanceTitle>
             <Score>{score}점</Score>
-            <Percentage>상위 {percentage}%</Percentage>
+            <Percentage>상위 {percentage}등</Percentage>
             <DetailView onClick={goToAnalytics}>상세보기</DetailView>
           </Balance>
           <RightText>AI 개선 방향 제안</RightText>
