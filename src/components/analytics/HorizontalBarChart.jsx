@@ -10,7 +10,9 @@ import {
 } from "recharts";
 
 const HorizontalBarChart = ({ data }) => {
-  const maxwdth = 1700;
+  const maxwdth = 2000;
+
+  // CustomLabel component for displaying percentage labels
   const CustomLabel = ({ x, y, value }) => {
     return (
       <Text
@@ -34,7 +36,7 @@ const HorizontalBarChart = ({ data }) => {
       layout="vertical"
       margin={{ top: 10, right: 50, left: 40, bottom: 20 }}
     >
-      <XAxis type="number" axisLine={false} tickLine={false} hide={true} />
+      <XAxis type="number" domain={[0, 100]} axisLine={false} tickLine={false} hide={true} />
       <YAxis
         type="category"
         dataKey="name"
@@ -48,6 +50,7 @@ const HorizontalBarChart = ({ data }) => {
         isAnimationActive={true}
         label={<CustomLabel />}
         barSize={30}
+        maxBarSize={50} 
       >
         {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={entry.fill} />

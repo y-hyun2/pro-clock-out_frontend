@@ -10,7 +10,9 @@ import RestPopup from "../components/analytics/popup/RestPopup";
 import SleepPopup from "../components/analytics/popup/SleepPopup";
 import PersonalPopup from "../components/analytics/popup/PersonalPopup";
 import HealthPopup from "../components/analytics/popup/HealthPopup";
+import MainSpinner from "../components/analytics/Spinner";
 import theme from "../styles/theme";
+import axios from "axios";
 
 const Container = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -88,7 +90,7 @@ const Title = styled.p`
 const TopCategoryContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 1.5rem;
   padding-bottom: 60px;
 `;
 
@@ -116,10 +118,11 @@ const SynthesisScore = styled.div`
 `;
 
 const Score = styled.div`
-  font-size: 120px;
-  font-weight: bold;
-  margin: 10px 0 5px 0;
+font-size: ${props => props.fontSize || '7rem'};
+font-weight: bold;
+margin: 10px 0 5px 0;
 `;
+
 
 const Percentage = styled.div`
   color: ${theme.colors["main-purple"]};
@@ -153,7 +156,7 @@ const LinegraphBox = styled.div`
 `;
 
 const InfoButton = styled.button`
-  width: 90%;
+  width: 89.9%;
   height: 60px;
   background-color: lightgray;
   color: white;
@@ -167,8 +170,23 @@ const InfoButton = styled.button`
   margin-top: 15px;
 `;
 
+const CategoryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 27.3rem;
+`;
+
+const MainSpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+`;
+
 // Main component
 function Analytics() {
+
+    
   const [chartdata, setChartdata] = useState({
     work_score: null,
     work_avg: null,
@@ -182,46 +200,38 @@ function Analytics() {
     health_avg: null,
   });
 
+  
+
   const [period, setPeriod] = useState("일간");
   const [showOptions, setShowOptions] = useState(false);
   const [showLineGraph, setShowLineGraph] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupCategory, setPopupCategory] = useState(null);
 
-  // Fetch data from the API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://proclockout.web.app/analytics"
-        );
-        const data = await response.json();
-        setChartdata({
-          work_score: data.work_score,
-          work_avg: data.work_avg,
-          rest_score: data.rest_score,
-          rest_avg: data.rest_avg,
-          sleep_score: data.sleep_score,
-          sleep_avg: data.sleep_avg,
-          personal_score: data.personal_score,
-          personal_avg: data.personal_avg,
-          health_score: data.health_score,
-          health_avg: data.health_avg,
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // Popup에서 저장할 때 데이터를 서버에 저장한 후, 최신 데이터를 다시 불러와 반영
+const handlePopupSave = async (score) => {
+  setChartdata((prevData) => ({
+    ...prevData,
+    [popupCategory]: Number(score),
+  }));
 
-    fetchData();
-  }, []); // Empty dependency array to run once on mount
+  // 점수 업데이트 후 서버에 저장하는 API 요청
+  try {
 
-  const handlePopupSave = (score) => {
-    setChartdata((prevData) => ({
-      ...prevData,
-      [popupCategory]: Number(score),
-    }));
-  };
+    // 서버에서 업데이트된 데이터를 다시 불러옴
+    const response = await axios.get("https://www.proclockout.com/api/v1/wolibals/all", {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: localStorage.getItem("authorization"),
+      },
+    });
+
+    setData(response.data); // 최신 데이터로 업데이트
+  } catch (error) {
+    console.error("Error updating score:", error);
+  }
+};
+
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -240,105 +250,134 @@ function Analytics() {
     setShowLineGraph(!showLineGraph);
   };
 
-  const isDataComplete = Object.values(chartdata).every(
-    (value) => value !== null
-  );
+  
 
   const categories = [
     { title: "작업", key: "work_score", avgKey: "work_avg", color: "#7AA2E3" },
     { title: "휴식", key: "rest_score", avgKey: "rest_avg", color: "#A2A6FF" },
-    { title: "수면", key: "sleep_score", avgKey: "sleep_avg", color: "#76e1e2" },
+    {
+      title: "수면",
+      key: "sleep_score",
+      avgKey: "sleep_avg",
+      color: "#76e1e2",
+    },
     {
       title: "개인 생활",
       key: "personal_score",
       avgKey: "personal_avg",
       color: "#97efb6",
     },
-    { title: "건강", key: "health_score", avgKey: "health_avg", color: "#FFFBD4" },
+    {
+      title: "건강",
+      key: "health_score",
+      avgKey: "health_avg",
+      color: "#FFFBD4",
+    },
   ];
 
-  const total_my_score = Object.values(chartdata).reduce(
-    (sum, score) => sum + (score || 0),
-    0
-  );
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
+  // 컴포넌트가 마운트될 때 API 호출
+  // 종합 및 항목별 워라밸 점수 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/wolibals/all", {
+            headers: { "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"),
+
+          }}
+        );
+        setData(response.data);
+        console.log('데이터 요청 성공!', response)
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  //꺾은선그래프 데이터
+  const [linedata, setLinedata] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response2 = await axios.get(
+          "https://www.proclockout.com/api/v1/wolibals/transitions", {
+            headers: { 
+              "Content-Type": "application/json",
+              authorization: localStorage.getItem("authorization"),
+            }
+          }
+        );
+  
+          console.log('꺾은선그래프 데이터 요청 성공!', response2)
+          
+        // 응답 데이터가 존재하는지 확인
+        const transitionData = response2.data.transitionData || {};
+  
+        
+        const updatedLinedata = {
+          종합: transitionData.total ? transitionData.total.map(item => ({ [item.date]: item.score })) : [],
+          작업: transitionData.work ? transitionData.work.map(item => ({ [item.date]: item.score })) : [],
+          휴식: transitionData.rest ? transitionData.rest.map(item => ({ [item.date]: item.score })) : [],
+          수면: transitionData.sleep ? transitionData.sleep.map(item => ({ [item.date]: item.score })) : [],
+          개인: transitionData.personal ? transitionData.personal.map(item => ({ [item.date]: item.score })) : [],
+          건강: transitionData.health ? transitionData.health.map(item => ({ [item.date]: item.score })) : [],
+        };
+  
+        setLinedata(updatedLinedata);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+
+  if (error) return <div>Error: {error.message}</div>;
+  if (!data) return <MainSpinnerContainer><MainSpinner/></MainSpinnerContainer>;
+  
+  const totalScore = (data.work?.score + data.rest?.score + data.sleep?.score + data.personal?.score + data.health?.score);
+
+  const noScoresEntered = isNaN(totalScore) || totalScore === 0;
+
+  // 항목별 분포도 그래프 데이터
   const horizondata = [
     {
       name: "작업",
-      score: Number(((chartdata.work_score / total_my_score) * 100).toFixed(1)),
+      score: isNaN(data.work?.score / totalScore) ? 0 : ((data.work?.score / totalScore) * 100).toFixed(1),
       fill: "#7AA2E3",
     },
     {
       name: "휴식",
-      score: Number(((chartdata.rest_score / total_my_score) * 100).toFixed(1)),
+      score: isNaN(data.rest?.score / totalScore) ? 0 : ((data.rest?.score / totalScore) * 100).toFixed(1),
       fill: "#A2A6FF",
     },
     {
       name: "수면",
-      score: Number(((chartdata.sleep_score / total_my_score) * 100).toFixed(1)),
+      score: isNaN(data.sleep?.score / totalScore) ? 0 : ((data.sleep?.score / totalScore) * 100).toFixed(1),
       fill: "#76e1e2",
     },
     {
       name: "개인생활",
-      score: Number(
-        ((chartdata.personal_score / total_my_score) * 100).toFixed(1)
-      ),
+      score: isNaN(data.personal?.score / totalScore) ? 0 : ((data.personal?.score / totalScore) * 100).toFixed(1),
       fill: "#97efb6",
     },
     {
       name: "건강",
-      score: Number(
-        ((chartdata.health_score / total_my_score) * 100).toFixed(1)
-      ),
+      score: isNaN(data.health?.score / totalScore) ? 0 : ((data.health?.score / totalScore) * 100).toFixed(1),
       fill: "#FFFBD4",
     },
   ];
-
-  const linedata = {
-    // Example data
-    total: [
-      { "2024-07-08": 8 },
-      { "2024-07-01": 7 },
-      { "2024-06-24": 6 },
-      { "2024-06-17": 5 },
-      { "2024-06-10": 6 },
-    ],
-    work: [
-      { "2024-07-08": 88 },
-      { "2024-07-01": 68 },
-      { "2024-06-24": 65 },
-      { "2024-06-17": 25 },
-      { "2024-06-10": 46 },
-    ],
-    rest: [
-      { "2024-07-08": 20 },
-      { "2024-07-01": 72 },
-      { "2024-06-24": 21 },
-      { "2024-06-17": 55 },
-      { "2024-06-10": 56 },
-    ],
-    sleep: [
-      { "2024-07-08": 40 },
-      { "2024-07-01": 74 },
-      { "2024-06-24": 64 },
-      { "2024-06-17": 45 },
-      { "2024-06-10": 66 },
-    ],
-    personal: [
-      { "2024-07-08": 82 },
-      { "2024-07-01": 28 },
-      { "2024-06-24": 61 },
-      { "2024-06-17": 75 },
-      { "2024-06-10": 62 },
-    ],
-    health: [
-      { "2024-07-08": 20 },
-      { "2024-07-01": 55 },
-      { "2024-06-24": 41 },
-      { "2024-06-17": 35 },
-      { "2024-06-10": 46 },
-    ],
-  };
+  
 
   return (
     <Container>
@@ -364,74 +403,200 @@ function Analytics() {
         )}
       </DropdownContainer>
 
-      <Title>항목별 워라벨 점수</Title>
+      <Title>항목별 워라밸 점수</Title>
       <TopCategoryContainer>
-        {categories.map((category) => (
-          <div key={category.key}>
-            <Category
-              categoryData={{
-                title: category.title,
-                score: chartdata[category.key] || 0,
-                percentage: chartdata[category.key] || 0,
-                fill: category.color,
-                data: [
-                  {
-                    name: "나의 점수",
-                    score: chartdata[category.key] || 0,
-                    fill: category.color,
-                  },
-                  {
-                    name: "평균 점수",
-                    score: chartdata[category.avgKey] || 0,
-                    fill: "#C9DDFD",
-                  },
-                ],
-              }}
-            />
-            <InfoButton
-              onClick={() => {
-                setPopupCategory(category.key);
-                setShowPopup(true);
-              }}
-            >
-              {isDataComplete ? "정보 수정하기" : "정보를 입력해주세요"}
-            </InfoButton>
-          </div>
-        ))}
+        <CategoryWrapper>
+          <Category
+            categoryData={{
+              title: "작업",
+              score: data.work?.score,
+              percentage: data.work.avg || 0,
+              fill: categories[0].color,
+              data: [
+                {
+                  name: "나의 점수",
+                  score: data.work.score || 0,
+                  fill: categories[0].color,
+                },
+                {
+                  name: "평균 점수",
+                  score: data.work.avg || 0,
+                  fill: "#C9DDFD",
+                },
+              ],
+            }}
+          />
+          <InfoButton
+            onClick={() => {
+              setPopupCategory("work_score");
+              setShowPopup(true);
+            }}
+          >
+            정보를 입력해주세요
+          </InfoButton>
+        </CategoryWrapper>
+        <CategoryWrapper>
+          <Category
+            categoryData={{
+              title: "휴식",
+              score: data.rest.score || 0,
+              percentage: data.rest.avg || 0,
+              fill: categories[1].color,
+              data: [
+                {
+                  name: "나의 점수",
+                  score: data.rest.score || 0,
+                  fill: categories[1].color,
+                },
+                {
+                  name: "평균 점수",
+                  score: data.rest.avg || 0,
+                  fill: "#C9DDFD",
+                },
+              ],
+            }}
+          />
+          <InfoButton
+            onClick={() => {
+              setPopupCategory("rest_score");
+              setShowPopup(true);
+            }}
+          >
+            정보를 입력해주세요
+          </InfoButton>
+        </CategoryWrapper>
+        <CategoryWrapper>
+          <Category
+            categoryData={{
+              title: "수면",
+              score: data.sleep.score || 0,
+              percentage: data.sleep.avg || 0,
+              fill: categories[2].color,
+              data: [
+                {
+                  name: "나의 점수",
+                  score: data.sleep.score || 0,
+                  fill: categories[2].color,
+                },
+                {
+                  name: "평균 점수",
+                  score: data.sleep.avg || 0,
+                  fill: "#C9DDFD",
+                },
+              ],
+            }}
+          />
+          <InfoButton
+            onClick={() => {
+              setPopupCategory("sleep_score");
+              setShowPopup(true);
+            }}
+          >
+            정보를 입력해주세요
+          </InfoButton>
+        </CategoryWrapper>
+        <CategoryWrapper>
+          <Category
+            categoryData={{
+              title: "개인생활",
+              score: data.personal.score || 0,
+              percentage: data.personal.avg || 0,
+              fill: categories[3].color,
+              data: [
+                {
+                  name: "나의 점수",
+                  score: data.personal.score || 0,
+                  fill: categories[3].color,
+                },
+                {
+                  name: "평균 점수",
+                  score: data.personal.avg || 0,
+                  fill: "#C9DDFD",
+                },
+              ],
+            }}
+          />
+          <InfoButton
+            onClick={() => {
+              setPopupCategory("personal_score");
+              setShowPopup(true);
+            }}
+          >
+            정보를 입력해주세요
+          </InfoButton>
+        </CategoryWrapper>
+        <CategoryWrapper>
+          <Category
+            categoryData={{
+              title: "건강",
+              score: data.health.score || 0,
+              percentage: data.health.avg || 0,
+              fill: categories[4].color,
+              data: [
+                {
+                  name: "나의 점수",
+                  score: data.health.score || 0,
+                  fill: categories[4].color,
+                },
+                {
+                  name: "평균 점수",
+                  score: data.health.avg || 0,
+                  fill: "#C9DDFD",
+                },
+              ],
+            }}
+          />
+          <InfoButton
+            onClick={() => {
+              setPopupCategory("health_score");
+              setShowPopup(true);
+            }}
+          >
+            정보를 입력해주세요
+          </InfoButton>
+        </CategoryWrapper>
       </TopCategoryContainer>
 
+          
       <BottomCategoryContainer>
         <SynthesisScoreBox>
           <Title>종합 워라밸 점수</Title>
-          {isDataComplete ? (
-            <SynthesisScore>
-              <Score>{total_my_score}점</Score>
-              <Percentage>상위 {Math.floor(Math.random() * 100)}%</Percentage>
-              <Analytics_BarChart
-                data={[
-                  { name: "나의 점수", score: total_my_score, fill: "#7A7EE3" },
-                  { name: "평균 점수", score: 50, fill: "#DADBFF" },
-                ]}
-              />
-            </SynthesisScore>
-          ) : (
-            <Title>모든 항목의 데이터를 입력해주세요</Title>
-          )}
+          <SynthesisScore>
+  {noScoresEntered ? (
+    <Score fontSize="3rem">데이터를 입력해주세요</Score>
+  ) : (
+    <>
+      <Score fontSize="7rem">{data.total.score}점</Score>
+      <Percentage>상위 {data.total.rank}%</Percentage>
+      <Analytics_BarChart
+        data={[
+          { name: "나의 점수", score: data.total.score, fill: "#7A7EE3" },
+          { name: "평균 점수", score: data.total.avg, fill: "#DADBFF" },
+        ]}
+      />
+    </>
+  )}
+</SynthesisScore>
+
         </SynthesisScoreBox>
 
-        <DistributionBox>
-          <SwitchBox>
-            <Title>{showLineGraph ? "워라밸 차트" : "항목 별 분포도"}</Title>
-            <SwitchButton onClick={toggleChart}>변경</SwitchButton>
-          </SwitchBox>
-          {showLineGraph ? (
-            <LinegraphBox>
-              <LineGraph data={linedata} />
-            </LinegraphBox>
-          ) : (
-            <HorizontalBarChart data={horizondata} />
-          )}
-        </DistributionBox>
+        {!noScoresEntered && (
+          <DistributionBox>
+            <SwitchBox>
+              <Title>{showLineGraph ? "워라밸 차트" : "항목 별 분포도"}</Title>
+              <SwitchButton onClick={() => setShowLineGraph(!showLineGraph)}>
+                변경
+              </SwitchButton>
+            </SwitchBox>
+            {showLineGraph ? (
+              <LinegraphBox>
+                <LineGraph data={linedata} />
+              </LinegraphBox>
+            ) : (
+              <HorizontalBarChart data={horizondata} />
+            )}
+          </DistributionBox>
+        )}
       </BottomCategoryContainer>
 
       {showPopup && popupCategory === "work_score" && (
