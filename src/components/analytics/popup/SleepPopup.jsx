@@ -136,7 +136,7 @@ const SleepPopup = ({
         console.log("Request Data:", requestData);
 
         // API 요청 보내기
-        const response = await axios.post(
+        const response = await axios.put(
           "https://www.proclockout.com/api/v1/wolibals/sleep",
           requestData,
           {

@@ -93,7 +93,7 @@ const PersonalPopup = ({ onClose, onSave }) => {
           personal_satisfaction: personalLifeScore,
         };
 
-        const response = await axios.post(
+        const response = await axios.put(
           "https://www.proclockout.com/api/v1/wolibals/personal",
           requestData,
           {
