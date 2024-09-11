@@ -28,7 +28,6 @@ const LoginPage = () => {
     password: password,
   };
 
-  console.log("email", email, "password", password, "requestdata", requestData);
   const handleLogin = async () => {
     try {
       const response = await axios.post(

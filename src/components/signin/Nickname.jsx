@@ -27,7 +27,7 @@ const Nickname = () => {
       );
       //console.log(response);
       alert("닉네임이 수정되었습니다.");
-      navigate("/");
+      navigate("/mypage");
     } catch (error) {
       console.error("Error response:", error.response);
     }
