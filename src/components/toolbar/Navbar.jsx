@@ -72,13 +72,13 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-bottom: 1px solid lightgray;
+  // border-bottom: 1px solid lightgray;
 `;
 
 const ButtonBase = styled.button`
   padding: 10px;
   margin-right: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   border: none;
   cursor: pointer;
 `;
@@ -86,7 +86,7 @@ const ButtonBase = styled.button`
 const Button = styled(ButtonBase)`
   background-color: white;
   margin-right: 8rem;
-  font-size: 2.5rem;
+  font-size: 2rem;
 `;
 
 const LoginButton = styled(ButtonBase)`

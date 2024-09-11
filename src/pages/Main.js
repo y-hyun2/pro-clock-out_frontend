@@ -25,7 +25,7 @@ const Container = styled.div`
 `;
 
 const BottomContainer = styled.div`
-  height: 30%;
+  height: 60%;
   display: flex;
   flex-direction: row;
   align-items: center; /* 수직 중앙 정렬 */

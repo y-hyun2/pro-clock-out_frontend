@@ -148,6 +148,7 @@ const Mypage = () => {
       console.error("Error uploading picture:", error);
     }
   };
+  
   const onChangeImage = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
