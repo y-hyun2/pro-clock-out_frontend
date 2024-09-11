@@ -24,24 +24,24 @@ const BubbleStyles = styled.div`
   padding: 20px 40px;
   margin-left: 10px;
   color: ${colors.white};
-  border-radius: 15px;
+  border-radius: 50px;
   background-color: ${colors.main};
   font-size: 32px;
-  font-weight: bold;
+  font-weight: medium;
   width: 60vw;
   height: auto;
   box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
   position: relative; /* 말풍선 꼬리 위치 설정에 필요 */
 
-  /* 애니메이션 적용 */
-  animation: ${bounce} 2s infinite;
+  // /* 애니메이션 적용 */
+  // animation: ${bounce} 2s infinite;
 
   /* 말풍선 꼬리 */
   &:after {
     content: "";
     position: absolute;
     top: 21px;
-    left: -30px;
+    left: -20px;
     border-right: 30px solid ${colors.main};
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
@@ -60,7 +60,7 @@ const Bubble = () => {
             headers: {
               authorization: localStorage.getItem("authorization"),
             },
-         }
+          }
         );
         console.log("response", response.data);
         setMessage(response.data.message);

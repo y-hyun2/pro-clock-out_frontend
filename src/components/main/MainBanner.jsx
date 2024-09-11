@@ -29,11 +29,12 @@ const slideIn = keyframes`
     transform: translateY(0);
     opacity: 0.5;
     font-size: 2rem;
+    font-weight: 500;
   }
   to {
     transform: translateY(100px);
     opacity: 1;
-    font-size: 4rem;
+    font-size: 6rem;
     font-weight: 600;
   }
 `;
@@ -42,13 +43,14 @@ const slideOut = keyframes`
   from {
     transform: translateY(0);
     opacity: 1;
-    font-size: 4rem;
+    font-size: 6rem;
     font-weight: 600;
   }
   to {
     transform: translateY(100px);
     opacity: 0.5;
     font-size: 2rem;
+    font-weight: 500;
   }
 `;
 
@@ -58,8 +60,8 @@ const MainContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 50%;
-  background: linear-gradient(${colors.rest}, ${colors.white});
+  height: 70%;
+  background: linear-gradient(${colors.main}, ${colors.white});
   text-align: center;
   font-weight: 500;
 `;
@@ -80,7 +82,6 @@ const LeftText = styled.div`
   margin-right: 50px;
   flex: 1;
   text-align: right;
-  font-weight: 600;
   font-family: "Gmarket Sans Bold", sans-serif;
   font-size: 4rem;
 `;
@@ -89,7 +90,6 @@ const RightText = styled.div`
   margin-left: 50px;
   flex: 1;
   text-align: left;
-  font-weight: 600;
   font-family: "Gmarket Sans Bold", sans-serif;
   font-size: 4rem;
 `;
@@ -133,7 +133,7 @@ const TopTitleItem = styled(TitleItem)`
 
 const MainTitleItem = styled(TitleItem)`
   font-weight: bold;
-  font-size: 4rem;
+  font-size: 6rem;
   opacity: 1;
   animation: ${(props) => (props.animate ? slideOut : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
@@ -143,7 +143,7 @@ const BottomTitleItem = styled(TitleItem)`
   animation: ${(props) => (props.animate ? fadeOut : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
 
-const services = ["나만의 시간", "행복", "즐거움", "한잔의 여유", "활기찬 하루", "재물"];
+const services = ["나만의 시간", "행복", "즐거움", "한잔의 여유", "활기찬 하루"];
 
 const MainBanner = () => {
   const [newIndex, setNewIndex] = useState(0);
@@ -189,7 +189,7 @@ const MainBanner = () => {
             {services[nextIndex]}
           </BottomTitleItem>
         </TitleWrapper>
-        <RightText>퇴근의 정석</RightText>
+        <RightText>, 퇴근의정석</RightText>
       </Title>
     </MainContainer>
   );

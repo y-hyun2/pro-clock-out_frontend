@@ -17,6 +17,13 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
 
+  @font-face {
+    font-family: 'Gmarket Sans Medium';
+    src: url('/fonts/GmarketSansTTFMedium.ttf') format('truetype');
+    font-weight: medium;
+    font-style: normal;
+  }
+
   html, body {
     height: 100%;
     margin: 0;
