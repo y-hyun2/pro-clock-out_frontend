@@ -118,11 +118,10 @@ const SynthesisScore = styled.div`
 `;
 
 const Score = styled.div`
-font-size: ${props => props.fontSize || '7rem'};
-font-weight: bold;
-margin: 10px 0 5px 0;
+  font-size: ${(props) => props.fontSize || "7rem"};
+  font-weight: bold;
+  margin: 10px 0 5px 0;
 `;
-
 
 const Percentage = styled.div`
   color: ${theme.colors["main-purple"]};
@@ -180,13 +179,11 @@ const MainSpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
+  height: 100vh;
 `;
 
 // Main component
 function Analytics() {
-
-    
   const [chartdata, setChartdata] = useState({
     work_score: null,
     work_avg: null,
@@ -200,8 +197,6 @@ function Analytics() {
     health_avg: null,
   });
 
-  
-
   const [period, setPeriod] = useState("일간");
   const [showOptions, setShowOptions] = useState(false);
   const [showLineGraph, setShowLineGraph] = useState(false);
@@ -209,29 +204,30 @@ function Analytics() {
   const [popupCategory, setPopupCategory] = useState(null);
 
   // Popup에서 저장할 때 데이터를 서버에 저장한 후, 최신 데이터를 다시 불러와 반영
-const handlePopupSave = async (score) => {
-  setChartdata((prevData) => ({
-    ...prevData,
-    [popupCategory]: Number(score),
-  }));
+  const handlePopupSave = async (score) => {
+    setChartdata((prevData) => ({
+      ...prevData,
+      [popupCategory]: Number(score),
+    }));
 
-  // 점수 업데이트 후 서버에 저장하는 API 요청
-  try {
+    // 점수 업데이트 후 서버에 저장하는 API 요청
+    try {
+      // 서버에서 업데이트된 데이터를 다시 불러옴
+      const response = await axios.get(
+        "https://www.proclockout.com/api/v1/wolibals/all",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
 
-    // 서버에서 업데이트된 데이터를 다시 불러옴
-    const response = await axios.get("https://www.proclockout.com/api/v1/wolibals/all", {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: localStorage.getItem("authorization"),
-      },
-    });
-
-    setData(response.data); // 최신 데이터로 업데이트
-  } catch (error) {
-    console.error("Error updating score:", error);
-  }
-};
-
+      setData(response.data); // 최신 데이터로 업데이트
+    } catch (error) {
+      console.error("Error updating score:", error);
+    }
+  };
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -249,8 +245,6 @@ const handlePopupSave = async (score) => {
   const toggleChart = () => {
     setShowLineGraph(!showLineGraph);
   };
-
-  
 
   const categories = [
     { title: "작업", key: "work_score", avgKey: "work_avg", color: "#7AA2E3" },
@@ -284,16 +278,18 @@ const handlePopupSave = async (score) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://www.proclockout.com/api/v1/wolibals/all", {
-            headers: { "Content-Type": "application/json",
-            authorization: localStorage.getItem("authorization"),
-
-          }}
+          "https://www.proclockout.com/api/v1/wolibals/all",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
         );
         setData(response.data);
-        console.log('데이터 요청 성공!', response)
+        console.log("데이터 요청 성공!", response);
       } catch (err) {
-        console.error('Error fetching data:', err);
+        console.error("Error fetching data:", err);
         setError(err);
       }
     };
@@ -302,82 +298,120 @@ const handlePopupSave = async (score) => {
   }, []);
 
   //꺾은선그래프 데이터
-  const [linedata, setLinedata] = useState(null);
+const [linedata, setLinedata] = useState({
+  total: [],
+  work: [],
+  rest: [],
+  sleep: [],
+  personal: [],
+  health: []
+});
+const transformLineData = (data) => {
+  return data.map(item => ({
+    date: item.date,
+    score: item.score
+  }));
+};
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response2 = await axios.get(
-          "https://www.proclockout.com/api/v1/wolibals/transitions", {
-            headers: { 
-              "Content-Type": "application/json",
-              authorization: localStorage.getItem("authorization"),
-            }
-          }
-        );
-  
-          console.log('꺾은선그래프 데이터 요청 성공!', response2)
-          
-        // 응답 데이터가 존재하는지 확인
-        const transitionData = response2.data.transitionData || {};
-  
-        
-        const updatedLinedata = {
-          종합: transitionData.total ? transitionData.total.map(item => ({ [item.date]: item.score })) : [],
-          작업: transitionData.work ? transitionData.work.map(item => ({ [item.date]: item.score })) : [],
-          휴식: transitionData.rest ? transitionData.rest.map(item => ({ [item.date]: item.score })) : [],
-          수면: transitionData.sleep ? transitionData.sleep.map(item => ({ [item.date]: item.score })) : [],
-          개인: transitionData.personal ? transitionData.personal.map(item => ({ [item.date]: item.score })) : [],
-          건강: transitionData.health ? transitionData.health.map(item => ({ [item.date]: item.score })) : [],
-        };
-  
-        setLinedata(updatedLinedata);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError(err);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
+useEffect(() => {
+  const fetchLineData = async () => {
+    try {
+      const response = await axios.get(
+        "https://www.proclockout.com/api/v1/wolibals/transitions",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+
+      console.log("꺾은선그래프 데이터 요청 성공!", response);
+
+      const transitionData = response.data || {};
+
+      setLinedata({
+        total: transformLineData(transitionData.total || []),
+        work: transformLineData(transitionData.work || []),
+        rest: transformLineData(transitionData.rest || []),
+        sleep: transformLineData(transitionData.sleep || []),
+        personal: transformLineData(transitionData.personal || []),
+        health: transformLineData(transitionData.health || [])
+      });
+    } catch (err) {
+      console.error("Error fetching line data:", err);
+      setError(err);
+    }
+  };
+
+  fetchLineData();
+}, []);
+
+
+
 
   if (error) return <div>Error: {error.message}</div>;
-  if (!data) return <MainSpinnerContainer><MainSpinner/></MainSpinnerContainer>;
-  
-  const totalScore = (data.work?.score + data.rest?.score + data.sleep?.score + data.personal?.score + data.health?.score);
+  if (!data)
+    return (
+      <MainSpinnerContainer>
+        <MainSpinner />
+      </MainSpinnerContainer>
+    );
 
-  const noScoresEntered = isNaN(totalScore) || totalScore === 0;
+    const workScore = data.work?.score || 0;
+    const restScore = data.rest?.score || 0;
+    const sleepScore = data.sleep?.score || 0;
+    const personalScore = data.personal?.score || 0;
+    const healthScore = data.health?.score || 0;
+    
+    const highestScore = Math.max(workScore, restScore, sleepScore, personalScore, healthScore);
 
-  // 항목별 분포도 그래프 데이터
-  const horizondata = [
-    {
-      name: "작업",
-      score: isNaN(data.work?.score / totalScore) ? 0 : ((data.work?.score / totalScore) * 100).toFixed(1),
-      fill: "#7AA2E3",
-    },
-    {
-      name: "휴식",
-      score: isNaN(data.rest?.score / totalScore) ? 0 : ((data.rest?.score / totalScore) * 100).toFixed(1),
-      fill: "#A2A6FF",
-    },
-    {
-      name: "수면",
-      score: isNaN(data.sleep?.score / totalScore) ? 0 : ((data.sleep?.score / totalScore) * 100).toFixed(1),
-      fill: "#76e1e2",
-    },
-    {
-      name: "개인생활",
-      score: isNaN(data.personal?.score / totalScore) ? 0 : ((data.personal?.score / totalScore) * 100).toFixed(1),
-      fill: "#97efb6",
-    },
-    {
-      name: "건강",
-      score: isNaN(data.health?.score / totalScore) ? 0 : ((data.health?.score / totalScore) * 100).toFixed(1),
-      fill: "#FFFBD4",
-    },
-  ];
-  
+    
+    
+    // 만약 모든 점수가 0일 경우 대비
+    const noScoresEntered = isNaN(highestScore) || highestScore === 0;
+    
+    // 항목별 분포도 그래프 데이터
+    const horizondata = [
+      {
+        name: "작업",
+        score: noScoresEntered
+          ? 0
+          : ((workScore / highestScore) * 100).toFixed(1),
+          value: 40,
+        fill: "#7AA2E3",
+
+      },
+      {
+        name: "휴식",
+        score: noScoresEntered
+          ? 0
+          : ((restScore / highestScore) * 100).toFixed(1),
+        fill: "#A2A6FF",
+      },
+      {
+        name: "수면",
+        score: noScoresEntered
+          ? 0
+          : ((sleepScore / highestScore) * 100).toFixed(1),
+        fill: "#76e1e2",
+      },
+      {
+        name: "개인생활",
+        score: noScoresEntered
+          ? 0
+          : ((personalScore / highestScore) * 100).toFixed(1),
+        fill: "#97efb6",
+      },
+      {
+        name: "건강",
+        score: noScoresEntered
+          ? 0
+          : ((healthScore / highestScore) * 100).toFixed(1),
+        fill: "#FFFBD4",
+      },
+    ];
+    
 
   return (
     <Container>
@@ -557,27 +591,33 @@ const handlePopupSave = async (score) => {
         </CategoryWrapper>
       </TopCategoryContainer>
 
-          
       <BottomCategoryContainer>
         <SynthesisScoreBox>
           <Title>종합 워라밸 점수</Title>
           <SynthesisScore>
-  {noScoresEntered ? (
-    <Score fontSize="3rem">데이터를 입력해주세요</Score>
-  ) : (
-    <>
-      <Score fontSize="7rem">{data.total.score}점</Score>
-      <Percentage>상위 {data.total.rank}%</Percentage>
-      <Analytics_BarChart
-        data={[
-          { name: "나의 점수", score: data.total.score, fill: "#7A7EE3" },
-          { name: "평균 점수", score: data.total.avg, fill: "#DADBFF" },
-        ]}
-      />
-    </>
-  )}
-</SynthesisScore>
-
+            {noScoresEntered ? (
+              <Score fontSize="3rem">데이터를 입력해주세요</Score>
+            ) : (
+              <>
+                <Score fontSize="7rem">{data.total.score}점</Score>
+                <Percentage>상위 {data.total.rank}%</Percentage>
+                <Analytics_BarChart
+                  data={[
+                    {
+                      name: "나의 점수",
+                      score: data.total.score,
+                      fill: "#7A7EE3",
+                    },
+                    {
+                      name: "평균 점수",
+                      score: data.total.avg,
+                      fill: "#DADBFF",
+                    },
+                  ]}
+                />
+              </>
+            )}
+          </SynthesisScore>
         </SynthesisScoreBox>
 
         {!noScoresEntered && (

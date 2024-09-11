@@ -9,8 +9,13 @@ function SleepCategory({ data, onClick, isDataComplete }) {
       { name: "평균", score: data.sleep_avg, fill: "#DADBFF" },
     ],
     score: data.sleep_score,
-    percentage: isDataComplete ? ((data.sleep_score / (data.sleep_score + data.sleep_avg)) * 100).toFixed(1) : 0,
-    fill: "#76e1e2"
+    percentage: isDataComplete
+      ? (
+          (data.sleep_score / (data.sleep_score + data.sleep_avg)) *
+          100
+        ).toFixed(1)
+      : 0,
+    fill: "#76e1e2",
   };
 
   return <Category categoryData={categoryData} />;

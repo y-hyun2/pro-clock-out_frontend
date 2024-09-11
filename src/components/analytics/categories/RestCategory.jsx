@@ -9,8 +9,10 @@ function RestCategory({ data, onClick, isDataComplete }) {
       { name: "평균", score: data.rest_avg, fill: "#DADBFF" },
     ],
     score: data.rest_score,
-    percentage: isDataComplete ? ((data.rest_score / (data.rest_score + data.rest_avg)) * 100).toFixed(1) : 0,
-    fill: "#A2A6FF"
+    percentage: isDataComplete
+      ? ((data.rest_score / (data.rest_score + data.rest_avg)) * 100).toFixed(1)
+      : 0,
+    fill: "#A2A6FF",
   };
 
   return <Category categoryData={categoryData} />;
