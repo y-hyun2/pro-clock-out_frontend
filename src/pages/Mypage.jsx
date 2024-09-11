@@ -7,6 +7,7 @@ import cameraLogo from "../img/cameraLogo.png";
 import theme from "../styles/theme";
 import { useNavigate } from "react-router-dom";
 import Lifelist from "../components/mypage/Lifelist";
+import MainSpinner from "../components/analytics/Spinner";
 
 import { useAuth } from "../AuthContext";
 import axios from "axios";
@@ -45,7 +46,7 @@ const Mypage = () => {
   const [aiSolution, setAiSolution] = useState(""); //markdown 형식임
   let lifelist_data = [];
   const selectedIds = [];
-
+  const [loading, setLoading] = useState(true);
   //페이지 새로고침시 동작
   //2번 호출되고 있는데, 1번 호출로 바꾸고 싶다면 index.js에서 strictmode 태그 삭제 필요
   useEffect(() => {
@@ -120,6 +121,7 @@ const Mypage = () => {
         }
       );
       setAiSolution(response.data.solution);
+      setLoading(false);
     } catch (error) {
       console.error("AI solution error:", error.response);
     }
@@ -183,7 +185,12 @@ const Mypage = () => {
     setSelectedLifestyles(selectedLifestyles);
     setIsLifelistVisible(false);
   };
-
+  if (loading)
+    return (
+      <MainSpinnerContainer>
+        <MainSpinner />
+      </MainSpinnerContainer>
+    );
   return (
     <div>
       <Wrapper>
@@ -271,6 +278,13 @@ const Mypage = () => {
 };
 
 export default Mypage;
+
+const MainSpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
 //전체 감싸는 Wrapper
 const Wrapper = styled.div`
