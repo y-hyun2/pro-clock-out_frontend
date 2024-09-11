@@ -9,8 +9,13 @@ function PersonalCategory({ data, onClick, isDataComplete }) {
       { name: "평균", score: data.personal_avg, fill: "#DADBFF" },
     ],
     score: data.personal_score,
-    percentage: isDataComplete ? ((data.personal_score / (data.personal_score + data.personal_avg)) * 100).toFixed(1) : 0,
-    fill: "#97efb6"
+    percentage: isDataComplete
+      ? (
+          (data.personal_score / (data.personal_score + data.personal_avg)) *
+          100
+        ).toFixed(1)
+      : 0,
+    fill: "#97efb6",
   };
 
   return <Category categoryData={categoryData} />;

@@ -15,7 +15,7 @@ const QuestionTitle = styled.h1`
 // 설명을 동적으로 설정
 const QuestionDescribe = styled.p`
   font-size: 1rem;
-  margin: 0; 
+  margin: 0;
   color: gray;
 `;
 

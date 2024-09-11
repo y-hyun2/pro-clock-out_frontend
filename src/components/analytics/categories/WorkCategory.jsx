@@ -3,8 +3,8 @@ import Analytics_BarChart from "../analytics/Analytics_BarChart";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-margin-left: 0rem;
-`
+  margin-left: 0rem;
+`;
 const Container = styled.div`
   width: 395px;
   border: 1px gray solid;
@@ -54,19 +54,18 @@ function WorkCategory({ categoryData }) {
 
   return (
     <Wrapper>
-    <Container>
-      <Header fill={fill}>{title}</Header>
-      <CategoryScore>{score}점</CategoryScore>
-      <Percentage fill={fill}>상위 {percentage}%</Percentage>
-      <ChartsContainer>
-        {chunkedData.map((dataSet, index) => (
-          <Analytics_BarChart key={index} data={dataSet} />
-        ))}
-      </ChartsContainer>
-    </Container>
+      <Container>
+        <Header fill={fill}>{title}</Header>
+        <CategoryScore>{score}점</CategoryScore>
+        <Percentage fill={fill}>상위 {percentage}%</Percentage>
+        <ChartsContainer>
+          {chunkedData.map((dataSet, index) => (
+            <Analytics_BarChart key={index} data={dataSet} />
+          ))}
+        </ChartsContainer>
+      </Container>
     </Wrapper>
   );
 }
-
 
 export default WorkCategory;

@@ -1,5 +1,5 @@
 import React from "react";
-import mainSpinner from "../../img/mainSpinner.gif"
+import mainSpinner from "../../img/mainSpinner.gif";
 
 const MainSpinner = () => {
   return (
@@ -9,4 +9,4 @@ const MainSpinner = () => {
   );
 };
 
-export default MainSpinner
+export default MainSpinner;

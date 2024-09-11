@@ -154,7 +154,6 @@ const HealthPopup = ({ onClose, onSave }) => {
       };
 
       try {
-
         const response = await axios.put(
           "https://www.proclockout.com/api/v1/wolibals/health",
           requestData,

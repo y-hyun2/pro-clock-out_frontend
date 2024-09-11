@@ -9,8 +9,13 @@ function HealthCategory({ data, onClick, isDataComplete }) {
       { name: "평균", score: data.health_avg, fill: "#DADBFF" },
     ],
     score: data.health_score,
-    percentage: isDataComplete ? ((data.health_score / (data.health_score + data.health_avg)) * 100).toFixed(1) : 0,
-    fill: "#FFFBD4"
+    percentage: isDataComplete
+      ? (
+          (data.health_score / (data.health_score + data.health_avg)) *
+          100
+        ).toFixed(1)
+      : 0,
+    fill: "#FFFBD4",
   };
 
   return <Category categoryData={categoryData} />;
