@@ -21,7 +21,7 @@ const BubbleStyles = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 40px;
+  padding: 40px 40px;
   margin-left: 10px;
   color: ${colors.white};
   border-radius: 50px;
@@ -33,8 +33,17 @@ const BubbleStyles = styled.div`
   box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
   position: relative; /* 말풍선 꼬리 위치 설정에 필요 */
 
-  // /* 애니메이션 적용 */
-  // animation: ${bounce} 2s infinite;
+  @media (max-width: 768px) {
+    font-size: 24px; /* 작은 화면에서 폰트 크기 축소 */
+    width: 80vw; /* 화면이 작아지면 너비를 늘림 */
+    padding: 15px 30px; /* 패딩을 줄여서 요소 크기를 적절히 조정 */
+  }
+
+  @media (max-width: 480px) {
+    font-size: 18px; /* 더 작은 화면에서는 폰트 크기 더 축소 */
+    width: 90vw; /* 너비 더 확장 */
+    padding: 10px 20px;
+  }
 
   /* 말풍선 꼬리 */
   &:after {
@@ -45,11 +54,21 @@ const BubbleStyles = styled.div`
     border-right: 30px solid ${colors.main};
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
+
+    @media (max-width: 768px) {
+      top: 18px; /* 작은 화면에서 꼬리 위치 조정 */
+      border-right: 25px solid ${colors.main};
+    }
+
+    @media (max-width: 480px) {
+      top: 15px;
+      border-right: 20px solid ${colors.main};
+    }
   }
 `;
 
 const Bubble = () => {
-  const [message, setMessage] = useState("오늘도 화이팅!");
+  const [message, setMessage] = useState("오늘의 너를 위해 해주고 싶은 말은 ...");
 
   useEffect(() => {
     const fetchMessage = async () => {

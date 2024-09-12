@@ -32,7 +32,7 @@ const slideIn = keyframes`
     font-weight: 500;
   }
   to {
-    transform: translateY(100px);
+    transform: translateY(150px);
     opacity: 1;
     font-size: 6rem;
     font-weight: 600;
@@ -47,7 +47,7 @@ const slideOut = keyframes`
     font-weight: 600;
   }
   to {
-    transform: translateY(100px);
+    transform: translateY(150px);
     opacity: 0.5;
     font-size: 2rem;
     font-weight: 500;
@@ -60,10 +60,15 @@ const MainContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 70%;
+  height: 100%;
   background: linear-gradient(${colors.main}, ${colors.white});
   text-align: center;
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* 작은 화면에서는 세로로 정렬 */
+    height: 50%; /* 높이 축소 */
+  }
 `;
 
 const Title = styled.div`
@@ -74,8 +79,14 @@ const Title = styled.div`
   position: relative;
   width: 100%;
   max-width: 1500px;
-  padding: 0 20px;
+  padding: 0 40px;
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* 작은 화면에서는 세로로 정렬 */
+    text-align: center;
+    padding: 0 10px;
+  }
 `;
 
 const LeftText = styled.div`
@@ -84,6 +95,11 @@ const LeftText = styled.div`
   text-align: right;
   font-family: "Gmarket Sans Bold", sans-serif;
   font-size: 4rem;
+
+  @media (max-width: 768px) {
+    font-size: 2rem; /* 작은 화면에서는 글자 크기 축소 */
+    margin-right: 0;
+  }
 `;
 
 const RightText = styled.div`
@@ -92,13 +108,22 @@ const RightText = styled.div`
   text-align: left;
   font-family: "Gmarket Sans Bold", sans-serif;
   font-size: 4rem;
+
+  @media (max-width: 768px) {
+    font-size: 2rem; /* 작은 화면에서는 글자 크기 축소 */
+    margin-left: 0;
+  }
 `;
 
-const TitleWrapper = styled.div`
+const TitleWrapper = styled.div`sss
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 500px;
+
+  @media (max-width: 768px) {
+    width: 100%; /* 작은 화면에서 너비 확장 */
+  }
 `;
 
 const TitleItem = styled.div`
@@ -106,17 +131,21 @@ const TitleItem = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 150px;
   text-align: center;
   white-space: nowrap;
   font-size: 2rem;
   color: ${colors.main};
   opacity: 0.5;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem; /* 작은 화면에서 글자 크기 축소 */
+  }
 `;
 
 const TopWrapper = styled.div`
   position: relative;
-  height: 100px;
+  height: 150px;
   width: 100%;
 `;
 
@@ -136,10 +165,13 @@ const MainTitleItem = styled(TitleItem)`
   font-size: 6rem;
   opacity: 1;
   animation: ${(props) => (props.animate ? slideOut : 'none')} ${ANIMATION_DURATION} ease-in-out;
+
+  @media (max-width: 768px) {
+    font-size: 3rem; /* 작은 화면에서 메인 타이틀 크기 축소 */
+  }
 `;
 
 const BottomTitleItem = styled(TitleItem)`
-  height: 100px;
   animation: ${(props) => (props.animate ? fadeOut : 'none')} ${ANIMATION_DURATION} ease-in-out;
 `;
 
