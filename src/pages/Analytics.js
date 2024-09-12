@@ -325,6 +325,8 @@ function Analytics() {
             },
           }
         );
+
+        console.log("꺾은선그래프 데이터 요청 성공!", response);
   
         const transitionData = response.data || {};
   
