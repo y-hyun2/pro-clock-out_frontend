@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import PasswordInput from "../components/login/PasswordInput";
 import InputDiv from "../components/login/InputDiv";
 import LoginButton from "../components/login/LoginButton";
-import KakaoLogin from "../components/login/KakaoLogin";
+// import KakaoLogin from "../components/login/KakaoLogin";
 import axios from "axios";
 
 import { useAuth } from "../AuthContext";
