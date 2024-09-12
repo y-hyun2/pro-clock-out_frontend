@@ -43,13 +43,15 @@ const EmailInputButton = ({
           },
         }
       );
-      console.log(response.data["duplicated"]);
-      if (!response.data["duplicated"]) {
+      const isDuplicated = response.data["duplicated"];
+      if (!isDuplicated) {
         setIsokayemail(true);
         setEmail(inputValue);
+        alert("사용 가능한 이메일입니다.");
       } else {
         setIsokayemail(false);
         setIsCanSignin(false);
+        alert("이미 존재하는 이메일입니다.");
       }
     } catch (error) {
       console.error(error); // 에러 출력
