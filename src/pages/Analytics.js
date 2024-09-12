@@ -424,27 +424,14 @@ function Analytics() {
 
   return (
     <Container>
-      <DropdownContainer>
+      {/* <DropdownContainer>
         <DropdownWrapper onClick={toggleOptions}>
           <DropdownText>{period}</DropdownText>
           <DropdownIcon>
             <AiFillCaretDown size={24} color="#FFFBD4" />
           </DropdownIcon>
         </DropdownWrapper>
-        {showOptions && (
-          <DropdownOptions>
-            <DropdownOption onClick={() => handleOptionClick("일간")}>
-              일간
-            </DropdownOption>
-            <DropdownOption onClick={() => handleOptionClick("주간")}>
-              주간
-            </DropdownOption>
-            <DropdownOption onClick={() => handleOptionClick("월간")}>
-              월간
-            </DropdownOption>
-          </DropdownOptions>
-        )}
-      </DropdownContainer>
+      </DropdownContainer> */}
 
       <Title>항목별 워라밸 점수</Title>
       <TopCategoryContainer>
