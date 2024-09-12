@@ -5,7 +5,7 @@ import theme from "../styles/theme";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../components/login/PasswordInput";
 import Signin from "../components/signin/Signin";
-import KakaoLogin from "../components/login/KakaoLogin";
+// import KakaoLogin from "../components/login/KakaoLogin";
 import AccountTitle from "../components/signin/AccountTitle";
 import EmailInputButton from "../components/signin/EmailInputButton";
 import Titlediv from "../components/signin/TitleDiv";
@@ -127,7 +127,7 @@ const SigninPage = () => {
             </Signin>
           </StyledLoginButton>
           <Link to={"/login/signin/nickname"}>
-            <KakaoLogin></KakaoLogin>
+            {/* <KakaoLogin></KakaoLogin> */}
           </Link>
 
           <SigninWrapper>
@@ -169,6 +169,7 @@ const SigninWrapper = styled.div`
 const LoginQuestion = styled.p`
   color: gray;
   font-size: 2rem;
+  margin-top: 2rem;
 `;
 
 const SigninButton = styled.a`
