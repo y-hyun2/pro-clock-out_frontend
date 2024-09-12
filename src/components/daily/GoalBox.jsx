@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 const GoalBoxContainer = styled.div`
-  width: 1128px;
+  width: 1528px;
   background-color: #dadbff;
   box-sizing: border-box;
   display: flex;
@@ -17,7 +17,7 @@ const GoalBoxContainer = styled.div`
   border-radius: 8px;
   margin-left: 30.5rem;
   margin-top: 10rem;
-  right: 65px;
+  left: 110px;
 `;
 
 const GoalBoxItem = styled.div`
