@@ -76,6 +76,7 @@ const Container = styled.div`
   padding: 1rem 2rem;
   background-color: ${colors.white};
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-bottom: 0.5px solid ${colors.gray};
 
   @media (max-width: 768px) {
     flex-direction: column; /* 작은 화면에서는 세로로 정렬 */

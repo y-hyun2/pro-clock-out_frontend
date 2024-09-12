@@ -40,19 +40,28 @@ const LoginPage = () => {
         }
       );
       const token = response.headers["authorization"];
-      //로그인 상태 업데이트
+      
+      // 로그인 상태 업데이트
       login();
       alert("로그인에 성공하였습니다");
       if (token) {
         localStorage.setItem("authorization", token);
       }
-
+  
       alert("홈 화면으로 이동합니다.");
       navigate("/");
     } catch (error) {
       console.error("Error response:", error.response);
+  
+      // 유효하지 않은 회원 정보 처리
+      if (error.response && error.response.status === 401) {
+        alert("유효하지 않은 회원 정보입니다");
+      } else {
+        alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+      }
     }
   };
+
   return (
     <Wrapper>
       <LogoImage src={logoImage} alt="Logo" />
