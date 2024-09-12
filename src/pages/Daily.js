@@ -32,7 +32,7 @@ const RightContainer = styled.div`
 const SaveButton = styled.button`
   z-index: 1;
   margin-top: 13rem;
-  margin-left: 122.3rem;
+  margin-left: 121.3rem;
   padding: 10px 20px;
   height: 40px;
   width: 170px;
@@ -40,21 +40,17 @@ const SaveButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: ${(props) => (props.isLocked ? "not-allowed" : "pointer")};
-  background-category: ${(props) =>
-    props.isLocked
-      ? "#cccccc"
-      : props.isEditing
-      ? "#7a7ee3"
-      : "#cccccc"}; /* isLocked에 따라 회색 또는 보라색으로 설정 */
+  background-color: "#7a7ee3";
   pointer-events: auto; /* 항상 클릭 가능 */
 
   &:hover {
-    background-category: ${(props) =>
+    background-color: ${(props) =>
       props.isLocked ? "#cccccc" : props.isEditing ? "#6a6fc3" : "#696969"};
+      color: white;
   }
 
   &:active {
-    background-category: ${(props) =>
+    background-color: ${(props) =>
       props.isLocked ? "#cccccc" : props.isEditing ? "#5a5fc3" : "#696969"};
   }
 `;

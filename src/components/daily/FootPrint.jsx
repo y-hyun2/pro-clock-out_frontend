@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ResponsiveCalendar } from "@nivo/calendar";
 import styled from "styled-components";
+import axios from "axios";
+
 
 const CalendarContainer = styled.div`
   width: 1528px;
@@ -107,7 +109,14 @@ const FootPrint = ({ onDateSelect }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://www.proclockout.com/api/v1/daily");
+        const response = await axios.get(`https://www.proclockout.com/api/v1/daily`, {
+          params: {
+            year:2024,
+          },
+          headers: {
+            authorization: localStorage.getItem("authorization"),
+          }
+        });
         if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.");
         
         const result = await response.json();
