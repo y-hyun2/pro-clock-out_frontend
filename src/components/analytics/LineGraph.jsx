@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 function LineGraph({ data }) {
-  const colors = ["#000000", "#c6e0ff", "#8884d8", "#76e1e2", "#97efb6", "#F2E88E"];
+  const colors = ["#000000", "#7AA2E3", "#A2A6FF", "#76e1e2", "#97efb6", "#F2E88E"];
 
   const processData = (data) => {
     const categories = Object.keys(data);
