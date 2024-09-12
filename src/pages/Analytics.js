@@ -451,7 +451,7 @@ function Analytics() {
             categoryData={{
               title: "작업",
               score: data.work?.score,
-              percentage: data.work.avg || 0,
+              percentage: data.work.rank || 0,
               fill: categories[0].color,
               data: [
                 {
@@ -481,7 +481,7 @@ function Analytics() {
             categoryData={{
               title: "휴식",
               score: data.rest.score || 0,
-              percentage: data.rest.avg || 0,
+              percentage: data.rest.rank || 0,
               fill: categories[1].color,
               data: [
                 {
@@ -511,7 +511,7 @@ function Analytics() {
             categoryData={{
               title: "수면",
               score: data.sleep.score || 0,
-              percentage: data.sleep.avg || 0,
+              percentage: data.sleep.rank || 0,
               fill: categories[2].color,
               data: [
                 {
@@ -541,7 +541,7 @@ function Analytics() {
             categoryData={{
               title: "개인생활",
               score: data.personal.score || 0,
-              percentage: data.personal.avg || 0,
+              percentage: data.personal.rank || 0,
               fill: categories[3].color,
               data: [
                 {
@@ -571,7 +571,7 @@ function Analytics() {
             categoryData={{
               title: "건강",
               score: data.health.score || 0,
-              percentage: data.health.avg || 0,
+              percentage: data.health.rank || 0,
               fill: categories[4].color,
               data: [
                 {

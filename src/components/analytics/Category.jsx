@@ -56,7 +56,7 @@ function Category({ categoryData }) {
       <Container>
         <Header fill={fill}>{title}</Header>
         <CategoryScore>{score}점</CategoryScore>
-        <Percentage fill={fill}>상위 {percentage}%</Percentage>
+        <Percentage fill={fill}>상위 {percentage}등</Percentage>
         <ChartsContainer>
           {chunkedData.map((dataSet, index) => (
             <Analytics_BarChart key={index} data={dataSet} />
