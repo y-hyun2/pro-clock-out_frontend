@@ -1,6 +1,6 @@
 // src/GoalListContainer.js
 import React, { useState } from "react";
-import axios from "axios"; // axios 임포트 추가
+import axios from "axios"; 
 import styled from "styled-components";
 import GoalList from "./GoalList";
 import Modal from "./Modal";

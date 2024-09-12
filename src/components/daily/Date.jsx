@@ -40,7 +40,7 @@ const Date = ({ setDate }) => {
   const Day = moment().format("dddd");
 
   const handleDateChange = () => {
-    const newDate = moment().format("YYYY-MM-DD"); // 예시: 현재 날짜
+    const newDate = moment().format("YYYY-MM-DD"); 
     setDate(newDate); // 날짜를 상위 컴포넌트로 전달
   };
 

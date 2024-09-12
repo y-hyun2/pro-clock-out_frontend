@@ -85,15 +85,17 @@ const StyledCheckbox = styled.label`
   }
 `;
 
-const GoalList = ({ goals, categoryColors, onCheckboxChange, onEditGoal }) => {
+const GoalList = ({ goals, categorycategorys, onCheckboxChange, onEditGoal }) => {
   //   console.log(goals[0].name);
   return (
     <ListContainer>
       {goals &&
-        goals.map((goal, index) => (
+        goals.map((goal, index) => {
+          console.log("카테고리 컬러:", categorycategorys[goal.category]); // 콘솔에 출력
+          return(
           <GoalItem key={index}>
             <ColorDot
-              color={categoryColors[goal.category]}
+              color={categorycategorys[goal.category]}
               onClick={() => onEditGoal(goal)}
             />
             <Content onClick={() => onGoalClick(goal)}>{goal.content}</Content>
@@ -103,11 +105,12 @@ const GoalList = ({ goals, categoryColors, onCheckboxChange, onEditGoal }) => {
               onChange={() => onCheckboxChange(goal)}
             />
             <StyledCheckbox
-              color={categoryColors[goal.category]}
+              color={categorycategorys[goal.category]}
               htmlFor={`checkbox-${index}`}
             />
           </GoalItem>
-        ))}
+          );
+})}
     </ListContainer>
   );
 };

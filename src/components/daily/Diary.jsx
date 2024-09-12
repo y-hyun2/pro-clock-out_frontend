@@ -13,18 +13,21 @@ import GoalBox from "./GoalBox";
 
 const Diary = ({
   checkedGoals,
-  categoryColors,
+  categorycategorys,
   content,
   setContent,
   image,
   setImage,
+  setShowImg
 }) => {
   const Image = process.env.PUBLIC_URL + "/image/Image.png";
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    setImage(file); //정상동작(api 보내는 코드)
+    
     if (file) {
-      setImage(URL.createObjectURL(file));
+      setShowImg(URL.createObjectURL(file));
     }
   };
 
@@ -56,7 +59,7 @@ const Diary = ({
           />
         </AddImageButton>
       </DiaryContainer>
-      <GoalBox goals={checkedGoals} categoryColors={categoryColors} />
+      <GoalBox goals={checkedGoals} categoryColors={categorycategorys} />
     </>
   );
 };
