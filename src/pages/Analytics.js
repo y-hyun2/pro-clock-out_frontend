@@ -298,58 +298,63 @@ function Analytics() {
   }, []);
 
   //꺾은선그래프 데이터
-const [linedata, setLinedata] = useState({
-  total: [],
-  work: [],
-  rest: [],
-  sleep: [],
-  personal: [],
-  health: []
-});
-const transformLineData = (data) => {
-  return data.map(item => ({
-    date: item.date,
-    score: item.score
-  }));
-};
-
-useEffect(() => {
-  const fetchLineData = async () => {
-    try {
-      const response = await axios.get(
-        "https://www.proclockout.com/api/v1/wolibals/transitions",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: localStorage.getItem("authorization"),
-          },
-        }
-      );
-
-      console.log("꺾은선그래프 데이터 요청 성공!", response);
-
-      const transitionData = response.data || {};
-
-      setLinedata({
-        total: transformLineData(transitionData.total || []),
-        work: transformLineData(transitionData.work || []),
-        rest: transformLineData(transitionData.rest || []),
-        sleep: transformLineData(transitionData.sleep || []),
-        personal: transformLineData(transitionData.personal || []),
-        health: transformLineData(transitionData.health || [])
-      });
-    } catch (err) {
-      console.error("Error fetching line data:", err);
-      setError(err);
-    }
+  const [linedata, setLinedata] = useState({
+    total: [],
+    work: [],
+    rest: [],
+    sleep: [],
+    personal: [],
+    health: [],
+  });
+  const transformLineData = (data) => {
+    return data.map((item) => ({
+      date: item.date,
+      score: item.score,
+    }));
   };
 
-  fetchLineData();
-}, []);
-
-
-
-
+  useEffect(() => {
+    const fetchLineData = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.proclockout.com/api/v1/wolibals/transitions",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: localStorage.getItem("authorization"),
+            },
+          }
+        );
+  
+        const transitionData = response.data || {};
+  
+        // 기존 데이터와 새로운 데이터를 비교
+        const newLineData = {
+          total: transformLineData(transitionData.total || []),
+          work: transformLineData(transitionData.work || []),
+          rest: transformLineData(transitionData.rest || []),
+          sleep: transformLineData(transitionData.sleep || []),
+          personal: transformLineData(transitionData.personal || []),
+          health: transformLineData(transitionData.health || []),
+        };
+  
+        // 데이터가 변경되었을 때만 업데이트
+        if (JSON.stringify(newLineData) !== JSON.stringify(linedata)) {
+          setLinedata(newLineData);
+        }
+      } catch (err) {
+        console.error("Error fetching line data:", err);
+        setError(err);
+      }
+    };
+  
+    // 데이터 실시간 업데이트를 위한 주기적인 요청
+    const intervalId = setInterval(fetchLineData, 1000);
+  
+    // 컴포넌트가 언마운트될 때 interval 정리
+    return () => clearInterval(intervalId);
+  }, [linedata]);  // linedata가 변경될 때마다 실행
+  
   if (error) return <div>Error: {error.message}</div>;
   if (!data)
     return (
@@ -358,60 +363,62 @@ useEffect(() => {
       </MainSpinnerContainer>
     );
 
-    const workScore = data.work?.score || 0;
-    const restScore = data.rest?.score || 0;
-    const sleepScore = data.sleep?.score || 0;
-    const personalScore = data.personal?.score || 0;
-    const healthScore = data.health?.score || 0;
-    
-    const highestScore = Math.max(workScore, restScore, sleepScore, personalScore, healthScore);
+  const workScore = data.work?.score || 0;
+  const restScore = data.rest?.score || 0;
+  const sleepScore = data.sleep?.score || 0;
+  const personalScore = data.personal?.score || 0;
+  const healthScore = data.health?.score || 0;
 
-    
-    
-    // 만약 모든 점수가 0일 경우 대비
-    const noScoresEntered = isNaN(highestScore) || highestScore === 0;
-    
-    // 항목별 분포도 그래프 데이터
-    const horizondata = [
-      {
-        name: "작업",
-        score: noScoresEntered
-          ? 0
-          : ((workScore / highestScore) * 100).toFixed(1),
-          value: 40,
-        fill: "#7AA2E3",
+  const highestScore = Math.max(
+    workScore,
+    restScore,
+    sleepScore,
+    personalScore,
+    healthScore
+  );
 
-      },
-      {
-        name: "휴식",
-        score: noScoresEntered
-          ? 0
-          : ((restScore / highestScore) * 100).toFixed(1),
-        fill: "#A2A6FF",
-      },
-      {
-        name: "수면",
-        score: noScoresEntered
-          ? 0
-          : ((sleepScore / highestScore) * 100).toFixed(1),
-        fill: "#76e1e2",
-      },
-      {
-        name: "개인생활",
-        score: noScoresEntered
-          ? 0
-          : ((personalScore / highestScore) * 100).toFixed(1),
-        fill: "#97efb6",
-      },
-      {
-        name: "건강",
-        score: noScoresEntered
-          ? 0
-          : ((healthScore / highestScore) * 100).toFixed(1),
-        fill: "#FFFBD4",
-      },
-    ];
-    
+  // 만약 모든 점수가 0일 경우 대비
+  const noScoresEntered = isNaN(highestScore) || highestScore === 0;
+
+  // 항목별 분포도 그래프 데이터
+  const horizondata = [
+    {
+      name: "작업",
+      score: noScoresEntered
+        ? 0
+        : ((workScore / highestScore) * 100).toFixed(1),
+      value: 40,
+      fill: "#7AA2E3",
+    },
+    {
+      name: "휴식",
+      score: noScoresEntered
+        ? 0
+        : ((restScore / highestScore) * 100).toFixed(1),
+      fill: "#A2A6FF",
+    },
+    {
+      name: "수면",
+      score: noScoresEntered
+        ? 0
+        : ((sleepScore / highestScore) * 100).toFixed(1),
+      fill: "#76e1e2",
+    },
+    {
+      name: "개인생활",
+      score: noScoresEntered
+        ? 0
+        : ((personalScore / highestScore) * 100).toFixed(1),
+      fill: "#97efb6",
+    },
+    {
+      name: "건강",
+      score: noScoresEntered
+        ? 0
+        : ((healthScore / highestScore) * 100).toFixed(1),
+      fill: "#FFFBD4",
+    },
+  ];
 
   return (
     <Container>
