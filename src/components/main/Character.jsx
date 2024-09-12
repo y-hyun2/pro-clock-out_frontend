@@ -20,6 +20,16 @@ const ImageContainer = styled.div`
 const Image = styled.img`
   width: 333px;
   height: 333px;
+
+  @media (max-width: 768px) {
+    width: 250px; /* 작은 화면에서는 이미지 크기 축소 */
+    height: 250px;
+  }
+
+  @media (max-width: 480px) {
+    width: 180px; /* 더 작은 화면에서는 더 많이 축소 */
+    height: 180px;
+  }
 `;
 
 

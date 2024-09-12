@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import MainLogo from "../logo/MainLogo";
 import { useAuth } from "../../AuthContext";
+import { colors } from "../../styles/theme";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -69,10 +70,17 @@ export default Navbar;
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* 양쪽에 로고와 버튼 정렬 */
   align-items: center;
   width: 100%;
-  // border-bottom: 1px solid lightgray;
+  padding: 1rem 2rem;
+  background-color: ${colors.white};
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* 작은 화면에서는 세로로 정렬 */
+    padding: 1rem;
+  }
 `;
 
 const ButtonBase = styled.button`
@@ -85,19 +93,49 @@ const ButtonBase = styled.button`
 
 const Button = styled(ButtonBase)`
   background-color: white;
-  margin-right: 8rem;
-  font-size: 2rem;
+  margin-right: 2rem;
+  font-size: 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem; /* 작은 화면에서는 버튼 크기 축소 */
+    margin-right: 1rem;
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem; /* 더 작은 화면에서는 더 축소 */
+    margin-right: 0.5rem;
+  }
 `;
 
 const LoginButton = styled(ButtonBase)`
-  background-color: white;
-  font-size: 30px;
-  margin-right: 5rem;
-  color: gray;
+  background-color: ${colors.main};
+  font-size: 1.5rem;
+  margin-right: 2rem;
+  color: ${colors.white};
+  border-radius: 10px;
+  padding: 10px 30px;
+  font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    margin-right: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+  }
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
   flex-grow: 1;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* 작은 화면에서는 세로로 정렬 */
+    align-items: center;
+    width: 100%;
+  }
 `;
