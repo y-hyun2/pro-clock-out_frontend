@@ -7,6 +7,9 @@ import Diary from "../components/daily/Diary";
 import GoalListContainer from "../components/daily/GoalListContainer";
 import axios from "axios";
 import fetchGoals from "../components/daily/api/fetchGoals";
+import moment from "moment";
+import "moment/locale/ko";
+
 
 const PageContainer = styled.div`
   display: flex;
@@ -64,14 +67,17 @@ const categorycategorys = {
   건강: "#F2E88E",
   기타: "#696969",
 };
-console.log(categorycategorys.작업);
+
+// console.log("카테고리작업컬러:", categorycategorys.작업);
 
 const Daily = () => {
   const [checkedGoals, setCheckedGoals] = useState([]);
   const [savedData, setSavedData] = useState({});
+  const [dailyData, setDailyData] = useState(null);
   const [currentDate, setCurrentDate] = useState("");
   const [diaryContent, setDiaryContent] = useState("");
   const [diaryImage, setDiaryImage] = useState("");
+  const [showImg, setShowImg] = useState(null);
   const [ratings, setRatings] = useState({
     작업: null,
     휴식: null,
@@ -96,6 +102,11 @@ const Daily = () => {
     loadGoals();
   }, []);
 
+  useEffect(() => {
+    const today = moment().format("YYYY-MM-DD");
+    setCurrentDate(today); // 초기 날짜 설정
+  }, []);
+
   const handleCheckboxChange = (goal) => {
     if (!isLocked) {
       setCheckedGoals((prevGoals) =>
@@ -111,202 +122,146 @@ const Daily = () => {
     }
   };
 
+
+
+
   const handleSave = async () => {
     try {
       // 이미지 업로드
-      let imageUrl = null;
       if (diaryImage) {
         const imageFormData = new FormData();
         imageFormData.append("file", diaryImage);
 
+        console.log(diaryImage);
+
         const imageResponse = await axios.post(
-          "https://www.proclockout.com//api/v1/daily/image", // 서버의 이미지 업로드 엔드포인트
+          "https://www.proclockout.com/api/v1/daily/image", // 서버의 이미지 업로드 엔드포인트
           imageFormData,
           {
             headers: {
-              Authorization: localStorage.getItem("authorization"),
+              "Content-Type": "multipart/form-data",
+              authorization: localStorage.getItem("authorization"),
               // Content-Type은 axios가 자동으로 설정합니다.
             },
           }
         );
-
+        
+        console.log(imageResponse.data);
+      
         if (imageResponse.status === 200) {
-          imageUrl = imageResponse.data.imageUrl; // 서버가 반환하는 이미지 URL에 맞춰 수정
-        } else {
-          throw new Error("이미지 업로드에 실패했습니다.");
-        }
+
+        // completed_goals를 문자열 배열로 변환(기존엔 객체 형태로 반환하고 있었음)
+        const goalContents = checkedGoals.map(goal => goal.content);
+
+          // JSON 데이터 업로드
+          const jsonData = {
+            date: currentDate,
+            workSatisfaction: ratings["작업"],
+            restSatisfaction: ratings["휴식"],
+            sleepSatisfaction: ratings["수면"],
+            personalSatisfaction: ratings["개인생활"],
+            healthSatisfaction: ratings["건강"],
+            content: diaryContent,
+            image_url:imageResponse.data,
+            completed_goals: goalContents,
+          };
+
+          console.log("본문데이터", jsonData);
+
+          const jsonResponse = await axios.post(
+            "https://www.proclockout.com/api/v1/daily",
+            jsonData, // JSON 데이터는 객체 형태로 감싸서 전송하면 안 됨(이미 객체형태이기 떄문)
+            {
+              headers: {
+                authorization: localStorage.getItem("authorization"),
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log("포스트",jsonResponse);
+
+          if (jsonResponse.status === 200) {
+            setSavedData((prevData) => ({
+              ...prevData,
+              [currentDate]: jsonData,
+            }));
+            setIsLocked(true);
+            setIsEditing(false);
+            alert("저장되었습니다.");
+          } else {
+            throw new Error("데이터 저장에 실패했습니다.");
+          }
+        } 
       }
-
-      // JSON 데이터 업로드
-      const jsonData = {
-        date: currentDate,
-        workSatisfaction: ratings["작업"],
-        restSatisfaction: ratings["휴식"],
-        sleepSatisfaction: ratings["수면"],
-        personalSatisfaction: ratings["개인생활"],
-        healthSatisfaction: ratings["건강"],
-        content: diaryContent,
-        completed_goals: checkedGoals,
-      };
-
-      const jsonResponse = await axios.post(
-        "https://www.proclockout.com/api/v1/daily",
-        { request: jsonData }, // JSON 데이터는 객체 형태로 감싸서 전송
-        {
-          headers: {
-            Authorization: localStorage.getItem("authorization"),
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (jsonResponse.status === 200) {
-        setSavedData((prevData) => ({
-          ...prevData,
-          [currentDate]: jsonData,
-        }));
-        setIsLocked(true);
-        setIsEditing(false);
-        alert("저장되었습니다.");
-      } else {
-        throw new Error("데이터 저장에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("저장 중 오류가 발생했습니다:", error);
-      alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
+ 
+} catch (error) {
+console.error("저장 중 오류가 발생했습니다:", error);
+alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+}
+     
   };
 
-  // const handleSave = () => {
-  //   const dataToSave = {
-  //     date: currentDate,
-  //     workSatisfaction: ratings["작업"],
-  //     restSatisfaction: ratings["휴식"],
-  //     sleepSatisfaction: ratings["수면"],
-  //     personalSatisfaction: ratings["개인생활"],
-  //     healthSatisfaction: ratings["건강"],
-  //     content: diaryContent,
-  //     image_url: diaryImage,
-  //     completed_goals: checkedGoals,
-  //   };
+  const handleEdit = async (date) => {
+    
+    console.log("date:", date);
 
-  //   setSavedData((prevData) => ({ ...prevData, [currentDate]: dataToSave }));
-  //   setIsLocked(true); // 저장 후 화면 잠금
-  //   setIsEditing(false); // 저장 후 수정 모드 해제
-  //   alert("저장되었습니다.");
-  // };
-
-  // const handleEdit = () => {
-  //   setIsLocked(false); // 수정 시작
-  //   setIsEditing(true); // 수정 모드로 전환
-  // };
-
-  // const handleSave = async () => {
-  //   const formData = new FormData();
-
-  //   const jsonRequest = JSON.stringify({
-  //     date: currentDate,
-  //     workSatisfaction: ratings["작업"],
-  //     restSatisfaction: ratings["휴식"],
-  //     sleepSatisfaction: ratings["수면"],
-  //     personalSatisfaction: ratings["개인생활"],
-  //     healthSatisfaction: ratings["건강"],
-  //     content: diaryContent,
-  //     completed_goals: checkedGoals,
-  //   });
-
-  //   formData.append("request", jsonRequest);
-
-  //   if (diaryImage) {
-  //     formData.append("file", diaryImage);
-  //   }
-
-  //   // FormData의 내용을 콘솔에 출력
-  //   for (let pair of formData.entries()) {
-  //     console.log(`${pair[0]}: ${pair[1]}`);
-  //   }
-  //   console.log(localStorage.getItem("authorization"));
-
-  //   try {
-  //     const response = await axios.post(
-  //       "https://www.proclockout.com/api/v1/daily",
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: `${localStorage.getItem("authorization")}`,
-  //           // `Content-Type` 헤더는 설정하지 않음
-  //         },
-  //       }
-  //     );
-
-  //     if (response.status === 200) {
-  //       setSavedData((prevData) => ({
-  //         ...prevData,
-  //         [currentDate]: JSON.parse(jsonRequest),
-  //       }));
-  //       setIsLocked(true);
-  //       setIsEditing(false);
-  //       alert("저장되었습니다.");
-  //     }
-  //   } catch (error) {
-  //     console.error("저장 중 오류가 발생했습니다:", error);
-  //     alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
-  //   }
-  // };
-  const handleEdit = async (dailyId) => {
     try {
-      // // 이미지 업로드
-      // let imageUrl = null;
-      // if (diaryImage) {
-      //   const imageFormData = new FormData();
-      //   imageFormData.append("file", diaryImage);
+       // 이미지 업로드
+       if (diaryImage) {
+        const imageFormData = new FormData();
+        imageFormData.append("file", diaryImage);
 
-      //   const imageResponse = await axios.put(
-      //     `https://www.proclockout.com/api/v1/daily/image`, // 서버의 이미지 업로드 엔드포인트
-      //     imageFormData,
-      //     {
-      //       headers: {
-      //         Authorization: localStorage.getItem("authorization"),
-      //         // Content-Type은 axios가 자동으로 설정합니다.
-      //       },
-      //     }
-      //   );
+        console.log(diaryImage);
 
-      //   if (imageResponse.status === 200) {
-      //     imageUrl = imageResponse.data.imageUrl; // 서버가 반환하는 이미지 URL에 맞춰 수정
-      //   } else {
-      //     throw new Error("이미지 업로드에 실패했습니다.");
-      //   }
-      // }
-
+        const imageResponse = await axios.put(
+          `https://www.proclockout.com/api/v1/daily/${date}`, // 서버의 이미지 업로드 엔드포인트
+          imageFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              authorization: localStorage.getItem("authorization"),
+              // Content-Type은 axios가 자동으로 설정합니다.
+            },
+          }
+        );
+        
+        console.log('이미지 업로드 응답:',imageResponse.data);
+  
+        if (imageResponse.status === 200) {
+      // completed_goals를 문자열 배열로 변환(기존엔 객체 형태로 반환하고 있었음)
+        const goalContents = checkedGoals.map(goal => goal.content);
       // JSON 데이터 업로드
       const jsonData = {
-        date: currentDate,
+        date: date,
         workSatisfaction: ratings["작업"],
         restSatisfaction: ratings["휴식"],
         sleepSatisfaction: ratings["수면"],
         personalSatisfaction: ratings["개인생활"],
         healthSatisfaction: ratings["건강"],
         content: diaryContent,
-        completed_goals: checkedGoals,
+        image_url:imageResponse.data,
+        completed_goals: goalContents,
       };
 
+      console.log("본문데이터수정", jsonData);
+
       const jsonResponse = await axios.put(
-        `https://www.proclockout.com/api/v1/daily/${dailyId}`,
+        `https://www.proclockout.com/api/v1/daily/${date}`,
         jsonData,
         {
           headers: {
-            Authorization: localStorage.getItem("authorization"),
+            authorization: localStorage.getItem("authorization"),
             "Content-Type": "application/json",
           },
         }
       );
-      console.log("JSON Data:", jsonData); // JSON 데이터를 콘솔에 출력
+      console.log("JSON Data:", jsonResponse); // JSON 데이터를 콘솔에 출력
+    
 
       if (jsonResponse.status === 200) {
         setSavedData((prevData) => ({
           ...prevData,
-          [currentDate]: jsonData,
+          [date]: jsonData,
         }));
         setIsLocked(false); // 수정 후 화면 잠금
         setIsEditing(true); // 수정 후 수정 모드 해제
@@ -314,93 +269,46 @@ const Daily = () => {
       } else {
         throw new Error("데이터 수정에 실패했습니다.");
       }
-    } catch (error) {
+    } 
+  } 
+  
+} catch (error) {
       console.error("수정 중 오류가 발생했습니다:", error);
       alert("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
-  //   const formData = new FormData();
 
-  //   // JSON 데이터 추가
-  //   formData.append(
-  //     "request",
-  //     JSON.stringify({
-  //       date: currentDate,
-  //       workSatisfaction: ratings["작업"],
-  //       restSatisfaction: ratings["휴식"],
-  //       sleepSatisfaction: ratings["수면"],
-  //       personalSatisfaction: ratings["개인생활"],
-  //       healthSatisfaction: ratings["건강"],
-  //       content: diaryContent,
-  //       image_url: diaryImage, // 수정 시에는 파일을 직접 보내지 않고, URL을 추가할 수 있습니다.
-  //       completed_goals: checkedGoals,
-  //     })
-  //   );
-
-  //   // 이미지 파일 추가 (파일이 있을 경우)
-  //   if (diaryImage) {
-  //     formData.append("file", diaryImage); // 파일을 추가합니다
-  //   }
-
-  //   try {
-  //     const response = await axios.put(
-  //       `https://www.proclockout.com/api/v1/daily/${dailyId}`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //           Authorization: `Bearer ${localStorage.getItem("authorization")}`, // 토큰 추가
-  //         },
-  //       }
-  //     );
-  //     if (response.status === 200) {
-  //       setSavedData((prevData) => ({
-  //         ...prevData,
-  //         [currentDate]: JSON.parse(formData.get("request")),
-  //       }));
-  //       setIsLocked(false); // 수정 후 화면 잠금
-  //       setIsEditing(true); // 수정 후 수정 모드 해제
-  //       alert("수정되었습니다.");
-  //     }
-  //   } catch (error) {
-  //     console.error("수정 중 오류가 발생했습니다:", error);
-  //     alert("수정 중 오류가 발생했습니다. 다시 시도해주세요.");
-  //   }
-  // };
-
-  const handleDateSelect = (date) => {
-    if (savedData[date]) {
-      const data = savedData[date];
-      setCurrentDate(date);
-      setDiaryContent(data.content);
-      setDiaryImage(data.image_url);
-      setCheckedGoals(data.completed_goals);
-      setRatings({
-        작업: data.workSatisfaction,
-        휴식: data.restSatisfaction,
-        개인생활: data.personalSatisfaction,
-        수면: data.sleepSatisfaction,
-        건강: data.healthSatisfaction,
+  const fetchDailyIdFromDate = async (date) => {
+    try {
+      console.log(`요청하는 날짜: ${date}`); 
+      const response = await axios.get(`https://www.proclockout.com/api/v1/daily/${date}`, {
+        headers: {
+          authorization: localStorage.getItem("authorization"),
+        }
       });
-      setIsLocked(true); // 데이터가 있는 경우 화면 잠금
-      setIsEditing(false); // 수정 모드 해제
-    } else {
-      setCurrentDate(date);
-      setDiaryContent("");
-      setDiaryImage("");
-      setCheckedGoals([]);
-      setRatings({
-        작업: null,
-        휴식: null,
-        개인생활: null,
-        수면: null,
-        건강: null,
-      });
-      setIsLocked(false); // 새로운 날짜 선택 시 화면 잠금 해제
-      setIsEditing(false); // 수정 모드 해제
+      console.log('응답 데이터:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('데이터 요청 실패:', error);
+      throw error;
+    }
+};
+
+  
+  const handleDateSelect = async (date) => {
+    try {
+      const dailyData = await fetchDailyIdFromDate(date);
+      
+      // 상태 업데이트
+      setDailyData(dailyData);
+      console.log('데이터 가져오기',dailyData)
+    } catch (error) {
+      console.error("데이터 가져오기 실패:", error);
     }
   };
+  
+  
 
   const handleAddGoal = async (newGoal) => {
     console.log(newGoal);
@@ -453,6 +361,7 @@ const Daily = () => {
 
   return (
     <PageContainer>
+      <Date setDate={setCurrentDate} />
       <FootPrint onDateSelect={handleDateSelect} />
       <RightContainer isLocked={isLocked}>
         <Diary
@@ -461,32 +370,34 @@ const Daily = () => {
           categorycategorys={categorycategorys}
           content={diaryContent}
           setContent={setDiaryContent}
-          image={diaryImage}
+          image={showImg}
           setImage={setDiaryImage}
+          setShowImg={setShowImg}
         />
         <SaveButton
-          onClick={isEditing ? handleSave : handleEdit}
+          onClick={() => isEditing ? handleSave() : handleEdit((currentDate))}
           isEditing={isEditing}
         >
           {isLocked ? "수정" : "저장"}
         </SaveButton>
       </RightContainer>
 
-      <Date setDate={setCurrentDate} />
       <RatingFormContainer
         onRatingChange={handleRatingChange}
         isLocked={isLocked}
       />
-      {/* <GoalListContainer
+      <GoalListContainer
         categorycategorys={categorycategorys}
         onCheckboxChange={handleCheckboxChange}
         onAddGoal={handleAddGoal}
         onDeleteGoal={handleDeleteGoal}
         goals={goals}
         isLocked={isLocked}
-      /> */}
+      />
     </PageContainer>
   );
 };
 
 export default Daily;
+
+

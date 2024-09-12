@@ -47,16 +47,6 @@ const TooltipContainer = styled.div`
   border-radius: 3px;
 `;
 
-const data = [
-  { day: "2024-01-01", value: 10 },
-  { day: "2024-01-02", value: 30 },
-  { day: "2024-01-03", value: 50 },
-  { day: "2024-01-04", value: 70 },
-  { day: "2024-01-05", value: 90 },
-  { day: "2024-07-05", value: 85 },
-  { day: "2024-06-15", value: 40 },
-  { day: "2024-08-03", value: 35 },
-];
 
 const colorScale = (value) => {
   let color;
@@ -111,11 +101,31 @@ const FootPrint = ({ onDateSelect }) => {
   // 연도 레전드 숨기기
   const yearLegend = (year) => "";
 
+  const [data, setData] = useState([]); // 서버에서 받아온 데이터를 저장할 상태
   const [filledCells, setFilledCells] = useState(0);
 
   useEffect(() => {
-    const count = countFilledCellsForYear(data);
-    setFilledCells(count);
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://www.proclockout.com/api/v1/daily");
+        if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.");
+        
+        const result = await response.json();
+        
+        // API 응답 데이터를 Nivo Calendar에서 사용하는 형식으로 변환
+        const formattedData = result.map((item) => ({
+          day: item.date,
+          value: item.totalScore,
+        }));
+
+        setData(formattedData); // 변환된 데이터를 상태에 저장
+        setFilledCells(formattedData.length); // 몇 개의 발자국을 남겼는지 카운트
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData(); // 데이터 가져오기 실행
   }, []);
 
   const handleDayClick = (day) => {

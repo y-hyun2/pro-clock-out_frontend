@@ -34,8 +34,9 @@ const StyledLabel = styled.label`
   justify-content: center;
   width: 70%;
   height: 70%;
-  background-color: ${({ isSelected, selectedColor }) =>
-    isSelected ? selectedColor : "#ddd"};
+  background-color: ${({ isSelected, selectedColor }) => {
+    return isSelected ? selectedColor : "#ddd";
+  }};
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -49,23 +50,23 @@ const StyledLabel = styled.label`
     background-repeat: no-repeat;
   }
 
-  &.veryGood::before {
+  &.rating-9::before {
     background-image: url(${veryGood});
   }
 
-  &.good::before {
+  &.rating-7::before {
     background-image: url(${good});
   }
 
-  &.normal::before {
+  &.rating-5::before {
     background-image: url(${normal});
   }
 
-  &.bad::before {
+  &.rating-3::before {
     background-image: url(${bad});
   }
 
-  &.veryBad::before {
+  &.rating-1::before {
     background-image: url(${veryBad});
   }
 
@@ -84,7 +85,8 @@ const RatingForm = ({ part, selectedColor, onRatingChange }) => {
   const [rating, setRating] = useState(null);
 
   const handleChange = (event) => {
-    const newRating = event.target.value;
+    const newRating = parseInt(event.target.value, 10);
+
     setRating((prevRating) => (prevRating === newRating ? null : newRating));
     onRatingChange(part, newRating); // 부모 컴포넌트로 변경된 값 전달
   };
@@ -93,11 +95,11 @@ const RatingForm = ({ part, selectedColor, onRatingChange }) => {
     <form>
       <Fieldset>
         {[
-          { value: "veryBad", label: "1점" },
-          { value: "bad", label: "3점" },
-          { value: "normal", label: "5점" },
-          { value: "good", label: "7점" },
-          { value: "veryGood", label: "9점" },
+          { value: 1, label: "1점" },
+          { value: 3, label: "3점" },
+          { value: 5, label: "5점" },
+          { value: 7, label: "7점" },
+          { value: 9, label: "9점" },
         ].map(({ value, label }) => (
           <RateContainer key={value}>
             <HiddenCheckbox
@@ -109,7 +111,7 @@ const RatingForm = ({ part, selectedColor, onRatingChange }) => {
             />
             <StyledLabel
               htmlFor={`${part}-rating-${value}`}
-              className={value}
+              className={`rating-${value}`}
               title={label}
               isSelected={rating === value}
               selectedColor={selectedColor}

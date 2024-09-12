@@ -12,7 +12,7 @@ const fetchGoals = async () => {
     );
 
     if (response.status === 200) {
-      console.log(response.data);
+      console.log(response.data.goals);
       return response.data.goals; // 목표활동 데이터 반환
     }
   } catch (error) {
