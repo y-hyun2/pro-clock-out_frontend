@@ -3,10 +3,10 @@ import { ResponsiveCalendar } from "@nivo/calendar";
 import styled from "styled-components";
 
 const CalendarContainer = styled.div`
-  width: 1128px;
+  width: 1528px;
   height: 220px;
   position: absolute;
-  left: 500px;
+  left: 680px;
 `;
 
 const JandiContainer = styled.div`

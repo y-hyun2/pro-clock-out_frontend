@@ -4,10 +4,10 @@ import "moment/locale/ko";
 import styled from "styled-components";
 
 const DateContainer = styled.div`
-  width: 250px;
+  width: 350px;
   height: 300px;
   position: absolute;
-  left: 150px;
+  left: 230px;
   display: flex;
   flex-direction: column;
   padding: 30px;
@@ -15,7 +15,7 @@ const DateContainer = styled.div`
 const YearContainer = styled.div`
   display: flex;
   align-items: start;
-  font-size: 16px;
+  font-size: 25px;
   font-weight: bold;
   color: #7a7ee3;
 `;
@@ -23,13 +23,13 @@ const YearContainer = styled.div`
 const MonthContainer = styled.span`
   font-weight: bold;
   margin: 0 10px;
-  font-size: 36px;
+  font-size: 56px;
   font-weight: bold;
 `;
 
 const DayContainer = styled.div`
   text-align: right;
-  font-size: 16px;
+  font-size: 25px;
   font-weight: bold;
   color: #7a7ee3;
 `;

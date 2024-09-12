@@ -32,10 +32,10 @@ const RightContainer = styled.div`
 const SaveButton = styled.button`
   z-index: 1;
   margin-top: 13rem;
-  margin-left: 88.3rem;
+  margin-left: 122.3rem;
   padding: 10px 20px;
   height: 40px;
-  width: 140px;
+  width: 170px;
   category: white;
   border: none;
   border-radius: 5px;

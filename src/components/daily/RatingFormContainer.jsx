@@ -14,7 +14,7 @@ const parts = {
 const DailyPageContainer = styled.div`
   width: 350px;
   position: absolute;
-  margin-right: auto;
+  left: 190px;
   top: calc(300px + 30px); /* DateContainer 높이 + padding */
   display: flex;
   flex-direction: column;

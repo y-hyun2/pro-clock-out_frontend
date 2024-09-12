@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const DiaryContainer = styled.div`
   border: 1px solid #7a7ee3;
   border-radius: 8px;
-  width: 1128px;
+  width: 1528px;
   height: 640px;
   padding: 20px 40px;
   box-sizing: border-box;
@@ -13,7 +13,7 @@ export const DiaryContainer = styled.div`
   top: calc(300px + 30px);
   //   margin-left: auto;
   //   right: 69px;
-  left: 425px;
+  left: 600px;
 `;
 
 export const DiaryTitle = styled.div`

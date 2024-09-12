@@ -8,7 +8,7 @@ import Modal from "./Modal";
 const GoalContainer = styled.div`
   width: 350px;
   position: absolute;
-  margin-right: auto;
+  left: 190px;
   top: calc(
     630px + 30px
   ); /* DateContainer 높이 + FormContainer높이 + padding */
