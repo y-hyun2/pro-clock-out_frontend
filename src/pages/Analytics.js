@@ -596,7 +596,7 @@ function Analytics() {
             ) : (
               <>
                 <Score fontSize="7rem">{data.total.score}점</Score>
-                <Percentage>상위 {data.total.rank}%</Percentage>
+                <Percentage>상위 {data.total.rank}등</Percentage>
                 <Analytics_BarChart
                   data={[
                     {
